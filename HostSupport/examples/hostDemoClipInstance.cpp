@@ -334,7 +334,7 @@ namespace MyHost {
   }
 
 
-  /// override this to return the rod on the clip canonical coords!
+  /// override this to return the rod on the clip cannoical coords!
   OfxRectD MyClipInstance::getRegionOfDefinition(OfxTime time) const
   {
     /// our clip is pretending to be progressive PAL SD, so return 0<=x<768, 0<=y<576 

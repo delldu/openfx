@@ -793,7 +793,15 @@ namespace OFX {
     _pixelDepth = mapStrToBitDepthEnum(str);
 
     // compute bytes per pixel
-    _pixelBytes = _pixelComponentCount;
+    _pixelBytes = 0;
+    switch(_pixelComponents) 
+    {
+    case ePixelComponentNone : _pixelBytes = 0; break;
+    case ePixelComponentRGBA  : _pixelBytes = 4; break;
+    case ePixelComponentRGB  : _pixelBytes = 3; break;
+    case ePixelComponentAlpha : _pixelBytes = 1; break;
+    case ePixelComponentCustom : _pixelBytes = 0; break;
+    }
 
     switch(_pixelDepth) 
     {
@@ -2717,6 +2725,10 @@ namespace OFX {
           // call the instance changed action
           if(getTimeDomainAction(handle, outArgs))
             stat = kOfxStatOK;
+
+          // fetch our pointer out of the props on the handle
+          ImageEffect *instance = retrieveImageEffectPointer(handle);
+          (void)instance;
         }
         else if(action == kOfxActionBeginInstanceChanged) {
           checkMainHandles(actionRaw, handleRaw, inArgsRaw, outArgsRaw, false, false, true);
@@ -2943,7 +2955,7 @@ namespace OFX {
   }; // namespace Private
 
   /** @brief Fetch's a suite from the host and logs errors */
-  const void * fetchSuite(const char *suiteName, int suiteVersion, bool optional)
+  void * fetchSuite(const char *suiteName, int suiteVersion, bool optional)
   {
     const void *suite = Private::gHost->fetchSuite(Private::gHost->host, suiteName, suiteVersion);
     if(suite==0)

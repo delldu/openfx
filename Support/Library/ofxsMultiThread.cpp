@@ -133,7 +133,7 @@ namespace OFX {
     /** @brief dtor */
     Mutex::~Mutex(void)
     {
-      OfxStatus stat = OFX::Private::gThreadSuite ? OFX::Private::gThreadSuite->mutexDestroy(_handle) : kOfxStatReplyDefault;
+      OfxStatus stat = OFX::Private::gThreadSuite->mutexDestroy(_handle);
       (void)stat;
     }
 

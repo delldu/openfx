@@ -372,7 +372,7 @@ void RetimerExamplePluginFactory::describeInContext(OFX::ImageEffectDescriptor &
     // Define the mandated kOfxImageEffectRetimerParamName param, note that we don't do anything with this other than.
     // describe it. It is not a true param but how the host indicates to the plug-in which frame
     // it wants you to retime to. It appears on no plug-in side UI, it is purely the host's to manage.
-    DoubleParamDescriptor *param = desc.defineDoubleParam(kOfxImageEffectRetimerParamName);
+    DoubleParamDescriptor *param = desc.defineDoubleParam("SourceTime");
     (void)param;
   }
   else {

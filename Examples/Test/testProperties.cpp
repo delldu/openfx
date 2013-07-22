@@ -63,7 +63,7 @@ static OfxMessageSuiteV1     *gMessageSuite;
 
 ////////////////////////////////////////////////////////////////////////////////
 // fetch a suite
-static const void *
+static void *
 fetchSuite(const char *suiteName, int suiteVersion, bool optional = false)
 {
   const void *suite = gHost->fetchSuite(gHost->host, suiteName, suiteVersion);
@@ -649,8 +649,8 @@ PropertyDescription::setValue(PropertySet &propSet)
 
 ////////////////////////////////////////////////////////////////////////////////
 // a set of property descriptions
-PropPropertySetDescription::PropertySetDescription(char *setName, OfxPropertySetHandle handle, PropertyDescription *v, int nV)
-PropertySet(handle)
+PropertySetDescription::PropertySetDescription(const char *setName, OfxPropertySetHandle handle, PropertyDescription *v, int nV)
+  : PropertySet(handle)
   , _setName(setName)
   , _descriptions(v)
   , _nDescriptions(nV)
@@ -1045,7 +1045,8 @@ describeInContext( OfxImageEffectHandle  /*effect*/,  OfxPropertySetHandle /*inA
 // code for the plugin's description routine
 
 // contexts we can be 
-statstatic char *gSupportedContexts[] =
+static const char *gSupportedContexts[] =
+  {
     kOfxImageEffectContextGenerator,
     kOfxImageEffectContextFilter,
     kOfxImageEffectContextTransition, 
@@ -1055,7 +1056,8 @@ statstatic char *gSupportedContexts[] =
   };
 
 // pixel depths we can be
-statstatic char *gSupportedPixelDepths[] =
+static const char *gSupportedPixelDepths[] =
+  {
     kOfxBitDepthByte,
     kOfxBitDepthShort,
     kOfxBitDepthFloat

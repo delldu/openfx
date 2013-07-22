@@ -649,8 +649,8 @@ PropertyDescription::setValue(PropertySet &propSet)
 
 ////////////////////////////////////////////////////////////////////////////////
 // a set of property descriptions
-PropertySetDescription::PropertySetDescription(const char *setName, OfxPropertySetHandle handle, PropertyDescription *v, int nV)
-  : PropertySet(handle)
+PropPropertySetDescription::PropertySetDescription(char *setName, OfxPropertySetHandle handle, PropertyDescription *v, int nV)
+PropertySet(handle)
   , _setName(setName)
   , _descriptions(v)
   , _nDescriptions(nV)
@@ -747,8 +747,7 @@ int
 PropertySetDescription::intPropValue(const std::string &name, int idx)
 {
   PropertyDescription *desc = 0;
-  desc = findDescription(name);
-  if(desc) {
+  if(desc == findDescription(name)) {
     if(idx < desc->_nCurrentVals) {
       return int(desc->_currentVals[idx]);
     }
@@ -1046,8 +1045,7 @@ describeInContext( OfxImageEffectHandle  /*effect*/,  OfxPropertySetHandle /*inA
 // code for the plugin's description routine
 
 // contexts we can be 
-static const char *gSupportedContexts[] =
-  {
+statstatic char *gSupportedContexts[] =
     kOfxImageEffectContextGenerator,
     kOfxImageEffectContextFilter,
     kOfxImageEffectContextTransition, 
@@ -1057,8 +1055,7 @@ static const char *gSupportedContexts[] =
   };
 
 // pixel depths we can be
-static const char *gSupportedPixelDepths[] =
-  {
+statstatic char *gSupportedPixelDepths[] =
     kOfxBitDepthByte,
     kOfxBitDepthShort,
     kOfxBitDepthFloat

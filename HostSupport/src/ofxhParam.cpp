@@ -284,13 +284,14 @@ namespace OFX {
 
         static const Property::PropSpec allString[] = {
           { kOfxParamPropStringMode,  Property::eString,    1,    false,    kOfxParamStringIsSingleLine },
-          { kOfxParamPropStringFilePathExists, Property::eInt,    1,    false,    "1" },
-          Property::propSpecEnd
+            { kOfxParamPropStringFilePathExists, Property::eInt,    1,    false,    "1" },
+          { 0 }
         };
 
         static const Property::PropSpec allChoice[] = {
           { kOfxParamPropChoiceOption,    Property::eString,    0,    false,    "" },
-          Property::propSpecEnd
+            // { kOfxParamPropChoiceLabelOption, Property::eString, 0, false, "" }, << add this to support tuttle choice param extension
+          { 0 }
         };
 
         static const Property::PropSpec allCustom[] = {
@@ -345,18 +346,15 @@ namespace OFX {
         if (type == kOfxParamTypePage) {
           _properties.addProperties(allPage);
         }
-
-        if (type == kOfxParamTypeGroup) {
-          _properties.addProperties(allGroup);
+        /*Fix Alex on 08/13/13: added this to deal with group params. Otherwise they would not work.*/
+        if( type == kOfxParamTypeGroup )
+        {
+            static const Property::PropSpec allGroup[] = {
+                { kOfxParamPropGroupOpen, Property::eInt, 1, false, "1" },
+                { 0 }
+            };
+            getProperties().addProperties(allGroup);
         }
-
-#       ifdef OFX_SUPPORTS_PARAMETRIC
-        if (type == kOfxParamTypeParametric) {
-          _properties.addProperties(allParametric);
-          _properties.setDoubleProperty(kOfxParamPropParametricRange, 0., 0);
-          _properties.setDoubleProperty(kOfxParamPropParametricRange, 1., 1);
-        }
-#       endif
       }
 
       /// add standard properties to a params that can take an interact

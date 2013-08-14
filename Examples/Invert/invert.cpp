@@ -39,7 +39,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     - basic property usage
     - basic image access and rendering
  */
-#include <iostream>
 #include <string.h>
 #include "ofxImageEffect.h"
 #include "ofxMemory.h"
@@ -78,7 +77,6 @@ static OfxStatus render(OfxImageEffectHandle  instance,
                         OfxPropertySetHandle inArgs,
                         OfxPropertySetHandle /*outArgs*/)
 {
-    std::cout << "render!! " << std::endl;
   // get the render window and the time from the inArgs
   OfxTime time;
   OfxRectI renderWindow;
@@ -180,7 +178,6 @@ static OfxStatus render(OfxImageEffectHandle  instance,
 static OfxStatus
 describeInContext( OfxImageEffectHandle  effect,  OfxPropertySetHandle /*inArgs*/)
 {
-    std::cout << "describe in context!" << std::endl;
   OfxPropertySetHandle props;
   // define the single output clip in both contexts
   gEffectHost->clipDefine(effect, kOfxImageEffectOutputClipName, &props);
@@ -202,7 +199,6 @@ describeInContext( OfxImageEffectHandle  effect,  OfxPropertySetHandle /*inArgs*
 static OfxStatus
 describe(OfxImageEffectHandle effect)
 {
-    std::cout << "describe!" << std::endl;
   // get the property handle for the plugin
   OfxPropertySetHandle effectProps;
   gEffectHost->getPropertySet(effect, &effectProps);

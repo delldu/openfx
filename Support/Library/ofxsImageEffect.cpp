@@ -812,6 +812,7 @@ namespace OFX {
     case eBitDepthFloat  : _pixelBytes *= 4; break;
     case eBitDepthCustom : _pixelBytes *= 0; break;
     }
+
     str = _imageProps.propGetString(kOfxImageEffectPropPreMultiplication);
     _preMultiplication =  mapStrToPreMultiplicationEnum(str);
 

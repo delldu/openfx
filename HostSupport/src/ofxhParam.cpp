@@ -284,13 +284,12 @@ namespace OFX {
 
         static const Property::PropSpec allString[] = {
           { kOfxParamPropStringMode,  Property::eString,    1,    false,    kOfxParamStringIsSingleLine },
-            { kOfxParamPropStringFilePathExists, Property::eInt,    1,    false,    "1" },
+          { kOfxParamPropStringFilePathExists, Property::eInt,    1,    false,    "1" },
           { 0 }
         };
 
         static const Property::PropSpec allChoice[] = {
           { kOfxParamPropChoiceOption,    Property::eString,    0,    false,    "" },
-            // { kOfxParamPropChoiceLabelOption, Property::eString, 0, false, "" }, << add this to support tuttle choice param extension
           { 0 }
         };
 
@@ -345,15 +344,6 @@ namespace OFX {
 
         if (type == kOfxParamTypePage) {
           _properties.addProperties(allPage);
-        }
-        /*Fix Alex on 08/13/13: added this to deal with group params. Otherwise they would not work.*/
-        if( type == kOfxParamTypeGroup )
-        {
-            static const Property::PropSpec allGroup[] = {
-                { kOfxParamPropGroupOpen, Property::eInt, 1, false, "1" },
-                { 0 }
-            };
-            getProperties().addProperties(allGroup);
         }
       }
 

@@ -122,10 +122,10 @@ all: $(OBJECTPATH)/$(PLUGINNAME).ofx.bundle
     LINKFLAGS = $(BITSFLAG) -bundle -fvisibility=hidden -exported_symbols_list $(PATHTOROOT)/include/osxSymbols -framework OpenGL -Wl,-rpath,@loader_path/../Frameworks -Wl,-rpath,@loader_path/../Libraries
     ARCH = MacOS
   endif
-
-  CXXFLAGS := $(DEBUGFLAG)  -I$(PATHTOROOT)/../include -I$(PATHTOROOT)/include -I$(PATHTOROOT)/Plugins/include $(BITSFLAG) -fvisibility=hidden $(CXXFLAGS_ADD)
-
-$(OBJECTPATH)/$(PLUGINNAME).ofx: $(addprefix $(OBJECTPATH)/,$(PLUGINOBJECTS)) $(SUPPORTOBJECTS)
+	
+  CXXFLAGS := $(DEBUGFLAG)  -I$(PATHTOROOT)/../include -I$(PATHTOROOT)/include -I$(PATHTOROOT)/Plugins/include $(BITSFLAG) -fPIC
+	
+  $(OBJECTPATH)/$(PLUGINNAME).ofx : $(OBJECTPATH)/$(PLUGINOBJECTS) $(SUPPORTOBJECTS)
 	mkdir -p $(OBJECTPATH)/
 	$(CXX) $^ $(LINKFLAGS) $(LDFLAGS_ADD) -o $@
 

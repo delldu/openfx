@@ -88,9 +88,6 @@ namespace OFX {
         { kOfxImageEffectPropClipPreferencesSlaveParam, Property::eString, 0, false, "" },
         { kOfxImageEffectInstancePropSequentialRender, Property::eInt, 1, false, "0" },
         { kOfxPluginPropFilePath, Property::eString, 1, true, ""},
-#ifdef OFX_SUPPORTS_OPENGLRENDER
-        { kOfxImageEffectPropOpenGLRenderSupported, Property::eString, 1, false, "false"}, // OFX 1.3
-#endif
         Property::propSpecEnd
       };
 
@@ -335,13 +332,6 @@ namespace OFX {
         { kOfxImageEffectInstancePropSequentialRender, Property::eInt, 1, false, "0" },
         { kOfxImageEffectPropFrameRate ,        Property::eDouble,     1, true,  "0" },
         { kOfxPropIsInteractive,                Property::eInt,        1, true, "0" },
-#     ifdef kOfxImageEffectPropInAnalysis
-        { kOfxImageEffectPropInAnalysis,        Property::eInt,        1, false, "0" }, // removed in OFX 1.4
-#     endif
-        { kOfxImageEffectPropSupportsTiles,     Property::eInt,        1, false, "1" }, // OFX 1.4
-#ifdef OFX_SUPPORTS_OPENGLRENDER
-        { kOfxImageEffectPropOpenGLRenderSupported, Property::eString, 1, false, "false"}, // OFX 1.4
-#endif
         Property::propSpecEnd
       };
 
@@ -900,8 +890,6 @@ namespace OFX {
           { kOfxImageEffectPropFrameStep, Property::eDouble, 1, true, "0" }, 
           { kOfxPropIsInteractive, Property::eInt, 1, true, "0" },
           { kOfxImageEffectPropRenderScale, Property::eDouble, 2, true, "0" },
-          { kOfxImageEffectPropSequentialRenderStatus, Property::eInt, 1, true, "0" },
-          { kOfxImageEffectPropInteractiveRenderStatus, Property::eInt, 1, true, "0" },
           Property::propSpecEnd
         };
 
@@ -947,9 +935,6 @@ namespace OFX {
           { kOfxImageEffectPropFieldToRender, Property::eString, 1, true, "" }, 
           { kOfxImageEffectPropRenderWindow, Property::eInt, 4, true, "0" },
           { kOfxImageEffectPropRenderScale, Property::eDouble, 2, true, "0" },
-          { kOfxImageEffectPropSequentialRenderStatus, Property::eInt, 1, true, "0" },
-          { kOfxImageEffectPropInteractiveRenderStatus, Property::eInt, 1, true, "0" },
-          { kOfxImageEffectPropRenderQualityDraft, Property::eInt, 1, true, "0" },
           Property::propSpecEnd
         };
 
@@ -990,8 +975,6 @@ namespace OFX {
           { kOfxImageEffectPropFrameStep, Property::eDouble, 1, true, "0" }, 
           { kOfxPropIsInteractive, Property::eInt, 1, true, "0" },
           { kOfxImageEffectPropRenderScale, Property::eDouble, 2, true, "0" },
-          { kOfxImageEffectPropSequentialRenderStatus, Property::eInt, 1, true, "0" },
-          { kOfxImageEffectPropInteractiveRenderStatus, Property::eInt, 1, true, "0" },
           Property::propSpecEnd
         };
 
@@ -1020,7 +1003,7 @@ namespace OFX {
 
       /// calculate the default rod for this effect instance
       OfxRectD Instance::calcDefaultRegionOfDefinition(OfxTime  time,
-                                                       OfxPointD   /*renderScale*/) const
+                                                       OfxPointD   /*renderScale*/)
       {
         OfxRectD rod;
 
@@ -2546,7 +2529,7 @@ namespace OFX {
       // Forward all multithread suite calls to the host implementation.
  
       static OfxStatus multiThread(OfxThreadFunctionV1 func,
-                                   unsigned int nThreads,
+                                   unsigned int /*nThreads*/,
                                    void *customArg)
       {
         return gImageEffectHost->multiThread(func, nThreads, customArg);
@@ -2607,8 +2590,6 @@ namespace OFX {
       }
 
       static OfxStatus multiThreadIndex(unsigned int *threadIndex){
-        if (!threadIndex)
-          return kOfxStatFailed;
         *threadIndex = 0;
         return kOfxStatOK;
       }
@@ -2617,16 +2598,16 @@ namespace OFX {
         return false;
       }
 
-      static OfxStatus mutexCreate(OfxMutexHandle *mutex, int /*lockCount*/)
+      static OfxStatus mutexCreate(const OfxMutexHandle */*mutex*/, int /*lockCount*/)
       {
         if (!mutex)
           return kOfxStatFailed;
         // do nothing single threaded
-        *mutex = 0;
+        //mutex = 0;
         return kOfxStatOK;
       }
 
-      static OfxStatus mutexDestroy(const OfxMutexHandle mutex)
+      static OfxStatus mutexDestroy(const OfxMutexHandle /*mutex*/)
       {
         if (mutex != 0)
           return kOfxStatErrBadHandle;
@@ -2634,23 +2615,17 @@ namespace OFX {
         return kOfxStatOK;
       }
 
-      static OfxStatus mutexLock(const OfxMutexHandle mutex){
-        if (mutex != 0)
-          return kOfxStatErrBadHandle;
+      static OfxStatus mutexLock(const OfxMutexHandle /*mutex*/){
         // do nothing single threaded
         return kOfxStatOK;
       }
        
-      static OfxStatus mutexUnLock(const OfxMutexHandle mutex){
-        if (mutex != 0)
-          return kOfxStatErrBadHandle;
+      static OfxStatus mutexUnLock(const OfxMutexHandle /*mutex*/){
         // do nothing single threaded
         return kOfxStatOK;
       }       
 
-      static OfxStatus mutexTryLock(const OfxMutexHandle mutex){
-        if (mutex != 0)
-          return kOfxStatErrBadHandle;
+      static OfxStatus mutexTryLock(const OfxMutexHandle /*mutex*/){
         // do nothing single threaded
         return kOfxStatOK;
       }
@@ -2709,12 +2684,6 @@ namespace OFX {
         { kOfxParamHostPropMaxParameters, Property::eInt, 1, true, "-1" },
         { kOfxParamHostPropMaxPages, Property::eInt, 1, true, "0" },
         { kOfxParamHostPropPageRowColumnCount, Property::eInt, 2, true, "0" },
-        { kOfxImageEffectInstancePropSequentialRender, Property::eInt, 1, true, "0" }, // OFX 1.2
-#ifdef OFX_SUPPORTS_OPENGLRENDER
-        { kOfxImageEffectPropOpenGLRenderSupported, Property::eString, 1, true, "false"}, // OFX 1.3
-#endif
-        { kOfxImageEffectPropRenderQualityDraft, Property::eInt, 1, true, "0" }, // OFX 1.4
-        { kOfxImageEffectHostPropNativeOrigin, Property::eString, 0, true, kOfxHostNativeOriginBottomLeft }, // OFX 1.4
         Property::propSpecEnd
       };    
 

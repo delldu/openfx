@@ -60,7 +60,7 @@ namespace OFX {
         { kOfxImageClipPropOptional, Property::eInt, 1, false, "0" },
         { kOfxImageClipPropIsMask,   Property::eInt, 1, false, "0" },
         { kOfxImageClipPropFieldExtraction, Property::eString, 1, false, kOfxImageFieldDoubled },
-        { kOfxImageEffectPropSupportsTiles,   Property::eInt, 1, false, "1" },
+        { kOfxImageEffectPropSupportsTiles,   Property::eInt, 1, false, "1" },  
         Property::propSpecEnd,
       };
       
@@ -249,7 +249,7 @@ namespace OFX {
 
       // don't know what to do
       void ClipInstance::reset(const std::string &/*name*/) OFX_EXCEPTION_SPEC {
-        //printf("failing in %s\n", __PRETTY_FUNCTION__);
+        printf("failing in %s\n", __PRETTY_FUNCTION__);
         throw Property::Exception(kOfxStatErrMissingHostFeature);
       }
 

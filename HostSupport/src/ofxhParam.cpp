@@ -220,9 +220,6 @@ namespace OFX {
         { kOfxParamTypeGroup,     Property::eNone,   0 },
         { kOfxParamTypePage,      Property::eNone,   0 },
         { kOfxParamTypePushButton,Property::eNone,   0 },
-#ifdef OFX_SUPPORTS_PARAMETRIC
-        { kOfxParamTypeParametric,Property::eDouble, 0 },
-#endif
         { 0,                      Property::eNone,   0  }
       };
       
@@ -277,7 +274,7 @@ namespace OFX {
           { kOfxParamPropLayoutHint, Property::eInt, 1, false, "0" }, //!< Nuke extension (@Alex on 08/16/13)
           { kOfxParamPropLayoutPadWidth, Property::eInt, 1, false, "0"}, //!< Nuke extension (@Alex on 08/16/13)
 #endif
-          { 0 }
+          Property::propSpecEnd
         };
         
         _properties.addProperties(universalProps);
@@ -294,23 +291,23 @@ namespace OFX {
              static Property::PropSpec allString[] = {
                { kOfxParamPropStringMode,  Property::eString,    1,    false,    kOfxParamStringIsSingleLine },
                  { kOfxParamPropStringFilePathExists, Property::eInt,    1,    false,    "1" },
-               { 0 }
+               Property::propSpecEnd
              };
 
              static Property::PropSpec allChoice[] = {
                { kOfxParamPropChoiceOption,    Property::eString,    0,    false,    "" },
                  // { kOfxParamPropChoiceLabelOption, Property::eString, 0, false, "" }//<< @Alex: add this to support tuttle choice param extension
-               { 0 }
+               Property::propSpecEnd
              };
 
              static Property::PropSpec allCustom[] = {
                { kOfxParamPropCustomInterpCallbackV1,    Property::ePointer,    1,    false,    0 },
-               { 0 },
+               Property::propSpecEnd
              };
 
              static Property::PropSpec allPage[] = {
                { kOfxParamPropPageChild,    Property::eString,    0,    false,    "" },
-               { 0 }
+               Property::propSpecEnd
              };
 
              if (propType != Property::eNone) {
@@ -348,7 +345,7 @@ namespace OFX {
 #ifdef OFX_EXTENSIONS_NUKE
                      { kFnOfxParamPropGroupIsTab, Property::eInt, 1, false, "0" }, //!< Nuke extension (@Alex on 08/16/13)
 #endif
-                     { 0 }
+                     Property::propSpecEnd
                  };
                  getProperties().addProperties(allGroup);
              }
@@ -371,7 +368,7 @@ namespace OFX {
       }
 
       /// add standard properties to a value holding param
-      void Descriptor::addValueParamProps(const std::string &type, Property::TypeEnum valueType, int dim)
+      void Descriptor::addValueParamProps(const std::string &/*type*/, Property::TypeEnum valueType, int dim)
       {
         static const Property::PropSpec invariantProps[] = {
           { kOfxParamPropIsAnimating, Property::eInt, 1,       false, "0" },
@@ -452,7 +449,6 @@ namespace OFX {
         if(isDoubleParam(type)) {
           static const Property::PropSpec allDouble[] = {
             { kOfxParamPropDoubleType, Property::eString,    1,    false,    kOfxParamDoubleTypePlain },
-            { kOfxParamPropDefaultCoordinateSystem, Property::eString,    1,    false,    kOfxParamCoordinatesCanonical },
             Property::propSpecEnd
           };
           _properties.addProperties(allDouble);
@@ -667,8 +663,13 @@ namespace OFX {
         }
       }
 
-      // copy one parameter to another, with a range (NULL means to copy all animation)
-      OfxStatus Instance::copyFrom(const Instance &/*instance*/, OfxTime /*offset*/, const OfxRangeD* /*range*/) {
+      // copy one parameter to another
+      OfxStatus Instance::copy(const Instance &/*instance*/, OfxTime /*offset*/) {
+        return kOfxStatErrMissingHostFeature; 
+      }
+
+      // copy one parameter to another, with a range
+      OfxStatus Instance::copy(const Instance &/*instance*/, OfxTime /*offset*/, OfxRangeD /*range*/) {
         return kOfxStatErrMissingHostFeature; 
       }
 

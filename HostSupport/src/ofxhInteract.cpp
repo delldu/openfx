@@ -112,7 +112,6 @@ namespace OFX {
         { kOfxInteractPropViewportSize, Property::eDouble, 2, true, "100.0f" },
 #endif
         { kOfxInteractPropSlaveToParam , Property::eString, 0, false, ""},
-        { kOfxInteractPropSuggestedColour , Property::eDouble, 3, true, "1.0f" },
         Property::propSpecEnd
       };
 

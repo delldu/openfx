@@ -399,8 +399,7 @@ namespace OFX {
         int counter = 0;
         for(std::vector<ClipDescriptor*>::const_iterator it=clips.begin();
             it!=clips.end();
-            it++, ++counter)
-          {
+            ++it, ++counter) {
               const std::string &name =  (*it)->getName();
             // foreach clip descriptor make a clip instance
             ClipInstance* instance = newClipInstance(this, *it, counter);   
@@ -1147,13 +1146,9 @@ namespace OFX {
           for(std::map<std::string, ClipInstance*>::iterator it=_clips.begin();
               it!=_clips.end();
               ++it) {
-            if(!it->second->isOutput() ||
-               getContext() == kOfxImageEffectContextGenerator) {
-              if (it->second->isOutput() || it->second->getConnected()) {// needed to be able to fetch the RoD
-					/// @todo tuttle: how to support size on generators... check if this is correct in all cases.
-                OfxRectD roi = it->second->getRegionOfDefinition(time);
-                rois[it->second] = roi;
-              }
+            if(!it->second->isOutput()) {
+              OfxRectD roi = it->second->getRegionOfDefinition(time);
+              rois[it->second] = roi;
             }
           }
           stat = kOfxStatOK;
@@ -1176,8 +1171,7 @@ namespace OFX {
           for(std::map<std::string, ClipInstance*>::iterator it=_clips.begin();
               it!=_clips.end();
               ++it) {
-            if(!it->second->isOutput() ||
-               getContext() == kOfxImageEffectContextGenerator) {
+            if(!it->second->isOutput()) {
               Property::PropSpec s;
               std::string name = "OfxImageClipPropRoI_"+it->first;
             
@@ -1224,9 +1218,15 @@ namespace OFX {
           for(std::map<std::string, ClipInstance*>::iterator it=_clips.begin();
               it!=_clips.end();
               ++it) {
-              if(!it->second->isOutput() ||
-               getContext() == kOfxImageEffectContextGenerator) {
-                if (it->second->isOutput() || it->second->getConnected()) { // needed to be able to fetch the RoD
+              if(!it->second->isOutput()) {
+                OfxRectD rod = it->second->getRegionOfDefinition(time);
+                if(it->second->supportsTiles()) {
+                  std::string name = "OfxImageClipPropRoI_"+it->first;
+                  OfxRectD thisRoi;
+                  thisRoi.x1 = outArgs.getDoubleProperty(name,0);
+                  thisRoi.y1 = outArgs.getDoubleProperty(name,1);
+                  thisRoi.x2 = outArgs.getDoubleProperty(name,2);
+                  thisRoi.y2 = outArgs.getDoubleProperty(name,3);
                   
                   if(it->second->supportsTiles()) {
                     std::string name = "OfxImageClipPropRoI_"+it->first;

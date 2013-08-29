@@ -121,7 +121,7 @@ SOURCE=.\ofxsPropertyValidation.cpp
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
-SOURCE=.\ofxsSupportPrivate.h
+SOURCE=.\ofxsSupportPrivate.H
 # End Source File
 # End Group
 # End Target

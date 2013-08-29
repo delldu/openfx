@@ -46,8 +46,6 @@ The log file is written to using printf style functions, rather than via c++ ios
 #include <cstdlib>
 #include <string>
 
-#include "ofxsLog.h"
-
 namespace OFX {
   namespace Log {
 

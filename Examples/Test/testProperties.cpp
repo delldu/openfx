@@ -747,7 +747,8 @@ int
 PropertySetDescription::intPropValue(const std::string &name, int idx)
 {
   PropertyDescription *desc = 0;
-  if(desc == findDescription(name)) {
+  desc = findDescription(name);
+  if(desc) {
     if(idx < desc->_nCurrentVals) {
       return int(desc->_currentVals[idx]);
     }

@@ -1705,12 +1705,8 @@ namespace OFX {
         Descriptor *desc = paramSetDescriptor->paramDefine(paramType, name);
 
         if(desc) {
-          if (propertySet)
-            *propertySet = desc->getPropHandle();
-          // desc is still referenced by _paramList and _paramMap
-#         ifdef OFX_DEBUG_PARAMETERS
-          std::cout << ' ' << StatStr(kOfxStatOK) << std::endl;
-#         endif
+          *propertySet = desc->getPropHandle();
+          delete desc;
           return kOfxStatOK;
         } else {
 #         ifdef OFX_DEBUG_PARAMETERS

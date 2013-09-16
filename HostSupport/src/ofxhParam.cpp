@@ -1706,7 +1706,7 @@ namespace OFX {
 
         if(desc) {
           *propertySet = desc->getPropHandle();
-          delete desc;
+          // desc is still referenced by _paramList and _paramMap
           return kOfxStatOK;
         } else {
 #         ifdef OFX_DEBUG_PARAMETERS

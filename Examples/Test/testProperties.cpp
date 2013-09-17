@@ -36,7 +36,6 @@ run it through a c beautifier or emacs auto formating, automagic indenting will 
 #include <string> // stl strings
 #include <map> // stl maps
 #include <stdexcept>
-#include <iostream>
 #include "ofxImageEffect.h"
 #include "ofxMemory.h"
 #include "ofxMultiThread.h"

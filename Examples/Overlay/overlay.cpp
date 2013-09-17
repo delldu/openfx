@@ -50,7 +50,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #endif
 #include <cmath>
 #include <stdexcept>
-#include <new>
 #include "ofxImageEffect.h"
 #include "ofxMemory.h"
 #include "ofxMultiThread.h"
@@ -408,9 +407,6 @@ pluginMain(const char *action, const void *handle, OfxPropertySetHandle inArgs, 
   }
   else if(strcmp(action, kOfxImageEffectActionIsIdentity) == 0) {
     return isIdentity(effect, inArgs, outArgs);
-  }    
-  else if(strcmp(action, kOfxImageEffectActionRender) == 0) {
-    return render(effect, inArgs, outArgs);
   }    
   } catch (std::bad_alloc) {
     // catch memory

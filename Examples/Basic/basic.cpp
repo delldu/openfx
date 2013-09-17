@@ -50,7 +50,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     - call back functions for user edited events on parameters
  */
 #include <stdexcept>
-#include <new>
 #include <cstring>
 #include "ofxImageEffect.h"
 #include "ofxMemory.h"
@@ -818,9 +817,7 @@ defineScaleParam( OfxParamSetHandle effectParams,
   OfxPropertySetHandle props;
   OfxStatus stat;
   stat = gParamHost->paramDefine(effectParams, kOfxParamTypeDouble, name, &props);
-  if (stat != kOfxStatOK) {
-    throw OfxuStatusException(stat);
-  }
+
   // say we are a scaling parameter
   gPropHost->propSetString(props, kOfxParamPropDoubleType, 0, kOfxParamDoubleTypeScale);
   gPropHost->propSetDouble(props, kOfxParamPropDefault, 0, 1.0);

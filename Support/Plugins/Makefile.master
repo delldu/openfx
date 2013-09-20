@@ -127,14 +127,10 @@ all: $(OBJECTPATH)/$(PLUGINNAME).ofx.bundle
 	
   $(OBJECTPATH)/$(PLUGINNAME).ofx : $(OBJECTPATH)/$(PLUGINOBJECTS) $(SUPPORTOBJECTS)
 	mkdir -p $(OBJECTPATH)/
-	$(CXX) $^ $(LINKFLAGS) $(LDFLAGS_ADD) -o $@
-
-$(OBJECTPATH)/$(PLUGINNAME).ofx.bundle: $(OBJECTPATH)/$(PLUGINNAME).ofx
-	mkdir -p  $@/Contents/$(ARCH)
-	cp  $^  $@/Contents/$(ARCH)
-	cp  Info.plist  $@/Contents/
-	if [ -n "$(RESOURCES)" ]; then mkdir -p $@/Contents/Resources; cp $(RESOURCES)  $@/Contents/Resources; fi
-	if [ $(DEBUGNAME) = "release" -a $(ARCH) = "MacOS" ]; then bash $(PATHTOROOT)/include/osxDeploy.sh $@ $(PLUGINNAME).ofx; fi
+	g++ $(OBJECTPATH)/$(PLUGINOBJECTS) $(SUPPORTOBJECTS) $(LINKFLAGS) -o $(OBJECTPATH)/$(PLUGINNAME).ofx
+	mkdir -p  $(OBJECTPATH)/$(PLUGINNAME).ofx.bundle/Contents/$(ARCH)
+	cp  $(OBJECTPATH)/$(PLUGINNAME).ofx  $(OBJECTPATH)/$(PLUGINNAME).ofx.bundle/Contents/$(ARCH)
+	cp  Info.plist  $(OBJECTPATH)/$(PLUGINNAME).ofx.bundle/Contents/
 
 clean :
 	rm -rf $(SUPPORTOBJECTS) $(OBJECTPATH)/ $(PATHTOROOT)/Library/$(OBJECTPATH)/ 

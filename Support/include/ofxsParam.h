@@ -144,41 +144,64 @@ namespace OFX {
         eStringTypeFilePath,
         eStringTypeDirectoryPath,
         eStringTypeLabel,
+#ifdef OFX_EXTENSIONS_VEGAS
         eStringTypeRichTextFormat
+#endif
     };
 
     /** @brief Enumerates the differing types of double params */
     enum DoubleTypeEnum {
-        eDoubleTypePlain, //!< parameter has no special interpretation
-        eDoubleTypeAngle, //!< parameter is to be interpretted as an angle
-        eDoubleTypeScale, //!< parameter is to be interpretted as a scale factor
-        eDoubleTypeTime, //!< parameter represents a time value (1D only)
-        eDoubleTypeAbsoluteTime, //!< parameter represents an absolute time value (1D only),
-        eDoubleTypeX, //!< a size in the X dimension dimension (1D only), new for 1.2
-        eDoubleTypeXAbsolute, //!< a position in the X dimension (1D only), new for 1.2
-        eDoubleTypeY, //!< a size in the Y dimension dimension (1D only), new for 1.2
-        eDoubleTypeYAbsolute, //!< a position in the X dimension (1D only), new for 1.2
-        eDoubleTypeXY, //!< a size in the X and Y dimension (2D only), new for 1.2
-        eDoubleTypeXYAbsolute, //!< a position in the X and Y dimension (2D only), new for 1.2
-#ifdef kOfxParamDoubleTypeNormalisedX
-        eDoubleTypeNormalisedX, //!< normalised size with respect to the project's X dimension (1D only), deprecated for 1.2
-        eDoubleTypeNormalisedY, //!< normalised absolute position on the X axis (1D only), deprecated for 1.2
-        eDoubleTypeNormalisedXAbsolute, //!< normalised size wrt to the project's Y dimension (1D only), deprecated for 1.2
-        eDoubleTypeNormalisedYAbsolute, //!< normalised absolute position on the Y axis (1D only), deprecated for 1.2
-        eDoubleTypeNormalisedXY, //!< normalised to the project's X and Y size (2D only), deprecated for 1.2
-        eDoubleTypeNormalisedXYAbsolute, //!< normalised to the projects X and Y size, and is an absolute position on the image plane, deprecated for 1.2
+        eDoubleTypePlain,
+        eDoubleTypeAngle,
+        eDoubleTypeScale,
+        eDoubleTypeTime,
+        eDoubleTypeAbsoluteTime,
+        eDoubleTypeNormalisedX,
+        eDoubleTypeNormalisedY,
+        eDoubleTypeNormalisedXAbsolute,
+        eDoubleTypeNormalisedYAbsolute,
+        eDoubleTypeNormalisedXY,
+        eDoubleTypeNormalisedXYAbsolute,    
+#ifdef OFX_EXTENSIONS_VEGAS
+        eDoubleTypePolar,
+        eDoubleTypeChrominance 
 #endif
     };
 
-    /** @brief Enumerates the differing types of coordinate system for default values */
-    enum DefaultCoordinateSystemEnum {
-        eCoordinatesCanonical, //!< canonical coordinate system
-        eCoordinatesNormalised, //!< normalized coordinate system
+#ifdef OFX_EXTENSIONS_VEGAS
+    /** @brief Enumerates the types of interpolation for vegas keyframes */
+    enum VegasInterpolationEnum {
+      eVegasInterpolationUnknown,
+      eVegasInterpolationLinear, 
+      eVegasInterpolationFast,   
+      eVegasInterpolationSlow,   
+      eVegasInterpolationSmooth, 
+      eVegasInterpolationSharp,  
+      eVegasInterpolationHold,   
+      eVegasInterpolationManual, 
+      eVegasInterpolationSplit
+      };
+
+    /** @brief Enumerates the types of color spaces vegas uses in color UI parameters */
+    enum ColorSpaceEnum {
+      eColorSpaceRGB,
+      eColorSpaceHSV,
+      eColorSpaceHSL,
+      eColorSpaceLab
     };
+#endif
 
     /** @brief turns a ParamTypeEnum into the char * that raw OFX uses */
     const char *
     mapParamTypeEnumToString(ParamTypeEnum v);
+
+#ifdef OFX_EXTENSIONS_VEGAS
+    VegasInterpolationEnum 
+    mapToInterpolationEnum(const std::string &s) throw(std::invalid_argument);
+
+    const char* 
+    mapToInterpolationTypeEnum(OFX::VegasInterpolationEnum type);
+#endif
 
     ////////////////////////////////////////////////////////////////////////////////
     /** @brief Base class for all param descriptors */
@@ -226,6 +249,11 @@ namespace OFX {
 
         /** @brief set the secretness of the param, defaults to false */
         void setIsSecret(bool v);
+
+#ifdef OFX_EXTENSIONS_VEGAS
+        /** @brief set the default expanded of the param, defaults to false */
+        void setParameterExpanded(bool v);
+#endif
 
         /** @brief set the group param that is the parent of this one, default is to be ungrouped at the root level */
         void setParent(const GroupParamDescriptor &v);
@@ -466,8 +494,10 @@ namespace OFX {
         void setDimensionLabels(const std::string &x,
                                 const std::string &y);
 
+#ifdef OFX_EXTENSIONS_VEGAS
         /** @brief set kOfxParamPropUseHostOverlayHandle */
         void setUseHostOverlayHandle(bool v);
+#endif
 
         /** @brief set the default value, default is 0 */
         void setDefault(double x, double y);
@@ -479,6 +509,11 @@ namespace OFX {
         /** @brief set the display min and max, default is to be the same as the range param */
         void setDisplayRange(double minX, double minY,
                             double maxX, double maxY);
+
+#ifdef OFX_EXTENSIONS_VEGAS
+        /** @brief set the color wheel level value, default is 0.75 */
+        void setColorWheelLevel(double x);
+#endif
     };
   
     ////////////////////////////////////////////////////////////////////////////////
@@ -533,14 +568,10 @@ namespace OFX {
 
         /** @brief set the default value */
         void setDefault(double r, double g, double b);
-
-        /** @brief set the hard min/max range, default is 0., 1. */
-        void setRange(double minR, double minG, double minB,
-                      double maxR, double maxG, double maxB);
-
-        /** @brief set the display min and max, default is to be the same as the range param */
-        void setDisplayRange(double minR, double minG, double minB,
-                            double maxR, double maxG, double maxB);
+#ifdef OFX_EXTENSIONS_VEGAS
+        /** @brief set the default UI color space of the RGB param, defaults to eColorSpaceHSV */
+        void setDefaultColorSpace(ColorSpaceEnum v);
+#endif
     };
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -565,14 +596,10 @@ namespace OFX {
 
         /** @brief set the default value */
         void setDefault(double r, double g, double b, double a);
-
-        /** @brief set the hard min/max range, default is 0., 1. */
-        void setRange(double minR, double minG, double minB, double minA,
-                      double maxR, double maxG, double maxB, double maxA);
-
-        /** @brief set the display min and max, default is to be the same as the range param */
-        void setDisplayRange(double minR, double minG, double minB, double minA,
-                            double maxR, double maxG, double maxB, double maxA);
+#ifdef OFX_EXTENSIONS_VEGAS
+        /** @brief set the default UI color space of the RGB param, defaults to eColorSpaceHSV */
+        void setDefaultColorSpace(ColorSpaceEnum v);
+#endif
     };
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -735,7 +762,9 @@ namespace OFX {
         /** @brief set the default value of the param */
         void setDefault(const std::string &v);    
 
+#ifdef OFX_EXTENSIONS_VEGAS
         void setCustomInterpolation(bool v);
+#endif
     };
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -902,11 +931,10 @@ namespace OFX {
         /** @brief whether the param is enabled */
         void setEnabled(bool v);
 
+#ifdef OFX_EXTENSIONS_VEGAS
         /** @brief set the param data ptr */
         void setDataPtr(void* ptr);
-
-        /** @brief fetch the label */
-        void getLabel(std::string &label) const;
+#endif
 
         /** @brief fetch the labels */
         void getLabels(std::string &label, std::string &shortLabel, std::string &longLabel) const;
@@ -917,8 +945,10 @@ namespace OFX {
         /** @brief whether the param is enabled */
         bool getIsEnable(void) const;
     
+#ifdef OFX_EXTENSIONS_VEGAS
         /** @brief get the param data ptr */
         void* getDataPtr(void) const;
+#endif
 
         /** @brief get the param hint */
         std::string getHint(void) const;
@@ -985,8 +1015,13 @@ namespace OFX {
         /** @brief delete all the keys */
         void deleteAllKeys(void);
 
-        /** @brief copy parameter from another, including any animation etc... */
-        void copyFrom(const ValueParam& from, OfxTime dstOffset, const OfxRangeD *frameRange);
+#ifdef OFX_EXTENSIONS_VEGAS
+        /** @brief gets the interpolation type of a key at the given time */
+        VegasInterpolationEnum getKeyInterpolation(double time);
+    
+        /** @brief sets the interpolation type of a key at the given time */
+        void setKeyInterpolation(double time, VegasInterpolationEnum interpolation);
+#endif
     };
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -1503,8 +1538,13 @@ namespace OFX {
         /** @brief set an option */
         void setOption(int item, const std::string &str);
     
+#ifdef OFX_EXTENSIONS_VEGAS
+        /** @brief set an option */
+        void setOption(int item, const std::string &str);
+    
         /** @brief get the option value */
         void getOption(int ix, std::string &v);
+#endif
 
         /** @brief clear all the options so as to add some new ones in */
         void resetOptions(void);
@@ -1578,8 +1618,10 @@ namespace OFX {
         // so it can make one
         friend class ParamSet;
     public :
-        /** @brief whether the initial state of a group is open or closed in a hierarchical layout, defaults to true */
-        bool getIsOpen();
+#ifdef OFX_EXTENSIONS_VEGAS
+        /** @brief set the open of the group defaults to false */
+        void setIsOpen(bool v);
+#endif
     };
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -1626,6 +1668,9 @@ namespace OFX {
 
         /** @brief set value */
         void setValue(const std::string &v);
+#ifdef OFX_EXTENSIONS_VEGAS
+        void setValue(const char* str);
+#endif
 
         /** @brief set value */
         void setValue(const char* str);

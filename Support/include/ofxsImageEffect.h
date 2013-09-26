@@ -48,10 +48,17 @@ of the direct OFX objects and any library side only functions.
 #include <memory>
 #include "ofxsParam.h"
 #include "ofxsInteract.h"
+#ifdef OFX_EXTENSIONS_VEGAS
+#if defined(WIN32) || defined(WIN64)
+#include "ofxsHWNDInteract.h"
+#endif
+#endif
 #include "ofxsMessage.h"
 #include "ofxProgress.h"
 #include "ofxTimeLine.h"
-#include "ofxParametricParam.h"
+#ifdef OFX_EXTENSIONS_VEGAS
+#include "ofxSonyVegas.h"
+#endif
 
 /** @brief Nasty macro used to define empty protected copy ctors and assign ops */
 #define mDeclareProtectedAssignAndCC(CLASS) \
@@ -71,10 +78,12 @@ namespace OFX
       OfxPropertySetHandle   outArgsRaw,
       const char* plugname);
 
-    OfxStatus customParamInterpolationV1Entry(
+#ifdef OFX_EXTENSIONS_VEGAS
+    OfxStatus customParamIterpolationV1Entry(
       const void*            handleRaw,
       OfxPropertySetHandle   inArgsRaw,
       OfxPropertySetHandle   outArgsRaw);
+#endif
   }
 }
 
@@ -108,6 +117,11 @@ namespace OFX {
     eBitDepthHalf,
     eBitDepthFloat,
     eBitDepthCustom, ///< some non standard bit depth
+#ifdef OFX_EXTENSIONS_VEGAS
+    eBitDepthUByteBGRA,   /// added support for sony vegas bgra ordered pixels
+    eBitDepthUShortBGRA,
+    eBitDepthFloatBGRA,
+#endif
   };
 
   /** @brief Enumerates the component types supported */
@@ -139,39 +153,48 @@ namespace OFX {
     eFieldDoubled /**< @brief image that consists of a single field, but each scan line is double, and so is full height  */
   };
 
+#ifdef OFX_EXTENSIONS_VEGAS
+  /** @brief Enumerates the pixel order in an image */
+  enum PixelOrderEnum {
+    ePixelOrderRGBA,   /**< @brief pixel order is RGBA (ofx typical) */
+    ePixelOrderBGRA    /**< @brief pixel order is BGRA (added for Sony Vegas) */
+  };
+#endif
+
   enum PreMultiplicationEnum { eImageOpaque,          /**< @brief the image is opaque and so has no premultiplication state */
     eImagePreMultiplied,   /**< @brief the image is premultiplied by it's alpha */
     eImageUnPreMultiplied, /**< @brief the image is unpremultiplied */
   };
 
-  enum NativeOriginEnum {
-    eNativeOriginBottomLeft,
-    eNativeOriginTopLeft,
-    eNativeOriginCenter
-  };
+#ifdef OFX_EXTENSIONS_VEGAS
+  /** @brief Enumerates the vegas contexts a plugin is being used in */
+  enum VegasRenderQualityEnum {
+    eVegasRenderQualityUnknown,
+    eVegasRenderQualityDraft,
+    eVegasRenderQualityPreview,
+    eVegasRenderQualityGood,
+    eVegasRenderQualityBest
+    };
 
-  /** @brief turns a field string into and enum */
-  FieldEnum mapStrToFieldEnum(const std::string &str)  throw(std::invalid_argument);
+  /** @brief Enumerates the vegas contexts a plugin is being used in */
+  enum VegasContextEnum {
+    eVegasContextUnknown,
+    eVegasContextMedia,
+    eVegasContextTrack,
+    eVegasContextEvent,
+    eVegasContextEventFadeIn,
+    eVegasContextEventFadeOut,
+    eVegasContextProject,
+    eVegasContextGenerator
+    };
 
-  ////////////////////////////////////////////////////////////////////////////////
-  /** @brief map a std::string to a context enum */
-  ContextEnum mapToContextEnum(const std::string &s) throw(std::invalid_argument);
-
-  const char* mapContextEnumToStr(ContextEnum context) throw(std::invalid_argument);
-
-  const char* mapMessageTypeEnumToStr(OFX::Message::MessageTypeEnum type);
-
-  OFX::Message::MessageReplyEnum mapToMessageReplyEnum(OfxStatus stat);
-
-  InstanceChangeReason mapToInstanceChangedReason(const std::string &s) throw(std::invalid_argument);
-
-  BitDepthEnum mapStrToBitDepthEnum(const std::string &str) throw(std::invalid_argument);
-
-  const char* mapBitDepthEnumToStr(BitDepthEnum bitDepth) throw(std::invalid_argument);
-
-  PixelComponentEnum mapStrToPixelComponentEnum(const std::string &str) throw(std::invalid_argument);
-
-  const char* mapPixelComponentEnumToStr(PixelComponentEnum pixelComponent) throw(std::invalid_argument);
+  /** @brief Enumerates the hint for vegas to display thumbnails */
+  enum VegasPresetThumbnailEnum {
+    eVegasPresetThumbnailDefault,
+    eVegasPresetThumbnailSolidImage,
+    eVegasPresetThumbnailImageWithAlpha
+    };
+#endif
 
   class PluginFactory
   {
@@ -211,6 +234,48 @@ namespace OFX {
     { 
       return OFX::Private::mainEntryStr(action, handle, in, out, _uid.c_str());
     }
+#ifdef OFX_EXTENSIONS_VEGAS
+#if 0
+          static const char* mapToMessageTypeEnum(OFX::Message::MessageTypeEnum type)
+          {
+            if(type == OFX::Message::eMessageFatal)
+              return kOfxMessageFatal;
+            else if(type == OFX::Message::eMessageError)
+              return kOfxMessageError;
+            else if(type == OFX::Message::eMessageMessage)
+              return kOfxMessageMessage;
+            else if(type == OFX::Message::eMessageLog)
+              return kOfxMessageLog;
+            else if(type == OFX::Message::eMessageQuestion)
+              return kOfxMessageQuestion;
+            OFX::Log::error(true, "Unknown message type enum '%d'", type);
+            return 0;
+          }
+
+          static OFX::Message::MessageReplyEnum mapToMessageReplyEnum(OfxStatus stat)
+          {
+            if(stat == kOfxStatOK)
+              return OFX::Message::eMessageReplyOK;
+            else if(stat == kOfxStatReplyYes)
+              return OFX::Message::eMessageReplyYes;
+            else if(stat == kOfxStatReplyNo)
+              return OFX::Message::eMessageReplyNo;
+            else if(stat == kOfxStatFailed)
+              return OFX::Message::eMessageReplyFailed;
+            OFX::Log::error(true, "Unknown message reply status enum '%d'", stat);
+            return OFX::Message::eMessageReplyFailed;
+          }
+
+      static OFX::Message::MessageReplyEnum sendMessage(OFX::Message::MessageTypeEnum type, const std::string& id, const std::string& msg)
+      {   
+        OfxMessageSuiteV1* messageSuite;
+        messageSuite   = (OfxMessageSuiteV1 *)     fetchSuite(kOfxMessageSuite, 1);
+        //OfxStatus stat = messageSuite->message(_effectHandle, mapToMessageTypeEnum(type), id.c_str(), msg.c_str());
+        OfxStatus stat = messageSuite->message(NULL, mapToMessageTypeEnum(type), id.c_str(), msg.c_str());
+        return mapToMessageReplyEnum(stat);
+      }
+#endif
+#endif
 
     static std::string _uid;
     std::string _id;
@@ -300,18 +365,9 @@ namespace OFX {
     PixelDepthArray _supportedPixelDepths;
     bool supportsProgressSuite;
     bool supportsTimeLineSuite;
+#ifdef OFX_EXTENSIONS_VEGAS
     bool supportsMessageSuiteV2;
-
-  public:
-    bool supportsPixelComponent(const PixelComponentEnum component) const;
-    bool supportsBitDepth( const BitDepthEnum bitDepth) const;
-    bool supportsContext(const ContextEnum context) const;
-	
-    /** @return default pixel depth supported by host application. */
-    BitDepthEnum getDefaultPixelDepth() const;
-	
-    /** @return default pixel component supported by host application. */
-    PixelComponentEnum getDefaultPixelComponent() const;
+#endif
   };
 
 
@@ -399,6 +455,11 @@ namespace OFX {
     std::map<std::string, std::string> _clipFrameRangePropNames;
 
     std::auto_ptr<EffectOverlayDescriptor> _overlayDescriptor;
+#ifdef OFX_EXTENSIONS_VEGAS
+#if defined(WIN32) || defined(WIN64)
+    std::auto_ptr<HWNDInteractDescriptor>  _hwndInteractDescriptor;
+#endif // #if defined(WIN32) || defined(WIN64)
+#endif
   public :
     /** @brief ctor */
     ImageEffectDescriptor(OfxImageEffectHandle handle);
@@ -422,8 +483,10 @@ namespace OFX {
     /** @brief Set the plugin grouping, defaults to "" */
     void setPluginGrouping(const std::string &group);
 
+#ifdef OFX_EXTENSIONS_VEGAS
     /** @brief Set the plugin description, defaults to "" */
     void setPluginDescription(const std::string &description);
+#endif
 
     /** @brief Add a context to those supported, defaults to none, must be called at least once */
     void addSupportedContext(ContextEnum v);
@@ -464,13 +527,17 @@ namespace OFX {
     /** @brief If the slave  param changes the clip preferences need to be re-evaluated */
     void addClipPreferencesSlaveParam(ParamDescriptor &p);
 
-#ifdef OFX_SUPPORTS_OPENGLRENDER
-    /** @brief Does the plugin support OpenGL accelerated rendering (but is also capable of CPU rendering) ? */
-    void setSupportsOpenGLRender(bool v);
+#ifdef OFX_EXTENSIONS_VEGAS
+    /** @brief Add a guid upgrade path, defaults to none, must be called at least once */
+    void addVegasUpgradePath(const std::string &guidString);
 
-    /** @brief Does the plugin require OpenGL accelerated rendering ? */
-    void setNeedsOpenGLRender(bool v);
-    void addOpenGLBitDepth(BitDepthEnum bitDepth);
+    /** @brief sets the path to a help file, defaults to none, must be called at least once */
+    void setHelpPath(const std::string &helpPathString);
+
+    /** @brief sets the context ID to a help file if it's a .chm file, defaults to none, must be called at least once */
+    void setHelpContextID(int helpContextID);
+
+    void setPresetThumbnailHint(VegasPresetThumbnailEnum thumbnailHint);
 #endif
 
     /** @brief Create a clip, only callable from describe in context 
@@ -490,7 +557,14 @@ namespace OFX {
 
     /** @brief override this to create an interact for the effect */
     virtual void setOverlayInteractDescriptor(EffectOverlayDescriptor* desc);
-  };
+
+#ifdef OFX_EXTENSIONS_VEGAS
+#if defined(WIN32) || defined(WIN64)
+    /** @brief override this to create an hwnd interact for the effect */
+    virtual void setHWNDInteractDescriptor(HWNDInteractDescriptor* desc);
+#endif // #if defined(WIN32) || defined(WIN64)
+#endif
+  };  
 
   ////////////////////////////////////////////////////////////////////////////////
   /** @brief Wraps up an image */
@@ -646,6 +720,10 @@ namespace OFX {
     /** @brief so one can be made */
     friend class ImageEffect;
 
+#ifdef OFX_EXTENSIONS_VEGAS
+    PixelOrderEnum _pixelOrder;              /**< @brief the pixel order */
+#endif
+
   public :
     /// get the underlying property set on this clip
     const PropertySet &getPropertySet() const {return _clipProps;}
@@ -716,6 +794,11 @@ namespace OFX {
     /** @brief get the RoD for this clip in the cannonical coordinate system */
     OfxRectD getRegionOfDefinition(double t);
 
+#ifdef OFX_EXTENSIONS_VEGAS
+    /** @brief get the pixel order of this image */
+    PixelOrderEnum getPixelOrder(void) const;
+#endif
+
     /** @brief fetch an image
 
     When finished with, the client code must delete the image.
@@ -723,6 +806,16 @@ namespace OFX {
     If the same image is fetched twice, it must be deleted in each case, they will not be the same pointer.
     */
     Image *fetchImage(double t);
+
+#ifdef OFX_EXTENSIONS_VEGAS
+    /** @brief fetch an image
+
+    When finished with, the client code must delete the image.
+
+    If the same image is fetched twice, it must be deleted in each case, they will not be the same pointer.
+    */
+    Image *fetchStereoscopicImage(double t, int view);
+#endif
 
     /** @brief fetch an image, with a specific region in cannonical coordinates
 
@@ -778,20 +871,11 @@ namespace OFX {
     OfxPointD renderScale;
     OfxRectI  renderWindow;
     FieldEnum fieldToRender;
-#ifdef OFX_SUPPORTS_OPENGLRENDER
-    bool      openGLEnabled;
+#ifdef OFX_EXTENSIONS_VEGAS
+    int         viewsToRender;      /// default is 1, for stereoscopic 3d: 2
+    int         renderView;         /// default is 0, for s3d left eye: 0, right eye: 1
+    VegasRenderQualityEnum renderQuality;
 #endif
-    bool      sequentialRenderStatus;
-    bool      interactiveRenderStatus;
-    bool      renderQualityDraft;
-  };
-
-  /** @brief POD struct to pass rendering arguments into @ref OFX::ImageEffect::isIdentity */
-  struct IsIdentityArguments {
-    double    time;
-    OfxPointD renderScale;
-    OfxRectI  renderWindow;
-    FieldEnum fieldToRender;
   };
 
   /** @brief POD struct to pass arguments into  @ref OFX::ImageEffect::render */
@@ -830,6 +914,29 @@ namespace OFX {
     OfxPointD renderScale;
     OfxRectD  regionOfInterest;
   };
+
+#ifdef OFX_EXTENSIONS_VEGAS
+  /** @brief POD struct to pass arguments into @ref OFX::ImageEffect::upliftVegasKeyframes */
+  class SonyVegasUpliftArguments {
+  protected:
+      /** @brief properties for this clip */
+      PropertySet _argProps;
+
+  public:
+
+      SonyVegasUpliftArguments(PropertySet args);
+
+      std::string  guidUplift;
+      int          keyframeCount;
+      void*        commonData;
+      int          commonDataSize;
+
+      void*  getKeyframeData     (int keyframeIndex) const;
+      int    getKeyframeDataSize (int keyframeIndex) const;
+      double getKeyframeTime     (int keyframeIndex) const;
+      VegasInterpolationEnum getKeyframeInterpolation (int keyframeIndex) const;
+  };
+#endif
 
   /** @brief Class used to set regions of interest on a clip in @ref OFX::ImageEffect::getRegionsOfInterest
 
@@ -949,9 +1056,8 @@ namespace OFX {
     OfxPointD            renderScale; /**< the renderscale on the instance */
   };
 
-  /** @brief struct to pass arguments into @ref OFX::ImageEffect::interpolateCustomParam.
-  It is non-POD (it contains std::string), but it is passed as const ref, so that does
-  not matter */
+#ifdef OFX_EXTENSIONS_VEGAS
+  /** @brief POD struct to pass arguments into @ref OFX::ImageEffect::interpolateCustomParam */
   struct InterpolateCustomArgs {
     double      time;
     std::string value1;
@@ -960,6 +1066,7 @@ namespace OFX {
     double      keytime2;
     double      amount;
   };
+#endif
 
   ////////////////////////////////////////////////////////////////////////////////
   /** @brief Wraps up an effect instance, plugin implementations need to inherit from this */
@@ -1005,6 +1112,11 @@ namespace OFX {
 
     /** @brief the context this effect was instantiate in */
     ContextEnum getContext(void) const;
+
+#ifdef OFX_EXTENSIONS_VEGAS
+    /** @brief the Vegas context this effect exists in */
+    VegasContextEnum getVegasContext(void);
+#endif
 
     /** @brief size of the project */
     OfxPointD getProjectSize(void) const;
@@ -1052,8 +1164,10 @@ namespace OFX {
 
     OFX::Message::MessageReplyEnum sendMessage(OFX::Message::MessageTypeEnum type, const std::string& id, const std::string& msg);
 
+#ifdef OFX_EXTENSIONS_VEGAS
       OFX::Message::MessageReplyEnum setPersistentMessage(OFX::Message::MessageTypeEnum type, const std::string& id, const std::string& msg);
       OFX::Message::MessageReplyEnum clearPersistentMessage();
+#endif
 
     /** @brief Fetch the named clip from this instance
 
@@ -1149,8 +1263,19 @@ namespace OFX {
     /** @brief the effect has just had some values changed */
     virtual void endChanged(InstanceChangeReason reason);
 
+#ifdef OFX_EXTENSIONS_VEGAS
+    /** @brief Vegas requires conversion of keyframe data */
+    virtual void upliftVegasKeyframes(const SonyVegasUpliftArguments &upliftInfo);
+
+    /** @brief Vegas invokes about dialog */
+    virtual bool invokeAbout();
+
+    /** @brief Vegas invokes help dialog */
+    virtual bool invokeHelp();
+
     /** @brief called when a custom param needs to be interpolated */
     virtual std::string interpolateCustomParam(const InterpolateCustomArgs &args, const std::string &paramName);
+#endif
 
     /** @brief what is the time domain of this effect, valid only in the general context
 
@@ -1168,6 +1293,10 @@ namespace OFX {
 
     /// Start doing progress.
     void progressStart(const std::string &message, const std::string &messageid = "");
+
+#ifdef OFX_EXTENSIONS_VEGAS
+    void progressStart(const std::string &id, const std::string &message);
+#endif
 
     /// finish yer progress
     void progressEnd();

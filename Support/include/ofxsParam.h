@@ -53,6 +53,11 @@ each represent the actions that can be carried out on those particular OFX objec
 #include <memory>
 #include "ofxsCore.h"
 
+#ifdef OFX_EXTENSIONS_NUKE
+#include "nuke/camera.h"
+#include "nuke/fnPublicOfxExtensions.h"
+#endif
+
 /** @brief Nasty macro used to define empty protected copy ctors and assign ops */
 #define mDeclareProtectedAssignAndCC(CLASS) \
   CLASS &operator=(const CLASS &) {assert(false); return *this;}	\
@@ -125,6 +130,9 @@ namespace OFX {
                         ePageParam,
                         ePushButtonParam,
                         eParametricParam,
+#ifdef OFX_EXTENSIONS_NUKE
+                        eCameraParam,
+#endif
                         };
 
     /** @brief Enumerates the different types of cache invalidation */
@@ -167,6 +175,14 @@ namespace OFX {
         eDoubleTypeChrominance 
 #endif
     };
+
+#ifdef OFX_EXTENSIONS_NUKE
+    enum ELayoutHint {
+      eLayoutHintNormal = kOfxParamPropLayoutHintNormal,
+      eLayoutHintDivider = kOfxParamPropLayoutHintDivider,
+      eLayoutHintNoNewLine = kOfxParamPropLayoutHintNoNewLine
+    };
+#endif
 
 #ifdef OFX_EXTENSIONS_VEGAS
     /** @brief Enumerates the types of interpolation for vegas keyframes */
@@ -264,9 +280,9 @@ namespace OFX {
         /** @brief whether the param is enabled, defaults to true */
         void setEnabled(bool v);
 
-        bool getHostHasNativeOverlayHandle() const;
-        
-        void setUseHostNativeOverlayHandle(bool use);
+#ifdef OFX_EXTENSIONS_NUKE
+        void setLayoutHint( const ELayoutHint layoutHint );
+#endif
     };
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -711,7 +727,7 @@ namespace OFX {
     class ParametricParamDescriptor : public ParamDescriptor
     {
     protected:
-        mDeclareProtectedAssignAndCCBase(ParametricParamDescriptor,ParamDescriptor);
+        mDeclareProtectedAssignAndCC(ParametricParamDescriptor);
         ParametricParamDescriptor(void) {assert(false);}
 
     protected:
@@ -730,6 +746,8 @@ namespace OFX {
         void setDimension( const int dimension );
 
         void setRange( const double min, const double max );
+
+        void setLabel( const std::string& label );
 
         void setDimensionLabel( const std::string& label, const int id );
 
@@ -1699,7 +1717,7 @@ namespace OFX {
     /** @brief Wraps up a parametric param */
     class ParametricParam : public Param {
     private:
-        mDeclareProtectedAssignAndCCBase(ParametricParam,Param);
+        mDeclareProtectedAssignAndCC(ParametricParam);
         ParametricParam(void) {assert( false);}
 
     protected:
@@ -1715,9 +1733,9 @@ namespace OFX {
                         const double parametricPosition);
         int getNControlPoints(const int curveIndex,
                               const OfxTime time);
-        std::pair<double, double> getNthControlPoint(const int curveIndex,
-                                                     const OfxTime time,
-                                                     const int nthCtl);
+        std::pair<double, double> getNthControlPoints(const int curveIndex,
+                                                      const OfxTime time,
+                                                      const int nthCtl);
         void setNthControlPoints(const int curveIndex,
                                  const OfxTime time,
                                  const int nthCtl,
@@ -1738,6 +1756,29 @@ namespace OFX {
                                 const int nthCtl);
         void deleteControlPoint(const int curveIndex);
     };
+
+#ifdef OFX_EXTENSIONS_NUKE
+    ////////////////////////////////////////////////////////////////////////////////
+    /** @brief Wraps up a camera param */
+    class CameraParam : public Param {
+    private:
+        mDeclareProtectedAssignAndCC(CameraParam);
+        CameraParam(void) {assert(false);}
+
+    protected:
+        /** @brief hidden constructor */
+        CameraParam(OfxImageEffectHandle imageEffectHandle, const ParamSet* paramSet, const std::string& name, NukeOfxCameraHandle handle);
+
+        // so it can make one
+        friend class ParamSet;
+            
+    public:
+        Param* getParameter( const std::string& name );
+            
+    private:
+        OfxImageEffectHandle _imageEffectHandle;
+    };
+#endif
 
     ////////////////////////////////////////////////////////////////////////////////
     /** @brief A set of parameters in a plugin instance */
@@ -1760,6 +1801,9 @@ namespace OFX {
 
         /** @brief calls the raw OFX routine to define a param */
         void fetchRawParam(const std::string &name, ParamTypeEnum paramType, OfxParamHandle &handle) const;
+#ifdef OFX_EXTENSIONS_NUKE
+        void fetchRawCameraParam(OfxImageEffectHandle pluginHandle, const std::string& name, NukeOfxCameraHandle& handle) const;
+#endif
 
         /** @brief Fetch a param of the given name and type */
         template <class T> void
@@ -1792,7 +1836,7 @@ namespace OFX {
         // the following function should be specialized for each param type T
         // (see example below with T = CameraParam)
         template<class T> void
-        fetchAttribute(OfxImageEffectHandle /*pluginHandle*/, const std::string& /*name*/, T * &/*paramPtr*/) const
+        fetchAttribute(OfxImageEffectHandle pluginHandle, const std::string& name, T * &paramPtr) const
         {
             assert(false);
         }
@@ -1865,6 +1909,37 @@ namespace OFX {
         /** @brief Fetch a parametric param */
         ParametricParam* fetchParametricParam(const std::string &name) const;
     };
+#ifdef OFX_EXTENSIONS_NUKE
+    /** @brief Fetch a camera param */
+    template<> inline void
+    ParamSet::fetchAttribute<CameraParam>(OfxImageEffectHandle pluginHandle, const std::string& name, CameraParam * &paramPtr) const
+    {
+        typedef CameraParam T;
+        const ParamTypeEnum paramType = eCameraParam;
+        paramPtr = NULL;
+
+        // have we made it already in this param set and is it an int?
+        if(Param * param  = findPreviouslyFetchedParam(name))
+        {
+            if(param->getType() == paramType)
+            {
+                paramPtr = (T*) param;
+            }
+        }
+        else
+        {
+            // ok define one and add it in
+            NukeOfxCameraHandle paramHandle;
+            fetchRawCameraParam(pluginHandle, name, paramHandle);
+
+            // make out support descriptor class
+            paramPtr = new T(pluginHandle, this, name, paramHandle);
+            
+            // add it to our map of described ones
+            _fetchedParams[name] = paramPtr;
+        }
+    }
+#endif
 };
 
 // undeclare the protected assign and CC macro

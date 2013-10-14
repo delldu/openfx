@@ -30,8 +30,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // ofx
 #include "ofxCore.h"
 #include "ofxImageEffect.h"
-#ifdef OFX_SUPPORTS_PARAMETRIC
-#include "ofxParametricParam.h"
+#ifdef OFX_EXTENSIONS_NUKE
+//nuke extensions (added on 08/16/13 by Alex).
+//We need to add to the rep. the extensions so it finds it automatically.
+#include "nuke/fnPublicOfxExtensions.h"
 #endif
 
 // ofx host
@@ -42,11 +44,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "ofxOld.h" // old plugins may rely on deprecated properties being present
 
 
-#ifdef OFX_EXTENSIONS_NUKE
-//nuke extensions (added on 08/16/13 by Alex).
-//We need to add to the rep. the extensions so it finds it automatically.
-#include <nuke/fnPublicOfxExtensions.h>
-#endif
 
 #include <assert.h>
 #include <float.h>
@@ -271,8 +268,8 @@ namespace OFX {
           { kOfxPropShortLabel, Property::eString, 1, false, cname },
           { kOfxPropLongLabel,  Property::eString, 1, false, cname },
 #ifdef OFX_EXTENSIONS_NUKE
-          { kOfxParamPropLayoutHint, Property::eInt, 1, false, "0" }, //!< Nuke extension (@Alex on 08/16/13)
-          { kOfxParamPropLayoutPadWidth, Property::eInt, 1, false, "0"}, //!< Nuke extension (@Alex on 08/16/13)
+          { kOfxParamPropLayoutHint, Property::eInt, 1, false, "0" },
+          { kOfxParamPropLayoutPadWidth, Property::eInt, 1, false, "0"}, 
 #endif
           Property::propSpecEnd
         };

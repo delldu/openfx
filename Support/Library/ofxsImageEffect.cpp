@@ -153,6 +153,10 @@ namespace OFX {
     OfxMessageSuiteV1     *gMessageSuite = 0;
     OfxProgressSuiteV1     *gProgressSuite = 0;
     OfxTimeLineSuiteV1     *gTimeLineSuite = 0;
+    OfxParametricParameterSuiteV1* gParametricParameterSuite = 0;
+#ifdef OFX_EXTENSIONS_NUKE
+    NukeOfxCameraSuiteV1* gCameraParameterSuite = 0;
+#endif
 #ifdef OFX_EXTENSIONS_VEGAS
 #if defined(WIN32) || defined(WIN64)
     OfxHWNDInteractSuiteV1 *gHWNDInteractSuite = 0;
@@ -1529,6 +1533,16 @@ namespace OFX {
     return newClip;
   }
 
+#ifdef OFX_EXTENSIONS_NUKE
+  /** @brief Fetch a camera param */
+  CameraParam* ImageEffect::fetchCameraParam(const std::string& name) const
+  {
+    CameraParam *paramPtr;
+    fetchAttribute(_effectHandle, name, paramPtr);
+    return paramPtr;
+  }
+#endif
+
   /** @brief does the host want us to abort rendering? */
   bool ImageEffect::abort(void) const
   {
@@ -2048,38 +2062,9 @@ namespace OFX {
         gHostDescription.supportsChoiceAnimation    = hostProps.propGetInt(kOfxParamHostPropSupportsChoiceAnimation) != 0;
         gHostDescription.supportsBooleanAnimation   = hostProps.propGetInt(kOfxParamHostPropSupportsBooleanAnimation) != 0;
         gHostDescription.supportsCustomAnimation    = hostProps.propGetInt(kOfxParamHostPropSupportsCustomAnimation) != 0;
-        gHostDescription.osHandle                   = hostProps.propGetPointer(kOfxPropHostOSHandle, false);
         gHostDescription.supportsParametricParameter = gParametricParameterSuite != 0;
-        gHostDescription.supportsParametricAnimation = hostProps.propGetInt(kOfxParamHostPropSupportsParametricAnimation, false) != 0;
-        gHostDescription.supportsRenderQualityDraft = hostProps.propGetInt(kOfxImageEffectPropRenderQualityDraft, false) != 0; // appeared in OFX 1.4
-        {
-            std::string originStr = hostProps.propGetString(kOfxImageEffectHostPropNativeOrigin, false); // appeared in OFX 1.4
-          if (originStr.empty()) {
-            // from http://openeffects.org/standard_changes/host-origin-hints :
-            // "All this hint does is tell plugin that the host world is different
-            // than OFX. Historically the first two hosts that exhibited this issue
-            // could be Fusion (upper left is 0,0 natively) and Toxic (Center is 0,0)."
-            if (gHostDescription.hostName == "com.eyeonline.Fusion" ||
-                ends_with(gHostDescription.hostName, "Fusion")) {
-              // if host is Fusion, set to TopLeft
-              gHostDescription.nativeOrigin = eNativeOriginTopLeft;
-            } else if (starts_with(gHostDescription.hostName, "Autodesk Toxik") ||
-                       ends_with(gHostDescription.hostName, "Toxik")) {
-              // if host is Toxic, set to Center
-              gHostDescription.nativeOrigin = eNativeOriginCenter;
-            } else {
-              gHostDescription.nativeOrigin = eNativeOriginBottomLeft;
-            }
-          } else if (originStr == kOfxHostNativeOriginBottomLeft) {
-            gHostDescription.nativeOrigin = eNativeOriginBottomLeft;
-          } else if (originStr == kOfxHostNativeOriginTopLeft) {
-            gHostDescription.nativeOrigin = eNativeOriginTopLeft;
-          } else if (originStr == kOfxHostNativeOriginCenter) {
-            gHostDescription.nativeOrigin = eNativeOriginCenter;
-          }
-        }
-#ifdef OFX_SUPPORTS_OPENGLRENDER
-        gHostDescription.supportsOpenGLRender = gOpenGLRenderSuite != 0 && hostProps.propGetString(kOfxImageEffectPropOpenGLRenderSupported, 0, false) == "true";
+#ifdef OFX_EXTENSIONS_NUKE
+        gHostDescription.supportsCameraParameter    = gCameraParameterSuite != 0;
 #endif
         gHostDescription.maxParameters              = hostProps.propGetInt(kOfxParamHostPropMaxParameters);
         gHostDescription.maxPages                   = hostProps.propGetInt(kOfxParamHostPropMaxPages);
@@ -2137,6 +2122,10 @@ namespace OFX {
         gProgressSuiteV1 = (OfxProgressSuiteV1 *)     fetchSuite(kOfxProgressSuite, 1, true);
         gProgressSuiteV2 = (OfxProgressSuiteV2 *)     fetchSuite(kOfxProgressSuite, 2, true);
         gTimeLineSuite   = (OfxTimeLineSuiteV1 *)     fetchSuite(kOfxTimeLineSuite, 1, true);
+        gParametricParameterSuite = (OfxParametricParameterSuiteV1*) fetchSuite(kOfxParametricParameterSuite, 1, true );
+#ifdef OFX_EXTENSIONS_NUKE
+        gCameraParameterSuite = (NukeOfxCameraSuiteV1*) fetchSuite(kNukeOfxCameraSuite, 1, true );
+#endif
 #ifdef OFX_EXTENSIONS_VEGAS
         gMessageSuiteV2 = (OfxMessageSuiteV2 *)     fetchSuite(kOfxMessageSuite, 2, true);
         gVegasProgressSuite   = (OfxVegasProgressSuiteV1 *)     fetchSuite(kOfxVegasProgressSuite, 1, true);
@@ -2196,6 +2185,10 @@ namespace OFX {
         gMessageSuite = 0;
         gMessageSuiteV2 = 0;
         gInteractSuite = 0;
+        gParametricParameterSuite = 0;
+#ifdef OFX_EXTENSIONS_NUKE
+        gCameraParameterSuite = 0;
+#endif
 #ifdef OFX_EXTENSIONS_VEGAS
         gMessageSuiteV2 = 0;
 #if defined(WIN32) || defined(WIN64)

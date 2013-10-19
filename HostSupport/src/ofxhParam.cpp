@@ -1575,6 +1575,7 @@ namespace OFX {
         return stat;
       }
 
+#ifdef OFX_MT_UNSAFE
       ////////////////////////////////////////////////////////////////////////////////
       // string param
       OfxStatus StringInstance::getV(va_list arg)
@@ -1595,6 +1596,7 @@ namespace OFX {
         *value = _returnValue.c_str();
         return stat;
       }
+#endif
       
       /// implementation of var args function
       OfxStatus StringInstance::setV(va_list arg)

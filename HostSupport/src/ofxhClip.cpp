@@ -577,7 +577,7 @@ namespace OFX {
         return rod;
       }
 
-      ImageBase::~ImageBase() {
+      Image::~Image() {
         //assert(_referenceCount <= 0);
       }
 

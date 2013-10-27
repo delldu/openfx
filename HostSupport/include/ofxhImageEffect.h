@@ -579,10 +579,12 @@ namespace OFX {
         virtual OfxStatus renderAction(OfxTime      time,
                                        const std::string &  field,
                                        const OfxRectI &renderRoI,
-                                       OfxPointD   renderScale,
-                                       bool     sequentialRender,
-                                       bool     interactiveRender,
-                                       bool     draftRender
+                                       OfxPointD   renderScale
+#ifdef OFX_EXTENSIONS_VEGAS
+                                       ,
+                                       int view,
+                                       int nViews
+#endif
                                        );
 
         virtual OfxStatus endRenderAction(OfxTime  startFrame,

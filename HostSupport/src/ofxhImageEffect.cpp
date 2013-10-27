@@ -32,6 +32,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // ofx
 #include "ofxCore.h"
 #include "ofxImageEffect.h"
+#ifdef OFX_EXTENSIONS_VEGAS
+#include "ofxSonyVegas.h"
+#endif
 
 // ofx host
 #include "ofxhBinary.h"
@@ -926,17 +929,22 @@ namespace OFX {
       OfxStatus Instance::renderAction(OfxTime      time,
                                        const std::string &  field,
                                        const OfxRectI    &renderRoI,
-                                       OfxPointD   renderScale,
-                                       bool     sequentialRender,
-                                       bool     interactiveRender,
-                                       bool     draftRender
-                                       )
-      {
-        static const Property::PropSpec inStuff[] = {
+                                       OfxPointD   renderScale
+#ifdef OFX_EXTENSIONS_VEGAS
+                                       ,
+                                       int view,
+                                       int nViews
+#endif
+                                       ) {
+        Property::PropSpec stuff[] = {
           { kOfxPropTime, Property::eDouble, 1, true, "0" },
           { kOfxImageEffectPropFieldToRender, Property::eString, 1, true, "" }, 
           { kOfxImageEffectPropRenderWindow, Property::eInt, 4, true, "0" },
           { kOfxImageEffectPropRenderScale, Property::eDouble, 2, true, "0" },
+#ifdef OFX_EXTENSIONS_VEGAS
+          { kOfxImageEffectPropRenderView, Property::eInt, 1, true, "0" },
+          { kOfxImageEffectPropViewsToRender, Property::eInt, 1, true, "1" },
+#endif
           Property::propSpecEnd
         };
 
@@ -946,21 +954,13 @@ namespace OFX {
         inArgs.setDoubleProperty(kOfxPropTime,time);
         inArgs.setIntPropertyN(kOfxImageEffectPropRenderWindow, &renderRoI.x1, 4);
         inArgs.setDoublePropertyN(kOfxImageEffectPropRenderScale, &renderScale.x, 2);
-        inArgs.setIntProperty(kOfxImageEffectPropSequentialRenderStatus,sequentialRender);
-        inArgs.setIntProperty(kOfxImageEffectPropInteractiveRenderStatus,interactiveRender);
-        inArgs.setIntProperty(kOfxImageEffectPropRenderQualityDraft,draftRender);
+#ifdef OFX_EXTENSIONS_VEGAS
+        inArgs.setIntProperty(kOfxImageEffectPropRenderView,view);
+        inArgs.setIntProperty(kOfxImageEffectPropViewsToRender,nViews);
+#endif
 
-#       ifdef OFX_DEBUG_ACTIONS
-          std::cout << "OFX: "<<(void*)this<<"->"<<kOfxImageEffectActionRender<<"("<<time<<","<<field<<",("<<renderRoI.x1<<","<<renderRoI.y1<<","<<renderRoI.x2<<","<<renderRoI.y2<<"),("<<renderScale.x<<","<<renderScale.y<<"),"<<sequentialRender<<","<<interactiveRender
-          <<")"<<std::endl;
-#       endif
 
-        OfxStatus st = mainEntry(kOfxImageEffectActionRender,this->getHandle(), &inArgs, 0);
-#       ifdef OFX_DEBUG_ACTIONS
-          std::cout << "OFX: "<<(void*)this<<"->"<<kOfxImageEffectActionRender<<"("<<time<<","<<field<<",("<<renderRoI.x1<<","<<renderRoI.y1<<","<<renderRoI.x2<<","<<renderRoI.y2<<"),("<<renderScale.x<<","<<renderScale.y<<"),"<<sequentialRender<<","<<interactiveRender
-          <<")->"<<StatStr(st)<<std::endl;
-#       endif
-        return st;
+        return mainEntry(kOfxImageEffectActionRender,this->getHandle(), &inArgs, 0);        
       }
 
       OfxStatus Instance::endRenderAction(OfxTime  startFrame,
@@ -2043,6 +2043,35 @@ namespace OFX {
         }
       }
 
+#ifdef OFX_EXTENSIONS_VEGAS
+      static OfxStatus clipGetStereoscopicImage(OfxImageClipHandle h1,
+                                                OfxTime time,
+                                                int view,
+                                                OfxRectD *h2,
+                                                OfxPropertySetHandle *h3)
+      {
+        ClipInstance *clipInstance = reinterpret_cast<ClipInstance*>(h1);
+
+        if (!clipInstance || !clipInstance->verifyMagic()) {
+          return kOfxStatErrBadHandle;
+        }
+
+        if(clipInstance){
+          Image* image = clipInstance->getStereoscopicImage(time,view,h2);
+          if(!image) {
+            h3 = NULL;
+            return kOfxStatFailed;
+          }
+
+          *h3 = image->getPropHandle();
+
+          return kOfxStatOK;
+        }
+        
+        return kOfxStatErrBadHandle;
+      }
+#endif
+      
       static OfxStatus clipReleaseImage(OfxPropertySetHandle h1)
       {
         try {
@@ -2268,84 +2297,11 @@ namespace OFX {
         imageMemoryUnlock
       };
 
-#   ifdef OFX_SUPPORTS_OPENGLRENDER
-      ////////////////////////////////////////////////////////////////////////////////
-      ////////////////////////////////////////////////////////////////////////////////
-      ////////////////////////////////////////////////////////////////////////////////
-      /// The OpenGL render suite functions
-
-      static OfxStatus clipLoadTexture(OfxImageClipHandle h1,
-                                       OfxTime time,
-                                       const char   *format,
-                                       const OfxRectD *h2,
-                                       OfxPropertySetHandle *h3)
-      {
-        try {
-        if (!h3) {
-          return kOfxStatErrBadHandle;
-        }
-
-        ClipInstance *clipInstance = reinterpret_cast<ClipInstance*>(h1);
-
-        if (!clipInstance || !clipInstance->verifyMagic()) {
-          return kOfxStatErrBadHandle;
-        }
-
-        if(clipInstance){
-          Texture* texture = clipInstance->loadTexture(time,format,h2);
-          if(!texture) {
-            *h3 = NULL;
-
-            return kOfxStatFailed;
-          }
-
-          *h3 = texture->getPropHandle();
-
-          return kOfxStatOK;
-        }
-        
-        return kOfxStatErrBadHandle;
-        } catch (...) {
-          *h3 = NULL;
-
-          return kOfxStatErrBadHandle;
-        }
-      }
-
-      static OfxStatus clipFreeTexture(OfxPropertySetHandle h1)
-      {
-        try {
-        Property::Set *pset = reinterpret_cast<Property::Set*>(h1);
-
-        if (!pset || !pset->verifyMagic()) {
-          return kOfxStatErrBadHandle;
-        }
-
-        Texture *texture = dynamic_cast<Texture*>(pset);
-
-        if(texture){
-          // clip::texture has a virtual destructor for derived classes
-          texture->releaseReference();
-          return kOfxStatOK;
-        }
-        else 
-          return kOfxStatErrBadHandle;
-        } catch (...) {
-          return kOfxStatErrBadHandle;
-        }
-      }
-
-      static OfxStatus flushResources( )
-      {
-        return gImageEffectHost->flushOpenGLResources();
-      }
-
-      static const struct OfxImageEffectOpenGLRenderSuiteV1 gOpenGLRenderSuite = {
-        clipLoadTexture,
-        clipFreeTexture,
-        flushResources
+#ifdef OFX_EXTENSIONS_VEGAS
+      static struct OfxVegasStereoscopicImageEffectSuiteV1 gVegasStereoscopicImageEffectSuite = {
+        clipGetStereoscopicImage
       };
-#   endif
+#endif
 
       /// message suite function for an image effect
       static OfxStatus message(void *handle, const char *type, const char *id, const char *format, ...)

@@ -191,13 +191,18 @@ int main(int argc, char **argv)
         //
         // In our example we are doing full frame fetches regardless.
         std::map<OFX::Host::ImageEffect::ClipInstance *, OfxRectD> rois;
-        stat = instance->getRegionOfInterestAction(frame, renderScale,
-                                                   regionOfInterest, rois);
-        assert(stat == kOfxStatOK || stat == kOfxStatReplyDefault);
-
+        instance->getRegionOfInterestAction(frame, renderScale, regionOfInterest, rois);
+  
+#ifdef OFX_EXTENSIONS_VEGAS
+        // render a stereoscopic frame
+        instance->renderAction(t,kOfxImageFieldBoth,renderWindow, renderScale,
+                               0 /*view*/, 2 /*nViews*/);
+        instance->renderAction(t,kOfxImageFieldBoth,renderWindow, renderScale,
+                               1 /*view*/, 2 /*nViews*/);
+#else
         // render a frame
-        stat = instance->renderAction(t,kOfxImageFieldBoth,renderWindow, renderScale, /*sequential=*/true, /*interactive=*/false, /*draft=*/false);
-        assert(stat == kOfxStatOK);
+        instance->renderAction(t,kOfxImageFieldBoth,renderWindow, renderScale);
+#endif
 
         // get the output image buffer
         MyHost::MyImage *outputImage = outputClip->getOutputImage();

@@ -654,7 +654,7 @@ namespace OFX {
         void setDefault(int v);
 
         /** @brief append an option, default is to have not there */
-        void appendOption(const std::string &v, const std::string& label = "");
+        void appendOption(const std::string &v, const std::string& label);
     
         /** @brief how many options do we have */
         int getNOptions(void);
@@ -679,6 +679,10 @@ namespace OFX {
     public :
         /** @brief whether the initial state of a group is open or closed in a hierarchical layout, defaults to false */
         void setOpen(const bool v);
+
+#ifdef OFX_EXTENSIONS_NUKE
+        void setAsTab();
+#endif
     };
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -1551,10 +1555,7 @@ namespace OFX {
         int getNOptions(void);
 
         /** @brief append an option, default is to have not there */
-        void appendOption(const std::string &v, const std::string& label = "");
-    
-        /** @brief set an option */
-        void setOption(int item, const std::string &str);
+        void appendOption(const std::string &v, const std::string& label);
     
 #ifdef OFX_EXTENSIONS_VEGAS
         /** @brief set an option */

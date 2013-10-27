@@ -2470,13 +2470,11 @@ namespace OFX {
     return nCurrentValues;
   }
 
-#ifdef OFX_EXTENSIONS_VEGAS
   /** @brief get the option value */
   void ChoiceParam::getOption(int ix, std::string &v)
   {    
     v = _paramProps.propGetString(kOfxParamPropChoiceOption, ix);
   }
-#endif
 
   /** @brief add another option */
   void ChoiceParam::appendOption(const std::string &v, const std::string& label)
@@ -2486,13 +2484,11 @@ namespace OFX {
     _paramProps.propSetString(kOfxParamPropChoiceLabelOption, label, nCurrentValues, false);
   }
 
-#ifdef OFX_EXTENSIONS_VEGAS
   /** @brief set the string of a specific option */
   void ChoiceParam::setOption(int item, const std::string &str)
   {
     _paramProps.propSetString(kOfxParamPropChoiceOption, str, item);
   }
-#endif
 
   /** @brief set to the default value */
   void ChoiceParam::resetOptions(void)
@@ -2546,14 +2542,12 @@ namespace OFX {
     throwSuiteStatusException(stat);
   }
 
-#ifdef OFX_EXTENSIONS_VEGAS
   /** @brief set value */
   void CustomParam::setValue(const char* str)
   {
     OfxStatus stat = OFX::Private::gParamSuite->paramSetValue(_paramHandle, str);
     throwSuiteStatusException(stat);
   }
-#endif
 
   /** @brief set the value at a time, implicitly adds a keyframe */
   void CustomParam::setValueAtTime(double t, const std::string &v)

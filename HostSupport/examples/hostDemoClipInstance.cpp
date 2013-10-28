@@ -29,9 +29,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <iostream>
 #include <fstream>
 #include <cassert>
-#include <algorithm>
-#include <cmath>
-#include <ctime>
+#include <math.h>
+#include <time.h>
 
 // ofx
 #include "ofxCore.h"

@@ -2305,54 +2305,43 @@ namespace OFX {
           stat = kOfxStatErrBadHandle;
         }
         return stat;
-        } catch (...) {
-          return kOfxStatFailed;
-        }
       }
 
       static OfxStatus setPersistentMessage(void *handle, const char *type, const char *id, const char *format, ...)
       {
-        try {
-          ImageEffect::Instance *effectInstance = reinterpret_cast<ImageEffect::Instance*>(handle);
-          OfxStatus stat;
-          if(effectInstance){
-            va_list args;
-            va_start(args,format);
-            stat = effectInstance->setPersistentMessage(type,id,format,args);
-            va_end(args);
-          }
-          else{
-            va_list args;
-            va_start(args,format);
-            vprintf(format,args);
-            va_end(args);
-            stat = kOfxStatErrBadHandle;
-          }
-          return stat;
-        } catch (...) {
-          return kOfxStatFailed;
+        ImageEffect::Instance *effectInstance = reinterpret_cast<ImageEffect::Instance*>(handle);
+        OfxStatus stat;
+        if(effectInstance){
+          va_list args;
+          va_start(args,format);
+          stat = effectInstance->setPersistentMessage(type,id,format,args);
+          va_end(args);
         }
+        else{
+          va_list args;
+          va_start(args,format);
+          vprintf(format,args);
+          va_end(args);
+          stat = kOfxStatErrBadHandle;
+        }
+        return stat;
       }
 
-      static OfxStatus clearPersistentMessage(void *handle)
+      OfxStatus clearPersistentMessage(void *handle)
       {
-        try {
-          ImageEffect::Instance *effectInstance = reinterpret_cast<ImageEffect::Instance*>(handle);
-          OfxStatus stat;
-          if(effectInstance){
-            stat = effectInstance->clearPersistentMessage();
-          }
-          else{
-            stat = kOfxStatErrBadHandle;
-          }
-          return stat;
-        } catch (...) {
-          return kOfxStatFailed;
+        ImageEffect::Instance *effectInstance = reinterpret_cast<ImageEffect::Instance*>(handle);
+        OfxStatus stat;
+        if(effectInstance){
+          stat = effectInstance->clearPersistentMessage();
         }
+        else{
+          stat = kOfxStatErrBadHandle;
+        }
+        return stat;
       }
 
       /// message suite for an image effect plugin (backward-compatible with OfxMessageSuiteV1)
-      static const struct OfxMessageSuiteV2 gMessageSuite = {
+      static struct OfxMessageSuiteV2 gMessageSuite = {
         message,
         setPersistentMessage,
         clearPersistentMessage

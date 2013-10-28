@@ -61,7 +61,7 @@ namespace MyHost {
   const int       kPalSizeXPixels = 720;
   const int       kPalSizeYPixels = 576;
   const OfxRectI  kPalRegionPixels = {0, 0, kPalSizeXPixels, kPalSizeYPixels};
-  //const OfxRectD  kPalRegionCanon = {0,0, kPalSizeXPixels * kPalPixelAspect ,kPalSizeYPixels};
+  const OfxRectD  kPalRegionCanon = {0,0, kPalSizeXPixels * kPalPixelAspect ,kPalSizeYPixels};
 
   // 5x3 bitmaps for digits 0..9 and period
   const char digits[11][5][3] = {
@@ -160,11 +160,13 @@ namespace MyHost {
     realFillValue = realFillValue << 8;
     realFillValue += fillValue;
 
-    std::fill(_data, _data + kPalSizeXPixels * kPalSizeYPixels, color);
+    // now blank it
+    memset(_data, realFillValue, sizeof(OfxRGBAColourB) * kPalSizeXPixels * kPalSizeYPixels);
     // draw the time and the view number in reverse color
     const int scale = 5;
     const int charwidth = 4*scale;
-    color.r = color.g = color.b = 255-fillValue;
+    realFillValue = realFillValue ^ ~0; // inverse
+    const OfxRGBAColourB color = *(reinterpret_cast<OfxRGBAColourB*>(&realFillValue));
     int xx = 50;
     int yy = 50;
     int d;

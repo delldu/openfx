@@ -215,7 +215,7 @@ namespace MyHost {
     {
       int rowBytes = getIntProperty(kOfxImagePropRowBytes);
       int offset = (y - bounds.y1) * rowBytes + (x - bounds.x1) * sizeof(OfxRGBAColourB);
-      return reinterpret_cast<OfxRGBAColourB*>(&(reinterpret_cast<char*>(_data)[offset]));
+      return &(_data[offset]);
     }
     return 0;
   }

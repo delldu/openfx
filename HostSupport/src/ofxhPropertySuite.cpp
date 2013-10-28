@@ -778,9 +778,11 @@ namespace OFX {
                                                  const char *property,
                                                  int index,
                                                  typename T::APIType value) {          
-#       ifdef OFX_DEBUG_PROPERTIES
-        std::cout << "OFX: propSet - " << properties << ' ' << property << "[" << index << "] = " << value << " ...";
-#       endif
+#ifdef DEBUG
+        std::cout << "propSet - " << properties << " " << property << "[" << index << "] = " << value << " \n";
+#endif
+        if (!properties)
+          return kOfxStatErrBadHandle;
         try {            
           Set *thisSet = reinterpret_cast<Set*>(properties);
           if(!thisSet || !thisSet->verifyMagic()) {
@@ -803,9 +805,6 @@ namespace OFX {
 #         endif
           return e.getStatus();
         } catch (...) {
-#         ifdef OFX_DEBUG_PROPERTIES
-          std::cout << ' ' << StatStr(kOfxStatErrUnknown) << std::endl;
-#         endif
           return kOfxStatErrUnknown;
         }
 #       ifdef OFX_DEBUG_PROPERTIES
@@ -818,16 +817,12 @@ namespace OFX {
       template<class T> static OfxStatus propSetN(OfxPropertySetHandle properties,
                                                 const char *property,
                                                 int count,
-                                                const typename T::APIType *values) {
-#       ifdef OFX_DEBUG_PROPERTIES
-        std::cout << "OFX: propSetN - " << properties << ' ' << property << "[0.." << count-1 << "] = ";
-        for (int i = 0; i < count; ++i) {
-            if (i != 0) {
-                std::cout << ',';
-            }
-            std::cout << values[i];
-        }
-#       endif
+                                                typename T::APIType *values) {          
+#ifdef DEBUG
+        std::cout << "propSetN - " << properties << " " << property << " \n";
+#endif
+        if (!properties)
+          return kOfxStatErrBadHandle;
         try {
           Set *thisSet = reinterpret_cast<Set*>(properties);
           if(!thisSet || !thisSet->verifyMagic()) {
@@ -850,9 +845,6 @@ namespace OFX {
 #         endif
           return e.getStatus();
         } catch (...) {
-#         ifdef OFX_DEBUG_PROPERTIES
-          std::cout << ' ' << StatStr(kOfxStatErrUnknown) << std::endl;
-#         endif
           return kOfxStatErrUnknown;
         }
 #       ifdef OFX_DEBUG_PROPERTIES
@@ -866,9 +858,11 @@ namespace OFX {
                                                const char *property,
                                                int index,
                                                typename T::APITypeConstless *value) {
-#       ifdef OFX_DEBUG_PROPERTIES
-        std::cout << "OFX: propGet - " << properties << ' ' << property << "[" << index << "] = ...";
-#       endif
+#ifdef DEBUG
+        std::cout << "propGet - " << properties << " " << property << " = ...";
+#endif
+        if (!properties)
+          return kOfxStatErrBadHandle;
         try {
           Set *thisSet = reinterpret_cast<Set*>(properties);
           if(!thisSet || !thisSet->verifyMagic()) {
@@ -895,9 +889,6 @@ namespace OFX {
 #         endif
           return e.getStatus();
         } catch (...) {
-#         ifdef OFX_DEBUG_PROPERTIES
-          std::cout << ' ' << StatStr(kOfxStatErrUnknown) << std::endl;
-#         endif
           return kOfxStatErrUnknown;
         }
         return kOfxStatOK;
@@ -908,9 +899,8 @@ namespace OFX {
                                             const char *property,
                                             int count,
                                             typename T::APITypeConstless *values) {
-#       ifdef OFX_DEBUG_PROPERTIES
-        std::cout << "OFX: propGetN - " << properties << ' ' << property << "[0.." << count-1 << "] = ...";
-#       endif
+        if (!properties)
+          return kOfxStatErrBadHandle;
         try {
           Set *thisSet = reinterpret_cast<Set*>(properties);
           if(!thisSet || !thisSet->verifyMagic()) {
@@ -942,9 +932,6 @@ namespace OFX {
 #         endif
           return e.getStatus();
         } catch (...) {
-#         ifdef OFX_DEBUG_PROPERTIES
-          std::cout << ' ' << StatStr(kOfxStatErrUnknown) << std::endl;
-#         endif
           return kOfxStatErrUnknown;
         }
         return kOfxStatOK;
@@ -952,9 +939,8 @@ namespace OFX {
       
       /// static functions for the suite
       static OfxStatus propReset(OfxPropertySetHandle properties, const char *property) {
-#       ifdef OFX_DEBUG_PROPERTIES
-        std::cout << "OFX: propReset - " << properties << ' ' << property << " ...";
-#       endif
+        if (!properties)
+          return kOfxStatErrBadHandle;
         try {            
           Set *thisSet = reinterpret_cast<Set*>(properties);
           if(!thisSet || !thisSet->verifyMagic()) {
@@ -980,9 +966,6 @@ namespace OFX {
 #         endif
           return e.getStatus();
         } catch (...) {
-#         ifdef OFX_DEBUG_PROPERTIES
-          std::cout << ' ' << StatStr(kOfxStatErrUnknown) << std::endl;
-#         endif
           return kOfxStatErrUnknown;
         }
         return kOfxStatOK;
@@ -990,41 +973,20 @@ namespace OFX {
       
       /// static functions for the suite
       static OfxStatus propGetDimension(OfxPropertySetHandle properties, const char *property, int *count) {
-#       ifdef OFX_DEBUG_PROPERTIES
-        std::cout << "OFX: propGetDimension - " << properties << ' ' << property << " ...";
-#       endif
-        if (!properties) {
-#         ifdef OFX_DEBUG_PARAMETERS
-          std::cout << ' ' << StatStr(kOfxStatErrBadHandle) << std::endl;
-#         endif
+        if (!properties)
           return kOfxStatErrBadHandle;
-        }
         try {            
-          Set *thisSet = reinterpret_cast<Set*>(properties);
-          Property *prop = thisSet->fetchProperty(property, true);
-          if(!prop) {
-#           ifdef OFX_DEBUG_PROPERTIES
-            std::cout << "unknown property\n";
-#           endif
-            return kOfxStatErrUnknown;
-          }
-          *count = prop->getDimension();
-#         ifdef OFX_DEBUG_PROPERTIES
-          std::cout << *count << ' ' << StatStr(kOfxStatOK) << std::endl;
-#         endif
-          return kOfxStatOK;
-        } catch (const Exception& e) {
-#         ifdef OFX_DEBUG_PROPERTIES
-          std::cout << ' ' << StatStr(e.getStatus()) << std::endl;
-#         endif
-          return e.getStatus();
-        } catch (...) {
-#         ifdef OFX_DEBUG_PROPERTIES
-          std::cout << ' ' << StatStr(kOfxStatErrUnknown) << std::endl;
-#         endif
+        Set *thisSet = reinterpret_cast<Set*>(properties);
+        Property *prop = thisSet->fetchProperty(property, true);
+        if(!prop) {
           return kOfxStatErrUnknown;
         }
-      }
+        *count = prop->getDimension();
+        return kOfxStatOK;
+        } catch (...) {
+          return kOfxStatErrUnknown;
+        }
+      }    
 
       /// the actual suite that is passed across the API to manage properties
       struct OfxPropertySuiteV1 gSuite = {

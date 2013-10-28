@@ -1680,7 +1680,8 @@ namespace OFX {
         Descriptor *desc = paramSetDescriptor->paramDefine(paramType, name);
 
         if(desc) {
-          *propertySet = desc->getPropHandle();
+          if (propertySet)
+            *propertySet = desc->getPropHandle();
           // desc is still referenced by _paramList and _paramMap
           return kOfxStatOK;
         } else {
@@ -1723,12 +1724,8 @@ namespace OFX {
           }
 
           // get the param
-          if (param) {
-            *param = (it->second)->getHandle();
-#           ifdef OFX_DEBUG_PARAMETERS
-            std::cout << ' ' << *param;
-#           endif
-          }
+          if (param)
+            *param = (it->second)->getHandle(); 
 
           // get the param property set
           if(propertySet) {
@@ -1759,13 +1756,9 @@ namespace OFX {
           }
           
           // get the param
-          if (param) {
+          if (param)
             *param = (it->second)->getHandle();  
-#           ifdef OFX_DEBUG_PARAMETERS
-            std::cout << ' ' << *param;
-#           endif
-          }
-
+          
           // get the param property set
           if(propertySet) {
             *propertySet = (it->second)->getPropHandle();
@@ -1795,15 +1788,8 @@ namespace OFX {
         BaseSet *baseSet = reinterpret_cast<BaseSet*>(paramSet);
 
         if (baseSet) {
-          if (propHandle) {
+          if (propHandle)
             *propHandle = baseSet->getParamSetProps().getHandle();
-#           ifdef OFX_DEBUG_PARAMETERS
-            std::cout << ' ' << *propHandle;
-#           endif
-          }
-#         ifdef OFX_DEBUG_PARAMETERS
-          std::cout << ' ' << StatStr(kOfxStatOK) << std::endl;
-#         endif
           return kOfxStatOK;
         }
 #       ifdef OFX_DEBUG_PARAMETERS
@@ -1822,12 +1808,8 @@ namespace OFX {
         
         if(paramInstance && paramInstance->verifyMagic()){
           // get the param property set
-          if (propHandle) {
+          if (propHandle)
             *propHandle = paramInstance->getPropHandle();
-#           ifdef OFX_DEBUG_PARAMETERS
-            std::cout << ' ' << *propHandle;
-#           endif
-          }
 
 #         ifdef OFX_DEBUG_PARAMETERS
           std::cout << ' ' << StatStr(kOfxStatOK) << std::endl;

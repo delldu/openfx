@@ -2311,39 +2311,50 @@ namespace OFX {
           stat = kOfxStatErrBadHandle;
         }
         return stat;
+        } catch (...) {
+          return kOfxStatFailed;
+        }
       }
 
       static OfxStatus setPersistentMessage(void *handle, const char *type, const char *id, const char *format, ...)
       {
-        ImageEffect::Instance *effectInstance = reinterpret_cast<ImageEffect::Instance*>(handle);
-        OfxStatus stat;
-        if(effectInstance){
-          va_list args;
-          va_start(args,format);
-          stat = effectInstance->setPersistentMessage(type,id,format,args);
-          va_end(args);
+        try {
+          ImageEffect::Instance *effectInstance = reinterpret_cast<ImageEffect::Instance*>(handle);
+          OfxStatus stat;
+          if(effectInstance){
+            va_list args;
+            va_start(args,format);
+            stat = effectInstance->setPersistentMessage(type,id,format,args);
+            va_end(args);
+          }
+          else{
+            va_list args;
+            va_start(args,format);
+            vprintf(format,args);
+            va_end(args);
+            stat = kOfxStatErrBadHandle;
+          }
+          return stat;
+        } catch (...) {
+          return kOfxStatFailed;
         }
-        else{
-          va_list args;
-          va_start(args,format);
-          vprintf(format,args);
-          va_end(args);
-          stat = kOfxStatErrBadHandle;
-        }
-        return stat;
       }
 
       OfxStatus clearPersistentMessage(void *handle)
       {
-        ImageEffect::Instance *effectInstance = reinterpret_cast<ImageEffect::Instance*>(handle);
-        OfxStatus stat;
-        if(effectInstance){
-          stat = effectInstance->clearPersistentMessage();
+        try {
+          ImageEffect::Instance *effectInstance = reinterpret_cast<ImageEffect::Instance*>(handle);
+          OfxStatus stat;
+          if(effectInstance){
+            stat = effectInstance->clearPersistentMessage();
+          }
+          else{
+            stat = kOfxStatErrBadHandle;
+          }
+          return stat;
+        } catch (...) {
+          return kOfxStatFailed;
         }
-        else{
-          stat = kOfxStatErrBadHandle;
-        }
-        return stat;
       }
 
       /// message suite for an image effect plugin (backward-compatible with OfxMessageSuiteV1)
@@ -2532,6 +2543,8 @@ namespace OFX {
       }
 
       static OfxStatus multiThreadIndex(unsigned int *threadIndex){
+        if (!threadIndex)
+          return kOfxStatFailed;
         *threadIndex = 0;
         return kOfxStatOK;
       }
@@ -2540,16 +2553,16 @@ namespace OFX {
         return false;
       }
 
-      static OfxStatus mutexCreate(const OfxMutexHandle */*mutex*/, int /*lockCount*/)
+      static OfxStatus mutexCreate(const OfxMutexHandle *mutex, int /*lockCount*/)
       {
         if (!mutex)
           return kOfxStatFailed;
         // do nothing single threaded
-        //mutex = 0;
+        *mutex = 0;
         return kOfxStatOK;
       }
 
-      static OfxStatus mutexDestroy(const OfxMutexHandle /*mutex*/)
+      static OfxStatus mutexDestroy(const OfxMutexHandle mutex)
       {
         if (mutex != 0)
           return kOfxStatErrBadHandle;
@@ -2557,17 +2570,23 @@ namespace OFX {
         return kOfxStatOK;
       }
 
-      static OfxStatus mutexLock(const OfxMutexHandle /*mutex*/){
+      static OfxStatus mutexLock(const OfxMutexHandle mutex){
+        if (mutex != 0)
+          return kOfxStatErrBadHandle;
         // do nothing single threaded
         return kOfxStatOK;
       }
        
-      static OfxStatus mutexUnLock(const OfxMutexHandle /*mutex*/){
+      static OfxStatus mutexUnLock(const OfxMutexHandle mutex){
+        if (mutex != 0)
+          return kOfxStatErrBadHandle;
         // do nothing single threaded
         return kOfxStatOK;
       }       
 
-      static OfxStatus mutexTryLock(const OfxMutexHandle /*mutex*/){
+      static OfxStatus mutexTryLock(const OfxMutexHandle mutex){
+        if (mutex != 0)
+          return kOfxStatErrBadHandle;
         // do nothing single threaded
         return kOfxStatOK;
       }

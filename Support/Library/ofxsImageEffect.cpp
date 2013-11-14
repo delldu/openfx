@@ -1710,13 +1710,13 @@ namespace OFX {
     // by default, do nothing
     return false;
   }
+#endif
 
   /** @brief called when a custom param needs to be interpolated */
   std::string ImageEffect::interpolateCustomParam(const InterpolateCustomArgs &args, const std::string &paramName)
   {
       return args.value1;
   }
-#endif
 
   /// Start doing progress.
   void ImageEffect::progressStart(const std::string &message)
@@ -3195,14 +3195,13 @@ namespace OFX {
       return stat;
     }
 
-#ifdef OFX_EXTENSIONS_VEGAS
-    OfxStatus customParamIterpolationV1Entry(
+    OfxStatus customParamInterpolationV1Entry(
       const void*            handleRaw,
       OfxPropertySetHandle   inArgsRaw,
       OfxPropertySetHandle   outArgsRaw)
     {
       OFX::Log::print("********************************************************************************");
-      OFX::Log::print("START customParamIterpolationV1Entry");
+      OFX::Log::print("START customParamInterpolationV1Entry");
       OFX::Log::indent();
       OfxStatus stat = kOfxStatReplyDefault;
       try {
@@ -3274,10 +3273,9 @@ namespace OFX {
       }
 
       OFX::Log::outdent();
-      OFX::Log::print("STOP customParamIterpolationV1Entry\n");
+      OFX::Log::print("STOP customParamInterpolationV1Entry\n");
       return stat;
     }
-#endif
 
     /** @brief The plugin function that gets passed the host structure. */
     void setHost(OfxHost *host)

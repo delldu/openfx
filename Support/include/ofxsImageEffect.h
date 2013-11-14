@@ -82,12 +82,10 @@ namespace OFX
       OfxPropertySetHandle   outArgsRaw,
       const char* plugname);
 
-#ifdef OFX_EXTENSIONS_VEGAS
-    OfxStatus customParamIterpolationV1Entry(
+    OfxStatus customParamInterpolationV1Entry(
       const void*            handleRaw,
       OfxPropertySetHandle   inArgsRaw,
       OfxPropertySetHandle   outArgsRaw);
-#endif
   }
 }
 
@@ -1052,7 +1050,6 @@ namespace OFX {
     OfxPointD            renderScale; /**< the renderscale on the instance */
   };
 
-#ifdef OFX_EXTENSIONS_VEGAS
   /** @brief POD struct to pass arguments into @ref OFX::ImageEffect::interpolateCustomParam */
   struct InterpolateCustomArgs {
     double      time;
@@ -1062,7 +1059,6 @@ namespace OFX {
     double      keytime2;
     double      amount;
   };
-#endif
 
   ////////////////////////////////////////////////////////////////////////////////
   /** @brief Wraps up an effect instance, plugin implementations need to inherit from this */
@@ -1274,10 +1270,10 @@ namespace OFX {
 
     /** @brief Vegas invokes help dialog */
     virtual bool invokeHelp();
+#endif
 
     /** @brief called when a custom param needs to be interpolated */
     virtual std::string interpolateCustomParam(const InterpolateCustomArgs &args, const std::string &paramName);
-#endif
 
     /** @brief what is the time domain of this effect, valid only in the general context
 

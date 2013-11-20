@@ -1840,8 +1840,6 @@ namespace OFX {
         };
 
         Property::Set outArgs(outStuff);  
-        outArgs.setDoubleProperty(kOfxImageEffectPropFrameRange, range.min, 0);
-        outArgs.setDoubleProperty(kOfxImageEffectPropFrameRange, range.max, 1);
 
 #       ifdef OFX_DEBUG_ACTIONS
           std::cout << "OFX: "<<(void*)this<<"->"<<kOfxImageEffectActionGetTimeDomain<<"()"<<std::endl;

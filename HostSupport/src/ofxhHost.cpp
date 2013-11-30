@@ -133,7 +133,7 @@ namespace OFX {
       }
     }
 
-    const void *Host::fetchSuite(const char *suiteName, int suiteVersion)
+    void *Host::fetchSuite(const char *suiteName, int suiteVersion)
     {
       if (strcmp(suiteName, kOfxPropertySuite)==0  && suiteVersion == 1) {
         return Property::GetSuite(suiteVersion);

@@ -566,6 +566,7 @@ namespace OFX {
 #       ifdef OFX_DEBUG_ACTIONS
             std::cout << "OFX: "<<(void*)this<<"->"<<kOfxActionDestroyInstance<<"()->"<<StatStr(st)<<std::endl;
 #       endif
+          (void)st;
         }
         
         /// clobber my clips
@@ -1114,15 +1115,6 @@ namespace OFX {
                                    this->getHandle(),
                                    &inArgs,
                                    &outArgs);
-
-#       ifdef OFX_DEBUG_ACTIONS
-          std::cout << "OFX: "<<(void*)this<<"->"<<kOfxImageEffectActionGetRegionOfDefinition<<"("<<time<<",("<<renderScale.x<<","<<renderScale.y<<"))->"<<StatStr(stat);
-          if(stat == kOfxStatOK) {
-              std::cout << ": ("<<rod.x1<<","<<rod.y1<<","<<rod.x2<<","<<rod.y2<<")";
-          }
-          std::cout << std::endl;
-#       endif
-
         if(stat == kOfxStatOK) {
           outArgs.getDoublePropertyN(kOfxImageEffectPropRegionOfDefinition, &rod.x1, 4);
         }

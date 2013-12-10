@@ -1413,9 +1413,6 @@ namespace OFX {
 
         Property::Set outArgs(outStuff);
 
-#       ifdef OFX_DEBUG_ACTIONS
-          std::cout << "OFX: "<<(void*)this<<"->"<<kOfxImageEffectActionIsIdentity<<"("<<time<<","<<field<<",("<<renderRoI.x1<<","<<renderRoI.y1<<","<<renderRoI.x2<<","<<renderRoI.y2<<"),("<<renderScale.x<<","<<renderScale.y<<"))"<<std::endl;
-#       endif
         outArgs.setDoubleProperty(kOfxPropTime,time);
 
         OfxStatus st = mainEntry(kOfxImageEffectActionIsIdentity,

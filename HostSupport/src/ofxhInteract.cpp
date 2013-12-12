@@ -31,6 +31,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "ofxKeySyms.h"
 #include "ofxCore.h"
 #include "ofxImageEffect.h"
+#ifdef OFX_EXTENSIONS_NUKE
+#include "nuke/fnPublicOfxExtensions.h"
+#endif
 
 // ofx host
 #include "ofxhBinary.h"
@@ -112,6 +115,9 @@ namespace OFX {
         { kOfxInteractPropViewportSize, Property::eDouble, 2, true, "100.0f" },
 #endif
         { kOfxInteractPropSlaveToParam , Property::eString, 0, false, ""},
+#ifdef OFX_EXTENSIONS_NUKE
+        { kOfxPropOverlayColour , Property::eDouble, 3, true, "1.0f" },
+#endif
         Property::propSpecEnd
       };
 

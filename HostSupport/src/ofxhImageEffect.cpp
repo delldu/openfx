@@ -91,7 +91,10 @@ namespace OFX {
         { kOfxImageEffectPropClipPreferencesSlaveParam, Property::eString, 0, false, "" },
         { kOfxImageEffectInstancePropSequentialRender, Property::eInt, 1, false, "0" },
         { kOfxPluginPropFilePath, Property::eString, 1, true, ""},
-        { kOfxPropPluginDescription, Property::eString, 1,false, ""}, /*Added by Alex on 09/23/13*/
+        { kOfxPropPluginDescription, Property::eString, 1,false, ""},
+#ifdef OFX_EXTENSIONS_NUKE
+        //{ ".length", Property::eDouble, 1, false, ""}, // Unknown Nuke property
+#endif
         Property::propSpecEnd
       };
 
@@ -337,6 +340,9 @@ namespace OFX {
         { kOfxImageEffectPropFrameRate ,        Property::eDouble,     1, true,  "0" },
         { kOfxPropIsInteractive,                Property::eInt,        1, true, "0" },
         { kOfxPropPluginDescription,            Property::eString,     1, true, ""},/*Added by Alex on 09/23/13*/
+#ifdef OFX_EXTENSIONS_NUKE
+        //{ ".verbosityProp",                Property::eInt,        2, true, "0" }, // Unknown Nuke property
+#endif
         Property::propSpecEnd
       };
 

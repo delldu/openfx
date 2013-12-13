@@ -1434,7 +1434,7 @@ namespace OFX {
         double value2 = va_arg(arg, double);
         double value3 = va_arg(arg, double);
 #       ifdef OFX_DEBUG_PARAMETERS
-        std::cout << '(' << value1 << ',' << value2 << ',' << value3 << ')';
+        std::cout << '(' << value1 << ',' << value2 ',' << value3 << ')';
 #       endif
         return set(value1, value2, value3);
       }
@@ -1446,7 +1446,7 @@ namespace OFX {
         double value2 = va_arg(arg, double);
         double value3 = va_arg(arg, double);
 #       ifdef OFX_DEBUG_PARAMETERS
-        std::cout << '(' << value1 << ',' << value2 << ',' << value3 << ')';
+        std::cout << '(' << value1 << ',' << value2 ',' << value3 << ')';
 #       endif
         return set(time, value1, value2, value3);
       }
@@ -1528,7 +1528,7 @@ namespace OFX {
         int value2 = va_arg(arg, int);
         int value3 = va_arg(arg, int);
 #       ifdef OFX_DEBUG_PARAMETERS
-        std::cout << '(' << value1 << ',' << value2 << ',' << value3 << ')';
+        std::cout << '(' << value1 << ',' << value2 ',' << value3 << ')';
 #       endif
         return set(value1, value2, value3);
       }
@@ -1540,7 +1540,7 @@ namespace OFX {
         int value2 = va_arg(arg, int);
         int value3 = va_arg(arg, int);
 #       ifdef OFX_DEBUG_PARAMETERS
-        std::cout << '(' << value1 << ',' << value2 << ',' << value3 << ')';
+        std::cout << '(' << value1 << ',' << value2 ',' << value3 << ')';
 #       endif
         return set(time, value1, value2, value3);
       }
@@ -1991,12 +1991,12 @@ namespace OFX {
                                      ...) 
       {
 #       ifdef OFX_DEBUG_PARAMETERS
-        std::cout << "OFX: paramSetValue - " << paramHandle << " ...";
+        std::cout << "OFX: paramSetValue - " << paramHandle << " ";
 #       endif
         Instance *paramInstance = reinterpret_cast<Instance*>(paramHandle);
         if(!paramInstance || !paramInstance->verifyMagic()) {
 #         ifdef OFX_DEBUG_PARAMETERS
-          std::cout << " " << StatStr(kOfxStatErrBadHandle) << "\n";
+          std::cout << " ... " << StatStr(kOfxStatErrBadHandle) << "\n";
 #         endif
           return kOfxStatErrBadHandle;
         }
@@ -2017,7 +2017,7 @@ namespace OFX {
         }
 
 #       ifdef OFX_DEBUG_PARAMETERS
-        std::cout << " " << StatStr(stat) << "\n";
+        std::cout << " ... " << StatStr(stat) << "\n";
 #       endif
         return stat;
       }
@@ -2029,12 +2029,12 @@ namespace OFX {
                                            ...)
       {
 #       ifdef OFX_DEBUG_PARAMETERS
-        std::cout << "OFX: paramSetValueAtTime - " << paramHandle << " " << time << " ...";
+        std::cout << "OFX: paramSetValueAtTime - " << paramHandle << " " << time << " ";
 #       endif
         Instance *paramInstance = reinterpret_cast<Instance*>(paramHandle);
         if(!paramInstance || !paramInstance->verifyMagic()) {
 #         ifdef OFX_DEBUG_PARAMETERS
-          std::cout << " " << StatStr(kOfxStatErrBadHandle) << "\n";
+          std::cout << " ... " << StatStr(kOfxStatErrBadHandle) << "\n";
 #         endif
           return kOfxStatErrBadHandle;
         }
@@ -2055,7 +2055,7 @@ namespace OFX {
         }
 
 #       ifdef OFX_DEBUG_PARAMETERS
-        std::cout << " " << StatStr(stat) << "\n";
+        std::cout << " ... " << StatStr(stat) << "\n";
 #       endif
         return stat;
       }

@@ -111,50 +111,10 @@ namespace OFX {
         /// Override this to initialise an image effect descriptor after it has been
         /// created.
         virtual void initDescriptor(Descriptor* desc);
-
-#ifdef OFX_SUPPORTS_MULTITHREAD
-        // these functions must be implemented if the host supports OfxMultiThreadSuiteV1
-        // all the following functions are described in ofxMultiThread.h
-        //
-
-        /// @see OfxMultiThreadSuiteV1.multiThread()
-        virtual OfxStatus multiThread(OfxThreadFunctionV1 func,unsigned int nThreads, void *customArg) = 0;
-          
-        /// @see OfxMultiThreadSuiteV1.multiThreadNumCPUS()
-        virtual OfxStatus multiThreadNumCPUS(unsigned int *nCPUs) const = 0;
-
-        /// @see OfxMultiThreadSuiteV1.multiThreadIndex()
-        virtual OfxStatus multiThreadIndex(unsigned int *threadIndex) const = 0;
-          
-        /// @see OfxMultiThreadSuiteV1.multiThreadIsSpawnedThread()
-        virtual int multiThreadIsSpawnedThread() const = 0;
-          
-        /// @see OfxMultiThreadSuiteV1.mutexCreate()
-        virtual OfxStatus mutexCreate(OfxMutexHandle *mutex, int lockCount) = 0;
-          
-        /// @see OfxMultiThreadSuiteV1.mutexDestroy()
-        virtual OfxStatus mutexDestroy(const OfxMutexHandle mutex) = 0;
-
-        /// @see OfxMultiThreadSuiteV1.mutexLock()
-        virtual OfxStatus mutexLock(const OfxMutexHandle mutex) = 0;
-          
-        /// @see OfxMultiThreadSuiteV1.mutexUnLock()
-        virtual OfxStatus mutexUnLock(const OfxMutexHandle mutex) = 0;
-          
-        /// @see OfxMultiThreadSuiteV1.mutexTryLock()
-        virtual OfxStatus mutexTryLock(const OfxMutexHandle mutex) = 0;
-#endif // OFX_SUPPORTS_MULTITHREAD
-
-#     ifdef OFX_SUPPORTS_OPENGLRENDER
-        /// @see OfxImageEffectOpenGLRenderSuiteV1.flushResources()
-        virtual OfxStatus flushOpenGLResources() const = 0;
-#     endif
-
-        /// override this to use your own memory instance - must inherrit from memory::instance
-        virtual Memory::Instance* newMemoryInstance(size_t nBytes);
-
-        // return an memory::instance calls makeMemoryInstance that can be overriden
-        Memory::Instance* imageMemoryAlloc(size_t nBytes);
+        
+        /// Call this to inform the plugins that you support a wider range of parameters than the built-in ones.
+        /// For instance you would need to override this if you want to support kOfxParamTypeParametric
+        void registerExtraParamTypeSupported(const std::string& typeName,Property::TypeEnum type,int dimension);
       };
 
       /// our global host object, set when the plugin cache is created

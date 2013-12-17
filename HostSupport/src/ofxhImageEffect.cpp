@@ -51,10 +51,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifdef OFX_SUPPORTS_PARAMETRIC
 #include "ofxhParametricParam.h"
 #endif
-#ifdef OFX_SUPPORTS_OPENGLRENDER
-#include "ofxOpenGLRender.h"
-#endif
-#include "ofxOld.h" // old plugins may rely on deprecated properties being present
 
 #include <string.h>
 #include <stdarg.h>
@@ -2750,6 +2746,11 @@ namespace OFX {
                 return (void*)&gVegasStereoscopicImageEffectSuite;
             else
                 return NULL;
+        }
+#endif
+#ifdef OFX_SUPPORTS_PARAMETRIC
+        else if (strcmp(suiteName, kOfxParametricParameterSuite)==0) {
+          return ParametricParam::GetSuite(suiteVersion);
         }
 #endif
         else  /// otherwise just grab the base class one, which is props and memory

@@ -2568,8 +2568,6 @@ namespace OFX {
         
         static OfxStatus mutexCreate(OfxMutexHandle *mutex, int lockCount)
         {
-            if (!mutex)
-                return kOfxStatFailed;
             if(gImageEffectHost->implementsMultiThreadSuite()){
                 gImageEffectHost->mutexCreate(mutex, lockCount);
             }else{

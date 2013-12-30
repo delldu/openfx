@@ -352,6 +352,14 @@ namespace OFX {
 
         /** @brief if the string param is a file path, say that we are picking an existing file, rather than posibly specifying a new one, defaults to true */
         void setFilePathExists(bool v);
+        
+#ifdef OFX_EXTENSIONS_NATRON
+        /**
+         * @brief if the string param is a file path, say that this param is the one that we use to select image files we're going
+         * to read/write
+         **/
+        void setFilePathIsImage(bool v);
+#endif
     };
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -1521,6 +1529,10 @@ namespace OFX {
 
         /** @brief set the value at a time, implicitly adds a keyframe */
         void setValueAtTime(double t, const std::string &v);
+        
+#ifdef OFX_EXTENSIONS_NATRON
+        void setImageFilePathShouldLoadNearestFrame(bool b);
+#endif
     };
 
     ////////////////////////////////////////////////////////////////////////////////

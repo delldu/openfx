@@ -43,6 +43,9 @@ England
 #include "nuke/camera.h"
 #endif
 
+#ifdef OFX_EXTENSIONS_NATRON
+#include "natron/IOExtensions.h"
+#endif
 /** @brief The core 'OFX Support' namespace, used by plugin implementations. All code for these are defined in the common support libraries. */
 namespace OFX {  
 
@@ -864,6 +867,16 @@ namespace OFX {
   {
     _paramProps.propSetInt(kOfxParamPropStringFilePathExists, int(v));
   }
+    
+#ifdef OFX_EXTENSIONS_NATRON
+    /**
+     * @brief if the string param is a file path, say that this param is the one that we use to select image files we're going
+     * to read/write
+     **/
+    void StringParamDescriptor::setFilePathIsImage(bool v){
+        _paramProps.propSetInt(kOfxParamFilePathIsImage,int(v));
+    }
+#endif
 
   ////////////////////////////////////////////////////////////////////////////////
   // custom param descriptor
@@ -2351,6 +2364,12 @@ namespace OFX {
     OfxStatus stat = OFX::Private::gParamSuite->paramSetValueAtTime(_paramHandle, t, v.c_str());
     throwSuiteStatusException(stat);
   }
+
+#ifdef OFX_EXTENSIONS_NATRON
+    void StringParam::setImageFilePathShouldLoadNearestFrame(bool b){
+        _paramProps.propSetInt(kOfxParamImageFilePathLoadNearest, int(b), 0)
+    }
+#endif
     
   ////////////////////////////////////////////////////////////////////////////////
   // Wraps up a Boolean integer param */

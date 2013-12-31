@@ -615,37 +615,7 @@ namespace OFX {
     If the components are custom, then this will return NULL as the support code
     can't know the pixel size to do the work.
     */
-    void *getPixelAddress(int x, int y);
-
-    /** @brief return a pixel pointer, returns NULL if (x,y) is outside the image bounds
-
-    x and y are in pixel coordinates
-
-    If the components are custom, then this will return NULL as the support code
-    can't know the pixel size to do the work.
-    */
-    const void *getPixelAddress(int x, int y) const;
-  };
-
-  ////////////////////////////////////////////////////////////////////////////////
-  /** @brief Wraps up an OpenGL texture */
-  class Texture : public ImageBase {
-  protected :
-    int _index;
-    int _target;
-
-  public :
-    /** @brief ctor */
-    Texture(OfxPropertySetHandle props);
-
-    /** @brief dtor */
-    virtual ~Texture();
-
-    /** @brief get OpenGL texture id (cast to GLuint) */
-    inline int getIndex() const {return _index;}
-      
-    /** @brief get OpenGL texture target (cast to GLenum) */
-    inline int getTarget() const {return _target;}
+    void *getPixelAddress(int x, int y) const;
   };
 
   ////////////////////////////////////////////////////////////////////////////////

@@ -1804,9 +1804,9 @@ namespace OFX {
   {
     if(OFX::Private::gTimeLineSuite) {
       OFX::Private::gTimeLineSuite->getTimeBounds((void *) _effectHandle, &t1, &t2);
-      return;
+    }else {
+        t1 = t2 = 0;
     }
-    t1 = t2 = 0;
   }
 
 #ifdef OFX_EXTENSIONS_VEGAS

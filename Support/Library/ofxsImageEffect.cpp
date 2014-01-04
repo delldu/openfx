@@ -1721,7 +1721,7 @@ namespace OFX {
       return args.value1;
   }
 
-  /// Start doing progress.
+  /// Start doing progress. 
   void ImageEffect::progressStart(const std::string &message)
   {
     if(OFX::Private::gProgressSuiteV2) {
@@ -1804,9 +1804,9 @@ namespace OFX {
   {
     if(OFX::Private::gTimeLineSuite) {
       OFX::Private::gTimeLineSuite->getTimeBounds((void *) _effectHandle, &t1, &t2);
-    }else {
-        t1 = t2 = 0;
+      return;
     }
+    t1 = t2 = 0;
   }
 
 #ifdef OFX_EXTENSIONS_VEGAS

@@ -136,10 +136,10 @@ namespace OFX {
         virtual OfxStatus mutexDestroy(const OfxMutexHandle /*mutex*/) const = 0;
 
         /// @see OfxMultiThreadSuiteV1.mutexLock()
-        virtual void mutexLock(const OfxMutexHandle /*mutex*/) const = 0;
+        virtual OfxStatus mutexLock(const OfxMutexHandle /*mutex*/) const = 0;
           
         /// @see OfxMultiThreadSuiteV1.mutexUnLock()
-        virtual void mutexUnLock(const OfxMutexHandle /*mutex*/) const = 0;
+        virtual OfxStatus mutexUnLock(const OfxMutexHandle /*mutex*/) const = 0;
           
         /// @see OfxMultiThreadSuiteV1.mutexTryLock()
         virtual OfxStatus mutexTryLock(const OfxMutexHandle/* mutex*/) const = 0;

@@ -2503,7 +2503,7 @@ namespace OFX {
         return gImageEffectHost->multiThreadIsSpawnedThread();
       }
 
-      static OfxStatus mutexCreate(OfxMutexHandle *mutex, int lockCount)
+      static OfxStatus mutexCreate(OfxMutexHandle *mutex, int /*lockCount*/)
       {
         return gImageEffectHost->mutexCreate(mutex, lockCount);
       }
@@ -2526,111 +2526,85 @@ namespace OFX {
       }
 #else // !OFX_SUPPORTS_MULTITHREAD
       /// a simple multithread suite
-        static OfxStatus multiThread(OfxThreadFunctionV1 func,
-                                     unsigned int nThreads,
-                                     void *customArg)
-        {
-            if (!func)
-                return kOfxStatFailed;
-            if(gImageEffectHost->implementsMultiThreadSuite()){
-                return gImageEffectHost->multiThread(func, nThreads, customArg);
-            }else{
-                func(0,1,customArg);
-                return kOfxStatOK;
-            }
-        }
-        
-        static OfxStatus multiThreadNumCPUs(unsigned int *nCPUs)
-        {
-            if (!nCPUs)
-                return kOfxStatFailed;
-            if(gImageEffectHost->implementsMultiThreadSuite()){
-                gImageEffectHost->multiThreadNumCPUS(nCPUs);
-            }else{
-                *nCPUs = 1;
-            }
-            return kOfxStatOK;
-        }
-        
-        static OfxStatus multiThreadIndex(unsigned int *threadIndex){
-            if (!threadIndex)
-                return kOfxStatFailed;
-            if(gImageEffectHost->implementsMultiThreadSuite()){
-                gImageEffectHost->multiThreadIndex(threadIndex);
-            }else{
-                *threadIndex = 0;
-            }
-            return kOfxStatOK;
-        }
-        
-        static int multiThreadIsSpawnedThread(void){
-            return (int)gImageEffectHost->multiThreadIsSpawnedThread();
-        }
-        
-        static OfxStatus mutexCreate(OfxMutexHandle *mutex, int lockCount)
-        {
-            if(gImageEffectHost->implementsMultiThreadSuite()){
-                gImageEffectHost->mutexCreate(mutex, lockCount);
-            }else{
-                // do nothing single threaded
-                *mutex = 0;
-            }
-            return kOfxStatOK;
-        }
-        
-        static OfxStatus mutexDestroy(const OfxMutexHandle mutex)
-        {
-            
-            if(gImageEffectHost->implementsMultiThreadSuite()){
-                if (mutex == 0)
-                    return kOfxStatErrBadHandle;
-                gImageEffectHost->mutexDestroy(mutex);
-            }
-            return kOfxStatOK;
-        }
-        
-        static OfxStatus mutexLock(const OfxMutexHandle mutex){
-            
-            if(gImageEffectHost->implementsMultiThreadSuite()){
-                if (mutex == 0)
-                    return kOfxStatErrBadHandle;
-                gImageEffectHost->mutexLock(mutex);
-            }
-            
-            return kOfxStatOK;
-        }
-        
-        static OfxStatus mutexUnLock(const OfxMutexHandle mutex){
-            
-            if(gImageEffectHost->implementsMultiThreadSuite()){
-                if (mutex == 0)
-                    return kOfxStatErrBadHandle;
-                gImageEffectHost->mutexUnLock(mutex);
-            }
-            return kOfxStatOK;
-        }
-        
-        static OfxStatus mutexTryLock(const OfxMutexHandle mutex){
-            
-            if(gImageEffectHost->implementsMultiThreadSuite()){
-                if (mutex == 0)
-                    return kOfxStatErrBadHandle;
-                return gImageEffectHost->mutexTryLock(mutex);
-            }
-            return kOfxStatOK;
-        }
-        
-        static struct OfxMultiThreadSuiteV1 gMultiThreadSuite = {
-            multiThread,
-            multiThreadNumCPUs,
-            multiThreadIndex,
-            multiThreadIsSpawnedThread,
-            mutexCreate,
-            mutexDestroy,
-            mutexLock,
-            mutexUnLock,
-            mutexTryLock
-        };
+      static OfxStatus multiThread(OfxThreadFunctionV1 func,
+                                   unsigned int /*nThreads*/,
+                                   void *customArg)
+      {
+        if (!func)
+          return kOfxStatFailed;
+        func(0,1,customArg);
+        return kOfxStatOK;
+      }
+
+      static OfxStatus multiThreadNumCPUs(unsigned int *nCPUs)
+      {
+        if (!nCPUs)
+          return kOfxStatFailed;
+        *nCPUs = 1;
+        return kOfxStatOK;
+      }
+
+      static OfxStatus multiThreadIndex(unsigned int *threadIndex){
+        if (!threadIndex)
+          return kOfxStatFailed;
+        *threadIndex = 0;
+        return kOfxStatOK;
+      }
+
+      static int multiThreadIsSpawnedThread(void){
+        return false;
+      }
+
+      static OfxStatus mutexCreate(OfxMutexHandle *mutex, int /*lockCount*/)
+      {
+        if (!mutex)
+          return kOfxStatFailed;
+        // do nothing single threaded
+        *mutex = 0;
+        return kOfxStatOK;
+      }
+
+      static OfxStatus mutexDestroy(const OfxMutexHandle mutex)
+      {
+        if (mutex != 0)
+          return kOfxStatErrBadHandle;
+        // do nothing single threaded
+        return kOfxStatOK;
+      }
+
+      static OfxStatus mutexLock(const OfxMutexHandle mutex){
+        if (mutex != 0)
+          return kOfxStatErrBadHandle;
+        // do nothing single threaded
+        return kOfxStatOK;
+      }
+       
+      static OfxStatus mutexUnLock(const OfxMutexHandle mutex){
+        if (mutex != 0)
+          return kOfxStatErrBadHandle;
+        // do nothing single threaded
+        return kOfxStatOK;
+      }       
+
+      static OfxStatus mutexTryLock(const OfxMutexHandle mutex){
+        if (mutex != 0)
+          return kOfxStatErrBadHandle;
+        // do nothing single threaded
+        return kOfxStatOK;
+      }
+#endif // !OFX_SUPPORTS_MULTITHREAD
+       
+      static struct OfxMultiThreadSuiteV1 gMultiThreadSuite = {
+        multiThread,
+        multiThreadNumCPUs,
+        multiThreadIndex,
+        multiThreadIsSpawnedThread,
+        mutexCreate,
+        mutexDestroy,
+        mutexLock,
+        mutexUnLock,
+        mutexTryLock
+      };
       
 
       ////////////////////////////////////////////////////////////////////////////////

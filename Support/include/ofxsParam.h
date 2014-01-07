@@ -1545,6 +1545,7 @@ namespace OFX {
 
         /** @brief set the value at a time, implicitly adds a keyframe */
         void setValueAtTime(double t, const std::string &v);
+        
     };
 
     ////////////////////////////////////////////////////////////////////////////////

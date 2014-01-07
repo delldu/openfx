@@ -2375,6 +2375,7 @@ namespace OFX {
     throwSuiteStatusException(stat);
   }
 
+    
   ////////////////////////////////////////////////////////////////////////////////
   // Wraps up a Boolean integer param */
 

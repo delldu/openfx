@@ -326,6 +326,9 @@ namespace OFX {
         // callback which should set option as appropriate
         virtual void setOption(int num);
 
+        // callback which should set option as appropriate
+        virtual void setOption(int num);
+
         // Deriving implementatation needs to overide these 
         virtual OfxStatus get(int&) = 0;
         virtual OfxStatus get(OfxTime time, int&) = 0;

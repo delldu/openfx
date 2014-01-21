@@ -181,6 +181,10 @@ namespace OFX {
     if(s == kOfxImageEffectContextPaint) return eContextPaint;
     if(s == kOfxImageEffectContextGeneral) return eContextGeneral;
     if(s == kOfxImageEffectContextRetimer) return eContextRetimer;
+#ifdef OFX_EXTENSIONS_TUTTLE
+    if(s == kOfxImageEffectContextReader) return eContextReader;
+    if(s == kOfxImageEffectContextWriter) return eContextWriter;
+#endif
     OFX::Log::error(true, "Unknown image effect context '%s'", s.c_str());
     throw std::invalid_argument(s);
   }
@@ -617,6 +621,14 @@ namespace OFX {
     case eContextRetimer :
       _effectProps.propSetString(kOfxImageEffectPropSupportedContexts, kOfxImageEffectContextRetimer, n);
       break;
+#ifdef OFX_EXTENSIONS_TUTTLE
+    case eContextReader :
+      _effectProps.propSetString(kOfxImageEffectPropSupportedContexts, kOfxImageEffectContextReader, n);
+      break;
+    case eContextWriter :
+      _effectProps.propSetString(kOfxImageEffectPropSupportedContexts, kOfxImageEffectContextWriter, n);
+      break;
+#endif
     }
   }
 
@@ -675,30 +687,32 @@ namespace OFX {
     }
   }
 
-#ifdef OFX_SUPPORTS_OPENGLRENDER
-  /** @brief Add a pixel depth to those supported */
-  void ImageEffectDescriptor::addSupportedOpenGLBitDepth(BitDepthEnum v)
+#ifdef OFX_EXTENSIONS_TUTTLE
+  /** @brief Add a file extension to those supported */
+  void ImageEffectDescriptor::addSupportedExtension(const std::string& extension)
   {
-    int n = _effectProps.propGetDimension(kOfxOpenGLPropPixelDepth);
-    switch(v) 
-    {
-    case eBitDepthNone :
-      _effectProps.propSetString(kOfxOpenGLPropPixelDepth, kOfxBitDepthNone  , n);
-      break;
-    case eBitDepthUByte :
-      _effectProps.propSetString(kOfxOpenGLPropPixelDepth, kOfxBitDepthByte  , n);
-      break;
-    case eBitDepthUShort :
-      _effectProps.propSetString(kOfxOpenGLPropPixelDepth, kOfxBitDepthShort  , n);
-      break;
-    case eBitDepthHalf :
-      _effectProps.propSetString(kOfxOpenGLPropPixelDepth, kOfxBitDepthHalf  , n);
-      break;
-    case eBitDepthFloat :
-      _effectProps.propSetString(kOfxOpenGLPropPixelDepth, kOfxBitDepthFloat  , n);
-      break;
-    default:
-      break;
+    // only Tuttle support this property ( out of standard )
+    //if( OFX::Private::gHostDescription.hostName == "TuttleOfx" ) {
+    try {
+      const int n = _effectProps.propGetDimension( kTuttleOfxImageEffectPropSupportedExtensions );
+      _effectProps.propSetString(kTuttleOfxImageEffectPropSupportedExtensions, extension, n);
+    } catch (OFX::Exception::PropertyUnknownToHost &e) {
+      // ignore exception
+    }
+  }
+
+  void ImageEffectDescriptor::addSupportedExtensions(const std::vector<std::string>& extensions)
+  {
+    // only Tuttle support this property ( out of standard )
+    //if( OFX::Private::gHostDescription.hostName == "TuttleOfx" ) {
+    try {
+      int n = _effectProps.propGetDimension( kTuttleOfxImageEffectPropSupportedExtensions );
+      
+        for (std::vector<std::string>::const_iterator it = extensions.begin(); it != extensions.end(); ++it, ++n) {
+        _effectProps.propSetString(kTuttleOfxImageEffectPropSupportedExtensions, *it, n);
+      }
+    } catch (OFX::Exception::PropertyUnknownToHost &e) {
+      // ignore exception
     }
   }
 #endif
@@ -2627,7 +2641,13 @@ namespace OFX {
       ImageEffect *effectInstance = retrieveImageEffectPointer(handle);
 
       // we can only be a general context effect, so check that this is true
+#ifdef OFX_EXTENSIONS_TUTTLE
+      OFX::Log::error(effectInstance->getContext() != eContextGeneral &&
+                      effectInstance->getContext() != eContextReader &&
+                      effectInstance->getContext() != eContextGenerator, "Calling kOfxImageEffectActionGetTimeDomain on an effect that is not a 'general', 'reader' or 'generator' context effect.");
+#else
       OFX::Log::error(effectInstance->getContext() != eContextGeneral, "Calling kOfxImageEffectActionGetTimeDomain on an effect that is not a general context effect.");
+#endif
 
       OfxRangeD timeDomain;
 

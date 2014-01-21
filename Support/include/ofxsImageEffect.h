@@ -63,6 +63,9 @@ of the direct OFX objects and any library side only functions.
 #ifdef OFX_EXTENSIONS_NUKE
 #include "nuke/camera.h"
 #endif
+#ifdef OFX_EXTENSIONS_TUTTLE
+#include "tuttle/ofxReadWrite.h"
+#endif
 
 /** @brief Nasty macro used to define empty protected copy ctors and assign ops */
 #define mDeclareProtectedAssignAndCC(CLASS) \
@@ -110,6 +113,10 @@ namespace OFX {
     eContextPaint,
     eContextGeneral,
     eContextRetimer,
+#ifdef OFX_EXTENSIONS_TUTTLE
+    eContextReader,
+    eContextWriter,
+#endif
   };
 
   /** @brief Enumerates the pixel depths supported */
@@ -446,8 +453,11 @@ namespace OFX {
     /** @brief Add a pixel depth to those supported, defaults to none, must be called at least once */
     void addSupportedBitDepth(BitDepthEnum v);
 
-    /** @brief Add a pixel depth to those supported for OpenGL rendering, defaults to all */
-    void addSupportedOpenGLBitDepth(BitDepthEnum v);
+#ifdef OFX_EXTENSIONS_TUTTLE
+    /** @brief Add a file extension to those supported, defaults to none */
+    void addSupportedExtension(const std::string& extension);
+    void addSupportedExtensions(const std::vector<std::string>& extensions);
+#endif
 
     /** @brief Is the plugin single instance only ? defaults to false */
     void setSingleInstance(bool v);

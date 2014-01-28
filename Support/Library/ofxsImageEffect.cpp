@@ -41,40 +41,8 @@ England
 #include <cstring> // for strlen
 #ifdef DEBUG
 #include <iostream>
-#endif
+#include <sstream>
 #include <stdexcept>
-#ifdef OFX_SUPPORTS_OPENGLRENDER
-#include "ofxOpenGLRender.h"
-#endif
-#include "ofxsCore.h"
-
-#if defined __APPLE__ || defined linux || defined __FreeBSD__
-# if __GNUC__ >= 4
-#  define EXPORT __attribute__((visibility("default")))
-#  define LOCAL  __attribute__((visibility("hidden")))
-# else
-#  define EXPORT
-#  define LOCAL
-# endif
-#elif defined _WIN32
-#  define EXPORT OfxExport
-#  define LOCAL
-#else
-#  error Not building on your operating system quite yet
-#endif
-
-// string utility functions
-static bool ends_with(std::string const & value, std::string const & ending)
-{
-  if (ending.size() > value.size()) return false;
-  return std::equal(ending.rbegin(), ending.rend(), value.rbegin());
-}
-
-static bool starts_with(std::string const & value, std::string const & beginning)
-{
-  if (beginning.size() > value.size()) return false;
-  return std::equal(beginning.begin(), beginning.end(), value.begin());
-}
 
 /** @brief The core 'OFX Support' namespace, used by plugin implementations. All code for these are defined in the common support libraries. */
 namespace OFX {
@@ -3222,6 +3190,11 @@ namespace OFX {
       }
 #endif
       // Catch anything else, unknown
+      catch (const std::exception &e)
+      {
+        std::cout << "Caught exception: " << e.what() << std::endl;
+        stat = kOfxStatFailed;
+      }
       catch (...)
       {
 #      ifdef DEBUG
@@ -3306,6 +3279,11 @@ namespace OFX {
       }
 #endif
       // Catch anything else, unknown
+      catch (const std::exception &e)
+      {
+        std::cout << "Caught exception: " << e.what() << std::endl;
+        stat = kOfxStatFailed;
+      }
       catch (...)
       {
         std::cout << "Caught Unknown exception" << std::endl;

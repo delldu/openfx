@@ -3279,11 +3279,6 @@ namespace OFX {
       }
 #endif
       // Catch anything else, unknown
-      catch (const std::exception &e)
-      {
-        std::cout << "Caught exception: " << e.what() << std::endl;
-        stat = kOfxStatFailed;
-      }
       catch (...)
       {
         std::cout << "Caught Unknown exception" << std::endl;

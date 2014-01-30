@@ -26,11 +26,11 @@ SUPPORTOBJECTS = $(PATHTOROOT)/Library/$(OBJECTPATH)/ofxsMultiThread.o \
 		 $(PATHTOROOT)/Library/$(OBJECTPATH)/ofxsParams.o 
 
 
-all: $(OBJECTPATH)/$(PLUGINNAME).ofx.bundle
-
-  ifeq ($(OS),$(filter $(OS),MINGW64_NT-6.1 MINGW32_NT-6.1))
-    LINKFLAGS = -shared -fvisibility=hidden -Xlinker --version-script=$(PATHTOROOT)/include/linuxSymbols -lopengl32
-    ARCH = Win32
+default: $(OBJECTPATH)/$(PLUGINNAME).ofx
+  ifeq ($(OS),Linux)
+    # use $ORIGIN to link to bundled libraries first, see http://itee.uq.edu.au/~daniel/using_origin/
+    LINKFLAGS = -shared -Xlinker --version-script=$(PATHTOROOT)/include/linuxSymbols -lGL -Wl,-rpath,'$$ORIGIN'/../../Libraries
+    ARCH = Linux-x86
     BITSFLAG = -m32
     ifeq ($(BITS), 64)
       BITSFLAG = -m64

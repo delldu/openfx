@@ -344,7 +344,6 @@ namespace OFX {
         { kOfxImageEffectInstancePropSequentialRender, Property::eInt, 1, false, "0" },
         { kOfxImageEffectPropFrameRate ,        Property::eDouble,     1, true,  "0" },
         { kOfxPropIsInteractive,                Property::eInt,        1, true, "0" },
-        { kOfxPropPluginDescription,            Property::eString,     1, true, ""},/*Added by Alex on 09/23/13*/
 #ifdef OFX_EXTENSIONS_NUKE
         //{ ".verbosityProp",                Property::eInt,        2, true, "0" }, // Unknown Nuke property
 #endif
@@ -368,9 +367,6 @@ namespace OFX {
       {
         int i = 0;
         _properties.setChainedSet(&other.getProps());
-
-        /*Added by Alex on 09/23/13*/
-        _properties.setStringProperty(kOfxPropPluginDescription, other.getProps().getStringProperty(kOfxPropPluginDescription));
           
         _properties.setStringProperty(kOfxImageEffectPropContext,context);
         _properties.setIntProperty(kOfxPropIsInteractive,interactive);

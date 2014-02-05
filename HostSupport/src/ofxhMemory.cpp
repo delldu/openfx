@@ -78,9 +78,7 @@ namespace OFX {
       }
 
       void Instance::unlock() {
-        if (_locked > 0) {
-          --_locked;
-        }
+        --_locked;
       }
 
     } // Memory

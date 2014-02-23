@@ -38,10 +38,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "nuke/fnPublicOfxExtensions.h"
 #endif
 
-#ifdef OFX_EXTENSIONS_NATRON
-#include "natron/IOExtensions.h"
-#endif
-
 // ofx host
 #include "ofxhBinary.h"
 #include "ofxhPropertySuite.h"
@@ -295,9 +291,6 @@ namespace OFX {
         static Property::PropSpec allString[] = {
           { kOfxParamPropStringMode,  Property::eString,    1,    false,    kOfxParamStringIsSingleLine },
           { kOfxParamPropStringFilePathExists, Property::eInt,    1,    false,    "1" },
-#ifdef OFX_EXTENSIONS_NATRON
-          { kNatronParamFilePathIsImageSequence, Property::eInt, 1, false, "0"},
-#endif
           Property::propSpecEnd
         };
 

@@ -1600,7 +1600,7 @@ namespace OFX {
 
   /** @brief client is identity function, returns the clip and time for the identity function 
   */
-  bool ImageEffect::isIdentity(const IsIdentityArguments &/*args*/, Clip * &/*identityClip*/, double &/*identityTime*/)
+  bool ImageEffect::isIdentity(const RenderArguments &/*args*/, Clip * &/*identityClip*/, double &/*identityTime*/)
   {
     return false; // by default, we are not an identity operation
   }
@@ -1694,7 +1694,7 @@ namespace OFX {
 
 #ifdef OFX_EXTENSIONS_VEGAS
   /** @brief Vegas requires conversion of keyframe data */
-  void ImageEffect::upliftVegasKeyframes(const SonyVegasUpliftArguments &upliftInfo)
+  void ImageEffect::upliftVegasKeyframes(const SonyVegasUpliftArguments &/*upliftInfo*/)
   {
     // fa niente
   }
@@ -1715,7 +1715,7 @@ namespace OFX {
 #endif
 
   /** @brief called when a custom param needs to be interpolated */
-  std::string ImageEffect::interpolateCustomParam(const InterpolateCustomArgs &args, const std::string &paramName)
+  std::string ImageEffect::interpolateCustomParam(const InterpolateCustomArgs &args, const std::string &/*paramName*/)
   {
       return args.value1;
   }
@@ -2476,7 +2476,7 @@ namespace OFX {
       regionsOfInterestAction(OfxImageEffectHandle handle, OFX::PropertySet inArgs, OFX::PropertySet &outArgs, const char* plugname)
     {
       /** @brief local class to set the roi of a clip */
-      class LOCAL ActualROISetter : public OFX::RegionOfInterestSetter {
+      class ActualROISetter : public OFX::RegionOfInterestSetter {
         OFX::PropertySet &outArgs_;
         bool doneSomething_;
         const std::map<std::string, std::string>& clipROIPropNames_;

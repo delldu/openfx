@@ -62,9 +62,6 @@ each represent the actions that can be carried out on those particular OFX objec
 #define mDeclareProtectedAssignAndCC(CLASS) \
   CLASS &operator=(const CLASS &) {assert(false); return *this;}	\
   CLASS(const CLASS &) {assert(false); } 
-#define mDeclareProtectedAssignAndCCBase(CLASS,BASE) \
-  CLASS &operator=(const CLASS &) {assert(false); return *this;}	\
-  CLASS(const CLASS &c) : BASE(c) {assert(false); }
 
 /** @brief The core 'OFX Support' namespace, used by plugin implementations. All code for these are defined in the common support libraries.
  */
@@ -1825,7 +1822,7 @@ namespace OFX {
         // the following function should be specialized for each param type T
         // (see example below with T = CameraParam)
         template<class T> void
-        fetchAttribute(OfxImageEffectHandle pluginHandle, const std::string& name, T * &paramPtr) const
+        fetchAttribute(OfxImageEffectHandle /*pluginHandle*/, const std::string& /*name*/, T * &/*paramPtr*/) const
         {
             assert(false);
         }

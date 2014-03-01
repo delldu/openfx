@@ -125,23 +125,6 @@ checkComponents(const OFX::Image &src,
 
 static void framesNeeded(double sourceTime, OFX::FieldEnum fieldToRender, double *fromTimep, double *toTimep, double *blendp)
 {
-    // get a dst image
-    std::auto_ptr<OFX::Image>  dst(dstClip_->fetchImage(args.time));
-    OFX::BitDepthEnum          dstBitDepth    = dst->getPixelDepth();
-    OFX::PixelComponentEnum    dstComponents  = dst->getPixelComponents();
-  
-    // figure the frame we should be retiming from
-    double sourceTime;
-    
-    if(getContext() == OFX::eContextRetimer) {
-        // the host is specifying it, so fetch it from the kOfxImageEffectRetimerParamName pseudo-param
-        sourceTime = sourceTime_->getValueAtTime(args.time);
-    }
-    else {
-        // we have our own param, which is a speed, so we integrate it to get the time we want
-        sourceTime = speed_->integrate(0, args.time);
-    }
-
     // figure the two images we are blending between
     double fromTime, toTime;
     double blend;

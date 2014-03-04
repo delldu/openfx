@@ -38,6 +38,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifdef OFX_EXTENSIONS_TUTTLE
 #include "tuttle/ofxReadWrite.h"
 #endif
+#ifdef OFX_EXTENSIONS_NUKE
+#include "nuke/fnOfxExtensions.h"
+#endif
 
 // ofx host
 #include "ofxhBinary.h"
@@ -92,6 +95,10 @@ namespace OFX {
         { kOfxPluginPropFilePath, Property::eString, 1, true, ""},
         { kOfxPropPluginDescription, Property::eString, 1,false, ""},
 #ifdef OFX_EXTENSIONS_NUKE
+        { kFnOfxImageEffectPropMultiPlanar,   Property::eInt, 1, false, "0" },
+        { kFnOfxImageEffectPropViewAware,   Property::eInt, 1, false, "0" },
+        { kFnOfxImageEffectPropViewInvariance,   Property::eInt, 1, false, "0" },
+        { kFnOfxImageEffectCanTransform,   Property::eInt, 1, false, "0" },
         //{ ".length", Property::eDouble, 1, false, ""}, // Unknown Nuke property
 #endif
 #ifdef OFX_EXTENSIONS_TUTTLE
@@ -750,6 +757,9 @@ namespace OFX {
           { kOfxPropChangeReason, Property::eString, 1, true, why.c_str() },
           { kOfxPropTime, Property::eDouble, 1, true, "0" },
           { kOfxImageEffectPropRenderScale, Property::eDouble, 2, true, "0" },
+#ifdef OFX_EXTENSIONS_NUKE
+          { kFnOfxImageEffectPropView, Property::eInt, 1, true, "0" },
+#endif
           Property::propSpecEnd
         };
 
@@ -888,6 +898,9 @@ namespace OFX {
           { kOfxImageEffectPropFrameStep, Property::eDouble, 1, true, "0" }, 
           { kOfxPropIsInteractive, Property::eInt, 1, true, "0" },
           { kOfxImageEffectPropRenderScale, Property::eDouble, 2, true, "0" },
+#ifdef OFX_EXTENSIONS_NUKE
+          { kFnOfxImageEffectPropView, Property::eInt, 1, true, "0" },
+#endif
           Property::propSpecEnd
         };
 
@@ -932,6 +945,9 @@ namespace OFX {
 #ifdef OFX_EXTENSIONS_VEGAS
           { kOfxImageEffectPropRenderView, Property::eInt, 1, true, "0" },
           { kOfxImageEffectPropViewsToRender, Property::eInt, 1, true, "1" },
+#endif
+#ifdef OFX_EXTENSIONS_NUKE
+          { kFnOfxImageEffectPropView, Property::eInt, 1, true, "0" },
 #endif
           Property::propSpecEnd
         };
@@ -986,6 +1002,9 @@ namespace OFX {
           { kOfxImageEffectPropFrameStep, Property::eDouble, 1, true, "0" }, 
           { kOfxPropIsInteractive, Property::eInt, 1, true, "0" },
           { kOfxImageEffectPropRenderScale, Property::eDouble, 2, true, "0" },
+#ifdef OFX_EXTENSIONS_NUKE
+          { kFnOfxImageEffectPropView, Property::eInt, 1, true, "0" },
+#endif
           Property::propSpecEnd
         };
 
@@ -1104,6 +1123,9 @@ namespace OFX {
         static const Property::PropSpec inStuff[] = {
           { kOfxPropTime, Property::eDouble, 1, true, "0" },
           { kOfxImageEffectPropRenderScale, Property::eDouble, 2, true, "0" },
+#ifdef OFX_EXTENSIONS_NUKE
+          { kFnOfxImageEffectPropView, Property::eInt, 1, true, "0" },
+#endif
           Property::propSpecEnd
         };
 
@@ -1180,6 +1202,9 @@ namespace OFX {
             { kOfxPropTime, Property::eDouble, 1, true, "0" },
             { kOfxImageEffectPropRenderScale, Property::eDouble, 2, true, "0" },
             { kOfxImageEffectPropRegionOfInterest , Property::eDouble, 4, true, 0 },
+#ifdef OFX_EXTENSIONS_NUKE
+            { kFnOfxImageEffectPropView, Property::eInt, 1, true, "0" },
+#endif
             Property::propSpecEnd
           };
           Property::Set inArgs(inStuff);
@@ -1286,6 +1311,9 @@ namespace OFX {
         if(temporalAccess()) {
           static const Property::PropSpec inStuff[] = {
             { kOfxPropTime, Property::eDouble, 1, true, "0" },          
+#ifdef OFX_EXTENSIONS_NUKE
+            { kFnOfxImageEffectPropView, Property::eInt, 1, true, "0" },
+#endif
             Property::propSpecEnd
           };
           Property::Set inArgs(inStuff);       
@@ -1402,6 +1430,9 @@ namespace OFX {
           { kOfxImageEffectPropFieldToRender, Property::eString, 1, true, "" }, 
           { kOfxImageEffectPropRenderWindow, Property::eInt, 4, true, "0" },
           { kOfxImageEffectPropRenderScale, Property::eDouble, 2, true, "0" },
+#ifdef OFX_EXTENSIONS_NUKE
+          { kFnOfxImageEffectPropView, Property::eInt, 1, true, "0" },
+#endif
           Property::propSpecEnd
         };
 
@@ -2650,6 +2681,9 @@ namespace OFX {
         { kOfxParamHostPropMaxParameters, Property::eInt, 1, true, "-1" },
         { kOfxParamHostPropMaxPages, Property::eInt, 1, true, "0" },
         { kOfxParamHostPropPageRowColumnCount, Property::eInt, 2, true, "0" },
+#ifdef OFX_EXTENSIONS_NUKE
+        { kFnOfxImageEffectPropMultiPlanar,   Property::eInt, 1, false, "0" },
+#endif
         Property::propSpecEnd
       };    
 

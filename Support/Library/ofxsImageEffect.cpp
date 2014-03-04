@@ -43,6 +43,9 @@ England
 #include <iostream>
 #include <sstream>
 #include <stdexcept>
+#ifdef OFX_EXTENSIONS_NUKE
+#include "nuke/fnOfxExtensions.h"
+#endif
 
 /** @brief The core 'OFX Support' namespace, used by plugin implementations. All code for these are defined in the common support libraries. */
 namespace OFX {
@@ -125,6 +128,8 @@ namespace OFX {
     OfxParametricParameterSuiteV1* gParametricParameterSuite = 0;
 #ifdef OFX_EXTENSIONS_NUKE
     NukeOfxCameraSuiteV1* gCameraParameterSuite = 0;
+    FnOfxImageEffectPlaneSuiteV1* gImageEffectPlaneSuiteV1 = 0;
+    FnOfxImageEffectPlaneSuiteV2* gImageEffectPlaneSuiteV2 = 0;
 #endif
 #ifdef OFX_EXTENSIONS_VEGAS
 #if defined(WIN32) || defined(WIN64)
@@ -291,6 +296,14 @@ namespace OFX {
     else if(str == kOfxImageComponentNone) {
       return ePixelComponentNone;
     }
+#ifdef OFX_EXTENSIONS_NUKE
+    else if(str == kFnOfxImageComponentMotionVectors) {
+        return ePixelComponentMotionVectors;
+    }
+    else if(str == kFnOfxImageComponentStereoDisparity) {
+        return ePixelComponentStereoDisparity;
+    }
+#endif
     else {
       return ePixelComponentCustom;
     }
@@ -445,6 +458,15 @@ namespace OFX {
     case ePixelComponentAlpha :
       _clipProps.propSetString(kOfxImageEffectPropSupportedComponents, kOfxImageComponentAlpha, n);
       break;
+#ifdef OFX_EXTENSIONS_NUKE
+    case ePixelComponentMotionVectors :
+      _clipProps.propSetString(kOfxImageEffectPropSupportedComponents, kFnOfxImageComponentMotionVectors, n);
+      break;
+
+    case ePixelComponentStereoDisparity :
+      _clipProps.propSetString(kOfxImageEffectPropSupportedComponents, kFnOfxImageComponentStereoDisparity, n);
+      break;
+#endif
     case ePixelComponentCustom :
       break;
     }
@@ -882,6 +904,10 @@ namespace OFX {
     case ePixelComponentRGBA  : _pixelBytes = 4; break;
     case ePixelComponentRGB  : _pixelBytes = 3; break;
     case ePixelComponentAlpha : _pixelBytes = 1; break;
+#ifdef OFX_EXTENSIONS_NUKE
+    case ePixelComponentMotionVectors  : _pixelBytes = 2; break;
+    case ePixelComponentStereoDisparity : _pixelBytes = 2; break;
+#endif
     case ePixelComponentCustom : _pixelBytes = 0; break;
     }
 
@@ -1868,6 +1894,14 @@ namespace OFX {
     case ePixelComponentAlpha : 
       outArgs_.propSetString(propName.c_str(), kOfxImageComponentAlpha); 
       break;
+#ifdef OFX_EXTENSIONS_NUKE
+    case ePixelComponentMotionVectors :
+      outArgs_.propSetString(propName.c_str(), kFnOfxImageComponentMotionVectors);
+      break;
+    case ePixelComponentStereoDisparity :
+      outArgs_.propSetString(propName.c_str(), kFnOfxImageComponentStereoDisparity);
+      break;
+#endif
     case ePixelComponentCustom :
       break;
     }
@@ -2124,6 +2158,8 @@ namespace OFX {
         gParametricParameterSuite = (OfxParametricParameterSuiteV1*) fetchSuite(kOfxParametricParameterSuite, 1, true );
 #ifdef OFX_EXTENSIONS_NUKE
         gCameraParameterSuite = (NukeOfxCameraSuiteV1*) fetchSuite(kNukeOfxCameraSuite, 1, true );
+        gImageEffectPlaneSuiteV1 = (FnOfxImageEffectPlaneSuiteV1*) fetchSuite(kFnOfxImageEffectPlaneSuite, 1, true );
+        gImageEffectPlaneSuiteV2 = (FnOfxImageEffectPlaneSuiteV2*) fetchSuite(kFnOfxImageEffectPlaneSuite, 2, true );
 #endif
 #ifdef OFX_EXTENSIONS_VEGAS
         gVegasProgressSuite   = (OfxVegasProgressSuiteV1 *)     fetchSuite(kOfxVegasProgressSuite, 1, true);
@@ -2770,6 +2806,11 @@ namespace OFX {
       return effectInstance->invokeHelp();
     }
 #endif
+#ifdef OFX_EXTENSIONS_NUKE
+    // TODO: getClipComponents(handle, inArgs, outargs);
+    // TODO: framesViewsNeededAction(handle, inArgs, outargs, plugname); (see framesNeededAction())
+    // TODO: getTransform(handle, inArgs, outargs);
+#endif
 
     /** @brief The main entry point for the plugin
     */
@@ -3042,6 +3083,30 @@ namespace OFX {
           if(invokeAbout(handle, plugname))
             stat = kOfxStatOK;
         }
+#endif
+#ifdef OFX_EXTENSIONS_NUKE
+        // TODO
+#if 0
+        else if(action == kFnOfxImageEffectActionGetClipComponents) {
+          checkMainHandles(actionRaw, handleRaw, inArgsRaw, outArgsRaw, false, false, false);
+
+          // call the clip components function
+          getClipComponents(handle, inArgs, outargs);
+        }
+        else if(action == kFnOfxImageEffectActionGetFrameViewsNeeded) {
+          checkMainHandles(actionRaw, handleRaw, inArgsRaw, outArgsRaw, false, false, false);
+
+          // call the frames views needed action, return OK if it does something
+          if(framesViewsNeededAction(handle, inArgs, outArgs, plugname))
+            stat = kOfxStatOK;
+        }
+        else if(action == kFnOfxImageEffectActionGetTransform) {
+          checkMainHandles(actionRaw, handleRaw, inArgsRaw, outArgsRaw, false, false, false);
+
+          // call the get transform function
+          getTransform(handle, inArgs, outargs);
+        }
+#endif
 #endif
         else if(actionRaw) {
           OFX::Log::error(true, "Unknown action '%s'.", actionRaw);

@@ -1907,9 +1907,7 @@ namespace OFX {
       {
         if (!_created) {
           // setValue() was probably called from kOfxActionCreateInstance 
-          // this is legal according to http://openfx.sourceforge.net/Documentation/1.3/ofxProgrammingReference.html#SettingParams
-          // but kOfxActionInstanceChanged should not be called according to the preconditions of http://openfx.sourceforge.net/Documentation/1.3/ofxProgrammingReference.html#kOfxActionInstanceChanged
-          return;
+          throw Property::Exception(kOfxStatFailed);
         }
         double frame  = getFrameRecursive();
         OfxPointD renderScale; getRenderScaleRecursive(renderScale.x, renderScale.y);

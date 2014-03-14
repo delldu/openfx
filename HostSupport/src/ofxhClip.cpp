@@ -37,8 +37,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "ofxhPropertySuite.h"
 #include "ofxhClip.h"
 #include "ofxhImageEffect.h"
-#ifdef OFX_SUPPORTS_OPENGLRENDER
-#include "ofxOpenGLRender.h"
+#ifdef OFX_EXTENSIONS_VEGAS
+#include "ofxSonyVegas.h"
 #endif
 
 namespace OFX {

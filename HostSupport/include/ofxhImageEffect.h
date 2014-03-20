@@ -563,17 +563,26 @@ namespace OFX {
                                             OfxPointD   renderScale,
                                             bool     sequentialRender,
                                             bool     interactiveRender
+#                                         ifdef OFX_EXTENSIONS_NUKE
+                                            ,
+                                            int view
+#                                         endif
                                             );
 
         virtual OfxStatus renderAction(OfxTime      time,
                                        const std::string &  field,
                                        const OfxRectI &renderRoI,
-                                       OfxPointD   renderScale
-#ifdef OFX_EXTENSIONS_VEGAS
+                                       OfxPointD   renderScale,
+                                       bool     sequentialRender,
+                                       bool     interactiveRender
+#                                    if defined(OFX_EXTENSIONS_VEGAS) || defined(OFX_EXTENSIONS_NUKE)
                                        ,
-                                       int view,
+                                       int view
+#                                    endif
+#                                    ifdef OFX_EXTENSIONS_VEGAS
+                                       ,
                                        int nViews
-#endif
+#                                    endif
                                        );
 
         virtual OfxStatus endRenderAction(OfxTime  startFrame,
@@ -583,6 +592,10 @@ namespace OFX {
                                           OfxPointD   renderScale,
                                           bool     sequentialRender,
                                           bool     interactiveRender
+#                                       ifdef OFX_EXTENSIONS_NUKE
+                                          ,
+                                          int view
+#                                       endif
                                           );
 
         /// Call the region of definition action the plugin at the given time

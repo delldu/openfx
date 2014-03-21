@@ -579,6 +579,14 @@ namespace OFX {
 
         /** @brief set the default value */
         void setDefault(double r, double g, double b);
+
+        /** @brief set the hard min/max range, default is 0., 1. */
+        void setRange(double minR, double minG, double minB,
+                      double maxR, double maxG, double maxB);
+
+        /** @brief set the display min and max, default is to be the same as the range param */
+        void setDisplayRange(double minR, double minG, double minB,
+                            double maxR, double maxG, double maxB);
 #ifdef OFX_EXTENSIONS_VEGAS
         /** @brief set the default UI color space of the RGB param, defaults to eColorSpaceHSV */
         void setDefaultColorSpace(ColorSpaceEnum v);
@@ -607,6 +615,14 @@ namespace OFX {
 
         /** @brief set the default value */
         void setDefault(double r, double g, double b, double a);
+
+        /** @brief set the hard min/max range, default is 0., 1. */
+        void setRange(double minR, double minG, double minB, double minA,
+                      double maxR, double maxG, double maxB, double maxA);
+
+        /** @brief set the display min and max, default is to be the same as the range param */
+        void setDisplayRange(double minR, double minG, double minB, double minA,
+                            double maxR, double maxG, double maxB, double maxA);
 #ifdef OFX_EXTENSIONS_VEGAS
         /** @brief set the default UI color space of the RGB param, defaults to eColorSpaceHSV */
         void setDefaultColorSpace(ColorSpaceEnum v);

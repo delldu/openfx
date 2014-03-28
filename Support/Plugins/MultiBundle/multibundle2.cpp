@@ -204,10 +204,13 @@ bool DotExamplePlugin::getRegionOfDefinition(const OFX::RegionOfDefinitionArgume
   double r = radius_->getValueAtTime(args.time);
   double x, y;
   position_->getValueAtTime(args.time, x, y);
-  rod.x1 = x - r;
-  rod.y1 = y - r;
-  rod.x2 = x + r;
-  rod.y2 = y + r;
+  OfxPointD size = getProjectSize();
+  OfxPointD offset = getProjectOffset();
+  float scaledR = (float)(r * size.x);
+  rod.x1 = x * size.x - scaledR + offset.x;
+  rod.y1 = y * size.y - scaledR  + offset.y;
+  rod.x2 = x * size.x + scaledR  + offset.x;
+  rod.y2 = y * size.y + scaledR  + offset.y;
   return true;
 }
 

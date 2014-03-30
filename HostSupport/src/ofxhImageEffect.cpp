@@ -2403,7 +2403,7 @@ namespace OFX {
       };
 
 #ifdef OFX_EXTENSIONS_VEGAS
-      static struct OfxVegasStereoscopicImageEffectSuiteV1 gVegasStereoscopicImageEffectSuite = {
+      static const struct OfxVegasStereoscopicImageEffectSuiteV1 gVegasStereoscopicImageEffectSuite = {
         clipGetStereoscopicImage
       };
 #endif
@@ -2475,7 +2475,7 @@ namespace OFX {
       }
 
       /// message suite for an image effect plugin (backward-compatible with OfxMessageSuiteV1)
-      static struct OfxMessageSuiteV2 gMessageSuite = {
+      static const struct OfxMessageSuiteV2 gMessageSuite = {
         message,
         setPersistentMessage,
         clearPersistentMessage
@@ -2709,7 +2709,7 @@ namespace OFX {
       }
 #endif // !OFX_SUPPORTS_MULTITHREAD
        
-      static struct OfxMultiThreadSuiteV1 gMultiThreadSuite = {
+      static const struct OfxMultiThreadSuiteV1 gMultiThreadSuite = {
         multiThread,
         multiThreadNumCPUs,
         multiThreadIndex,

@@ -485,7 +485,7 @@ namespace OFX {
       // Image
       //
 
-      static const Property::PropSpec imageBaseStuffs[] = {
+      static const Property::PropSpec imageStuffs[] = {
         { kOfxPropType, Property::eString, 1, false, kOfxTypeImage },
         { kOfxImageEffectPropPixelDepth, Property::eString, 1, true, kOfxBitDepthNone  },
         { kOfxImageEffectPropComponents, Property::eString, 1, true, kOfxImageComponentNone },

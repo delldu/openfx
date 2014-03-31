@@ -63,7 +63,7 @@ static OfxMessageSuiteV1     *gMessageSuite;
 
 ////////////////////////////////////////////////////////////////////////////////
 // fetch a suite
-static void *
+static const void *
 fetchSuite(const char *suiteName, int suiteVersion, bool optional = false)
 {
   const void *suite = gHost->fetchSuite(gHost->host, suiteName, suiteVersion);

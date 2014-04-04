@@ -502,7 +502,6 @@ namespace OFX {
     case eDoubleTypeXYAbsolute :
       _paramProps.propSetString(kOfxParamPropDoubleType, kOfxParamDoubleTypeXYAbsolute);
       break;
-#ifdef kOfxParamDoubleTypeNormalisedX
     case eDoubleTypeNormalisedX :
       _paramProps.propSetString(kOfxParamPropDoubleType, kOfxParamDoubleTypeNormalisedX);
       break;
@@ -529,6 +528,20 @@ namespace OFX {
       _paramProps.propSetString(kOfxParamPropDoubleType, kOfxParamDoubleTypeChrominance);
       break;
 #endif
+    }
+  }
+
+  /** @brief set the type of coordinate system for default values */
+  void BaseDoubleParamDescriptor::setDefaultCoordinateSystem(DefaultCoordinateSystemEnum v)
+  {
+    switch(v) 
+    {
+    case eCoordinatesCanonical :
+      _paramProps.propSetString(kOfxParamPropDefaultCoordinateSystem, kOfxParamCoordinatesCanonical);
+      break;
+    case eCoordinatesNormalised :
+      _paramProps.propSetString(kOfxParamPropDefaultCoordinateSystem, kOfxParamCoordinatesNormalised);
+      break;
     }
   }
 
@@ -1925,7 +1938,6 @@ namespace OFX {
       v = eDoubleTypeXY;
     else if(str == kOfxParamDoubleTypeXYAbsolute)
       v = eDoubleTypeXYAbsolute;
-#ifdef kOfxParamDoubleTypeNormalisedX
     else if(str == kOfxParamDoubleTypeNormalisedX)
       v = eDoubleTypeNormalisedX;
     else if(str == kOfxParamDoubleTypeNormalisedY)

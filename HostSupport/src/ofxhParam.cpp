@@ -470,6 +470,7 @@ namespace OFX {
         if(isDoubleParam(type)) {
           static const Property::PropSpec allDouble[] = {
             { kOfxParamPropDoubleType, Property::eString,    1,    false,    kOfxParamDoubleTypePlain },
+            { kOfxParamPropDefaultCoordinateSystem, Property::eString,    1,    false,    kOfxParamCoordinatesCanonical },
             Property::propSpecEnd
           };
           _properties.addProperties(allDouble);

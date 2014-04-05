@@ -316,6 +316,7 @@ namespace OFX {
     bool supportsParametricParameter;
 #ifdef OFX_EXTENSIONS_NUKE
     bool supportsCameraParameter;
+    bool canTransform;
 #endif
     int maxParameters;
     int maxPages;
@@ -872,6 +873,16 @@ namespace OFX {
   };
 #endif
 
+#ifdef OFX_EXTENSIONS_NUKE
+  /** @brief POD struct to pass arguments into @ref OFX::ImageEffect::getTransform */
+  struct TransformArguments {
+    double    time;
+    OfxPointD renderScale;
+    FieldEnum fieldToRender = eFieldBoth;
+    int       renderView;
+  };
+#endif
+
   /** @brief Class used to set regions of interest on a clip in @ref OFX::ImageEffect::getRegionsOfInterest
 
   This is a base class, the actual class is private and you don't need to see the glue involved.
@@ -1113,6 +1124,9 @@ namespace OFX {
     The returned camera param \em must not be deleted by the client code. This is all managed by the ImageEffect itself.
     */
     CameraParam* fetchCameraParam(const std::string& name) const;
+
+    /** @brief indicate that a plugin or host can handle transform effects */
+    void setCanTransform(bool v);
 #endif
 
     /** @brief does the host want us to abort rendering? */
@@ -1212,6 +1226,14 @@ namespace OFX {
 
     /** @brief Vegas invokes help dialog */
     virtual bool invokeHelp();
+#endif
+
+#ifdef OFX_EXTENSIONS_NUKE
+    // TODO: getClipComponents(handle, inArgs, outargs);
+    // TODO: framesViewsNeededAction(handle, inArgs, outargs, plugname); (see framesNeededAction())
+
+    /** @brief recover a transform matrix from an effect */
+    virtual bool getTransform(const TransformArguments &args, Clip * &transformClip, double transformMatrix[9]);
 #endif
 
     /** @brief called when a custom param needs to be interpolated */

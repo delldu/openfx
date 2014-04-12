@@ -689,9 +689,9 @@ namespace OFX {
     {
       PropertyDescription(kOfxImageEffectPropFrameRate,         OFX::eDouble, 1, eDescFinished),
       PropertyDescription(kOfxImageClipPropFieldOrder,          OFX::eString, 1, eDescFinished),
+      PropertyDescription(kOfxImageEffectPropPreMultiplication, OFX::eString, 1, eDescFinished),
       PropertyDescription(kOfxImageClipPropContinuousSamples,   OFX::eInt, 1, eDescDefault, 0, eDescFinished),
       PropertyDescription(kOfxImageEffectFrameVarying,          OFX::eInt, 1, eDescDefault, 0, eDescFinished),
-      PropertyDescription(kOfxImageEffectPropPreMultiplication, OFX::eString, 1, eDescFinished),
     };
 
     /** @brief kOfxImageEffectActionGetClipPreferences property set */

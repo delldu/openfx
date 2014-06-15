@@ -1070,11 +1070,6 @@ namespace OFX {
     _paramProps.propSetInt(kOfxParamPropParametricDimension, dimension);
   }
 
-  void ParametricParamDescriptor::setLabel(const std::string& label)
-  {
-    _paramProps.propSetString(kOfxPropLabel, label);
-  }
-
   void ParametricParamDescriptor::setDimensionLabel(const std::string& label, const int id)
   {
     _paramProps.propSetString(kOfxParamPropDimensionLabel, label, id);

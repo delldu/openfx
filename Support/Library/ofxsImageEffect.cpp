@@ -722,6 +722,12 @@ namespace OFX {
       // ignore exception
     }
   }
+
+  void ImageEffectDescriptor::setPluginEvaluation(double evaluation)
+  {
+    // This property is an extension, so it's optional.
+    _effectProps.propSetDouble( kTuttleOfxImageEffectPropEvaluation, evaluation, false );
+  }
 #endif
 
   /** @brief Is the plugin single instance only ? */

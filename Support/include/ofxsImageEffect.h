@@ -817,6 +817,8 @@ namespace OFX {
     int         renderView;         /// default is 0, for s3d left eye: 0, right eye: 1
     VegasRenderQualityEnum renderQuality;
 #endif
+    bool      sequentialRenderStatus;
+    bool      interactiveRenderStatus;
   };
 
   /** @brief POD struct to pass arguments into  @ref OFX::ImageEffect::render */
@@ -825,9 +827,6 @@ namespace OFX {
     double    frameStep;
     bool      isInteractive;
     OfxPointD renderScale;
-#ifdef OFX_SUPPORTS_OPENGLRENDER
-    bool      openGLEnabled;
-#endif
     bool      sequentialRenderStatus;
     bool      interactiveRenderStatus;
   };
@@ -836,9 +835,6 @@ namespace OFX {
   struct EndSequenceRenderArguments {
     bool      isInteractive;
     OfxPointD renderScale;
-#ifdef OFX_SUPPORTS_OPENGLRENDER
-    bool      openGLEnabled;
-#endif
     bool      sequentialRenderStatus;
     bool      interactiveRenderStatus;
   };

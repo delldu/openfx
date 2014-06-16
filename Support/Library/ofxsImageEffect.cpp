@@ -2356,6 +2356,9 @@ namespace OFX {
       args.renderWindow.x2 = inArgs.propGetInt(kOfxImageEffectPropRenderWindow, 2);
       args.renderWindow.y2 = inArgs.propGetInt(kOfxImageEffectPropRenderWindow, 3);
 
+      args.sequentialRenderStatus = inArgs.propGetInt(kOfxImageEffectPropSequentialRenderStatus) != 0;
+      args.interactiveRenderStatus = inArgs.propGetInt(kOfxImageEffectPropInteractiveRenderStatus) != 0;
+
 #ifdef OFX_EXTENSIONS_VEGAS
       args.viewsToRender = inArgs.propGetInt(kOfxImageEffectPropViewsToRender, 0, false);
       args.renderView = inArgs.propGetInt(kOfxImageEffectPropRenderView, 0, false);
@@ -2424,11 +2427,9 @@ namespace OFX {
       args.openGLEnabled = inArgs.propGetInt(kOfxImageEffectPropOpenGLEnabled, false) != 0;
 #endif
       args.isInteractive = inArgs.propGetInt(kOfxPropIsInteractive) != 0;
-      // Don't throw an exception if the following inArgs are not present:
-      // They appeared in OFX 1.2
-      args.sequentialRenderStatus = inArgs.propGetInt(kOfxImageEffectPropSequentialRenderStatus, false) != 0;
-      args.interactiveRenderStatus = inArgs.propGetInt(kOfxImageEffectPropInteractiveRenderStatus, false) != 0;
-        
+      args.sequentialRenderStatus = inArgs.propGetInt(kOfxImageEffectPropSequentialRenderStatus) != 0;
+      args.interactiveRenderStatus = inArgs.propGetInt(kOfxImageEffectPropInteractiveRenderStatus) != 0;
+
       // and call the plugin client render code
       effectInstance->beginSequenceRender(args);
     }
@@ -2451,10 +2452,8 @@ namespace OFX {
       args.openGLEnabled = inArgs.propGetInt(kOfxImageEffectPropOpenGLEnabled, false) != 0;
 #endif
       args.isInteractive = inArgs.propGetInt(kOfxPropIsInteractive) != 0;
-      // Don't throw an exception if the following inArgs are not present:
-      // They appeared in OFX 1.2
-      args.sequentialRenderStatus = inArgs.propGetInt(kOfxImageEffectPropSequentialRenderStatus, false) != 0;
-      args.interactiveRenderStatus = inArgs.propGetInt(kOfxImageEffectPropInteractiveRenderStatus, false) != 0;
+      args.sequentialRenderStatus = inArgs.propGetInt(kOfxImageEffectPropSequentialRenderStatus) != 0;
+      args.interactiveRenderStatus = inArgs.propGetInt(kOfxImageEffectPropInteractiveRenderStatus) != 0;
 
       // and call the plugin client render code
       effectInstance->endSequenceRender(args);

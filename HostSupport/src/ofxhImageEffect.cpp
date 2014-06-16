@@ -94,6 +94,7 @@ namespace OFX {
         { kOfxImageEffectInstancePropSequentialRender, Property::eInt, 1, false, "0" },
         { kOfxPluginPropFilePath, Property::eString, 1, true, ""},
         { kOfxPropPluginDescription, Property::eString, 1,false, ""},
+        { kOfxImageEffectInstancePropSequentialRender, Property::eInt, 1, false , "0" },
 #ifdef OFX_EXTENSIONS_NUKE
         { kFnOfxImageEffectPropMultiPlanar,   Property::eInt, 1, false, "0" },
         { kFnOfxImageEffectPropViewAware,   Property::eInt, 1, false, "0" },
@@ -352,7 +353,6 @@ namespace OFX {
         { kOfxImageEffectPropProjectExtent,     Property::eDouble,     2, true,  "0" },
         { kOfxImageEffectPropProjectPixelAspectRatio, Property::eDouble, 1, true,  "0" },
         { kOfxImageEffectInstancePropEffectDuration, Property::eDouble, 1, true,  "0" },
-        { kOfxImageEffectInstancePropSequentialRender, Property::eInt, 1, false, "0" },
         { kOfxImageEffectPropFrameRate ,        Property::eDouble,     1, true,  "0" },
         { kOfxPropIsInteractive,                Property::eInt,        1, true, "0" },
 #ifdef OFX_EXTENSIONS_NUKE

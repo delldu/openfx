@@ -1612,8 +1612,7 @@ namespace OFX {
 
         /// OK find the deepest chromatic component on our input clips and the one with the
         /// most components
-          bool hasInputs = false;
-          
+        bool hasInputs = false;
         std::string deepestBitDepth = kOfxBitDepthNone;
         std::string mostComponents  = kOfxImageComponentNone;       
         double frameRate = getFrameRate(); //< default to the project frame rate
@@ -1651,7 +1650,7 @@ namespace OFX {
           }
         }
         // default to a reasonable value if there is no input
-        if (!hasSetCompsAndDepth) {
+        if (!hasInputs) {
           mostComponents = kOfxImageComponentRGBA;
           deepestBitDepth = kOfxBitDepthFloat;
         }
@@ -1665,12 +1664,6 @@ namespace OFX {
 
         /// now find the best depth that the plugin supports
         deepestBitDepth = bestSupportedDepth(deepestBitDepth);
-          
-          /*edit on 08/29/13 default value when there's no inputs for a plugin*/
-          if(!hasInputs){
-              mostComponents = kOfxImageComponentRGBA;
-              deepestBitDepth = kOfxBitDepthFloat;
-          }
 
         /// now add the clip gubbins to the out args
         for(std::map<std::string, ClipInstance*>::iterator it=_clips.begin();

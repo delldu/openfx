@@ -314,6 +314,9 @@ namespace OFX {
     bool supportsBooleanAnimation;
     bool supportsCustomAnimation;
     bool supportsParametricParameter;
+#ifdef OFX_SUPPORTS_OPENGLRENDER
+    bool supportsOpenGLRender;
+#endif
 #ifdef OFX_EXTENSIONS_NUKE
     bool supportsCameraParameter;
     bool canTransform;
@@ -493,6 +496,12 @@ namespace OFX {
     /** @brief If the slave  param changes the clip preferences need to be re-evaluated */
     void addClipPreferencesSlaveParam(ParamDescriptor &p);
 
+#ifdef OFX_SUPPORTS_OPENGLRENDER
+    void setSupportsOpenGLRender(bool v);
+    void setNeedsOpenGLRender(bool v);
+    void addOpenGLBitDepth(BitDepthEnum bitDepth);
+#endif
+
 #ifdef OFX_EXTENSIONS_VEGAS
     /** @brief Add a guid upgrade path, defaults to none, must be called at least once */
     void addVegasUpgradePath(const std::string &guidString);
@@ -566,7 +575,7 @@ namespace OFX {
 
     /** @brief dtor */
     virtual ~ImageBase();
-      
+
     const PropertySet &getPropertySet() const {return _imageProps;}
 
     PropertySet &getPropertySet() {return _imageProps;}
@@ -605,7 +614,7 @@ namespace OFX {
     FieldEnum getField(void) const { return _field;}
 
     /** @brief the unique ID of this image */
-    const std::string& getUniqueIdentifier(void) const { return _uniqueID;}
+    std::string getUniqueIdentifier(void) const { return _uniqueID;}
   };
 
   ////////////////////////////////////////////////////////////////////////////////
@@ -622,10 +631,7 @@ namespace OFX {
     virtual ~Image();
 
     /** @brief get the pixel data for this image */
-    void *getPixelData(void) { return _pixelData;}
-
-    /** @brief get the pixel data for this image */
-    const void *getPixelData(void) const { return _pixelData;}
+    void *getPixelData(void) const { return _pixelData;}
 
     /** @brief return a pixel pointer, returns NULL if (x,y) is outside the image bounds
 
@@ -635,6 +641,27 @@ namespace OFX {
     can't know the pixel size to do the work.
     */
     void *getPixelAddress(int x, int y) const;
+  };
+
+  ////////////////////////////////////////////////////////////////////////////////
+  /** @brief Wraps up an OpenGL texture */
+  class Texture : public ImageBase {
+  protected :
+    int _index;
+    int _target;
+
+  public :
+    /** @brief ctor */
+    Texture(OfxPropertySetHandle props);
+
+    /** @brief dtor */
+    virtual ~Texture();
+
+    /** @brief get OpenGL texture id (cast to GLuint) */
+    inline int getIndex() {return _index;}
+      
+    /** @brief get OpenGL texture target (cast to GLenum) */
+    inline int getTarget() {return _target;}
   };
 
   ////////////////////////////////////////////////////////////////////////////////
@@ -781,7 +808,7 @@ namespace OFX {
     }
 
 #ifdef OFX_SUPPORTS_OPENGLRENDER
-    Texture *loadTexture(double t, BitDepthEnum format = eBitDepthNone, const OfxRectD *region = NULL);
+    Texture *loadTexture(double t, BitDepthEnum format, const OfxRectD *region);
 #endif
   };
 
@@ -1253,7 +1280,7 @@ namespace OFX {
 #endif
 
     /// Start doing progress.
-    void progressStart(const std::string &message, const std::string &messageid = "");
+    void progressStart(const std::string &message);
 
 #ifdef OFX_EXTENSIONS_VEGAS
     void progressStart(const std::string &id, const std::string &message);

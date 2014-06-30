@@ -46,6 +46,9 @@ England
 #ifdef OFX_EXTENSIONS_NUKE
 #include "nuke/fnOfxExtensions.h"
 #endif
+#ifdef OFX_SUPPORTS_OPENGLRENDER
+#include "ofxOpenGLRender.h"
+#endif
 
 /** @brief The core 'OFX Support' namespace, used by plugin implementations. All code for these are defined in the common support libraries. */
 namespace OFX {
@@ -125,7 +128,10 @@ namespace OFX {
     OfxMessageSuiteV2     *gMessageSuiteV2 = 0;
     OfxProgressSuiteV1     *gProgressSuite = 0;
     OfxTimeLineSuiteV1     *gTimeLineSuite = 0;
-    OfxParametricParameterSuiteV1* gParametricParameterSuite = 0;
+    OfxParametricParameterSuiteV1 *gParametricParameterSuite = 0;
+#ifdef OFX_SUPPORTS_OPENGLRENDER
+    OfxImageEffectOpenGLRenderSuiteV1 *gOpenGLRenderSuite = 0;
+#endif
 #ifdef OFX_EXTENSIONS_NUKE
     NukeOfxCameraSuiteV1* gCameraParameterSuite = 0;
     FnOfxImageEffectPlaneSuiteV1* gImageEffectPlaneSuiteV1 = 0;
@@ -259,10 +265,11 @@ namespace OFX {
     }
   }
 
-  /** @brief turns a bit depth string into and enum */
-  const char* mapBitDepthEnumToStr(BitDepthEnum bitDepth) throw(std::invalid_argument)
-  {
-    switch (bitDepth) {
+#ifdef OFX_SUPPORTS_OPENGLRENDER
+    /** @brief turns a bit depth string into and enum */
+    static std::string mapBitDepthEnumToStr(BitDepthEnum bitDepth)
+    {
+      switch (bitDepth) {
       case eBitDepthUByte:
         return kOfxBitDepthByte;
       case eBitDepthUShort:
@@ -271,15 +278,21 @@ namespace OFX {
         return kOfxBitDepthHalf;
       case eBitDepthFloat:
         return kOfxBitDepthFloat;
+#ifdef OFX_EXTENSIONS_VEGAS
+      case eBitDepthUByteBGRA:
+        return kOfxBitDepthByteBGR;
+      case eBitDepthUShortBGRA:
+        return kOfxBitDepthShortBGR;
+      case eBitDepthFloatBGRA:
+        return kOfxBitDepthFloatBGR;
+#endif
       case eBitDepthNone:
         return kOfxBitDepthNone;
       case eBitDepthCustom:
-        return "OfxBitDepthCustom";
-      default:
-        OFX::Log::error(true, "Unknown bit depth enum '%d'", (int)bitDepth);
-        throw std::invalid_argument("unknown BitDepthEnum");
+        return std::string();
+        }
     }
-  }
+#endif
 
   /** @brief turns a pixel component string into and enum */
   PixelComponentEnum mapStrToPixelComponentEnum(const std::string &str) throw(std::invalid_argument)
@@ -813,6 +826,29 @@ namespace OFX {
   }
 #endif
 
+#ifdef OFX_SUPPORTS_OPENGLRENDER
+    void ImageEffectDescriptor::setSupportsOpenGLRender(bool v) {
+      if (gHostDescription.supportsOpenGLRender) {
+        _effectProps.propSetString(kOfxImageEffectPropOpenGLRenderSupported, (v ? "true" : "false"));
+      }
+    }
+
+    void ImageEffectDescriptor::setNeedsOpenGLRender(bool v) {
+      if (gHostDescription.supportsOpenGLRender) {
+        _effectProps.propSetString(kOfxImageEffectPropOpenGLRenderSupported, (v ? "needed" : "false"));
+      }
+    }
+
+    void ImageEffectDescriptor::addOpenGLBitDepth(BitDepthEnum v) {
+      int n = _effectProps.propGetDimension(kOfxImageEffectPropSupportedPixelDepths);
+      std::string value = mapBitDepthEnumToStr(v);
+      if (!value.empty()) {
+        _effectProps.propSetString(kOfxOpenGLPropPixelDepth, value, n);
+      }
+    }
+
+#endif
+
 #ifdef OFX_EXTENSIONS_NUKE
   /** @brief indicate that a plugin or host can handle transform effects */
   void ImageEffectDescriptor::setCanTransform(bool v)
@@ -882,7 +918,7 @@ namespace OFX {
   ImageBase::ImageBase(OfxPropertySetHandle props)
     : _imageProps(props)
   {
-    OFX::Validation::validateImageBaseProperties(props);
+    //OFX::Validation::validateImageProperties(props);
 
     // and fetch all the properties
     _rowBytes         = _imageProps.propGetInt(kOfxImagePropRowBytes);
@@ -992,7 +1028,6 @@ namespace OFX {
     OFX::Validation::validateImageProperties(props);
 
     // and fetch all the properties
-    // should throw if it is not an image
     _pixelData = _imageProps.propGetPointer(kOfxImagePropData);
   }
 
@@ -1007,11 +1042,10 @@ namespace OFX {
   Texture::Texture(OfxPropertySetHandle props)
     : ImageBase(props)
   {
-    OFX::Validation::validateTextureProperties(props);
-
-    // should throw if it is not a texture
-    _index = _imageProps.propGetInt(kOfxImageEffectPropOpenGLTextureIndex);
-    _target = _imageProps.propGetInt(kOfxImageEffectPropOpenGLTextureTarget);
+    //OFX::Validation::validateTextureProperties(props);
+  
+    _index = _imageProps.propGetInt(kOfxImageEffectPropOpenGLTextureIndex, 0);
+    _target = _imageProps.propGetInt(kOfxImageEffectPropOpenGLTextureTarget, 0);
   }
 
   Texture::~Texture()
@@ -1348,6 +1382,20 @@ namespace OFX {
   }
 #endif
 
+#ifdef OFX_SUPPORTS_OPENGLRENDER
+  Texture *Clip::loadTexture(double t, BitDepthEnum format, const OfxRectD *region)
+  {
+    if (!gHostDescription.supportsOpenGLRender) {
+      throwHostMissingSuiteException("loadTexture");
+    }
+    OfxPropertySetHandle hTex;
+    OfxStatus stat = Private::gOpenGLRenderSuite->clipLoadTexture(_clipHandle, t, mapBitDepthEnumToStr(format).c_str(), region, &hTex);
+    if (stat != kOfxStatOK) {
+      throwSuiteStatusException(stat);
+    }
+    return new Texture(hTex);
+  }
+#endif
   ////////////////////////////////////////////////////////////////////////////////
   /// image effect 
 
@@ -1734,6 +1782,20 @@ namespace OFX {
     // by default, do the default
     return false;
   }
+
+#ifdef OFX_SUPPORTS_OPENGLRENDER
+  /** @brief OpenGL context attached */
+  void ImageEffect::contextAttached(void)
+  {
+    // fa niente
+  }
+
+  /** @brief OpenGL context detached */
+  void ImageEffect::contextDetached(void)
+  {
+    // fa niente
+  }
+#endif
 
 #ifdef OFX_EXTENSIONS_VEGAS
   /** @brief Vegas requires conversion of keyframe data */
@@ -2126,6 +2188,9 @@ namespace OFX {
         gHostDescription.supportsBooleanAnimation   = hostProps.propGetInt(kOfxParamHostPropSupportsBooleanAnimation) != 0;
         gHostDescription.supportsCustomAnimation    = hostProps.propGetInt(kOfxParamHostPropSupportsCustomAnimation) != 0;
         gHostDescription.supportsParametricParameter = gParametricParameterSuite != 0;
+#ifdef OFX_SUPPORTS_OPENGLRENDER
+        gHostDescription.supportsOpenGLRender = hostProps.propGetString(kOfxImageEffectPropOpenGLRenderSupported, 0) == "true" && gOpenGLRenderSuite != 0;
+#endif
 #ifdef OFX_EXTENSIONS_NUKE
         gHostDescription.supportsCameraParameter    = gCameraParameterSuite != 0;
         gHostDescription.canTransform               = hostProps.propGetInt(kFnOfxImageEffectCanTransform, false) != 0;
@@ -2185,7 +2250,10 @@ namespace OFX {
         gMessageSuiteV2 = (OfxMessageSuiteV2 *)     fetchSuite(kOfxMessageSuite, 2, true);
         gProgressSuite   = (OfxProgressSuiteV1 *)     fetchSuite(kOfxProgressSuite, 1, true);
         gTimeLineSuite   = (OfxTimeLineSuiteV1 *)     fetchSuite(kOfxTimeLineSuite, 1, true);
-        gParametricParameterSuite = (OfxParametricParameterSuiteV1*) fetchSuite(kOfxParametricParameterSuite, 1, true );
+        gParametricParameterSuite = (OfxParametricParameterSuiteV1*) fetchSuite(kOfxParametricParameterSuite, 1, true);
+#ifdef OFX_SUPPORTS_OPENGLRENDER
+        gOpenGLRenderSuite = (OfxImageEffectOpenGLRenderSuiteV1*) fetchSuite(kOfxOpenGLRenderSuite, 1, true);
+#endif
 #ifdef OFX_EXTENSIONS_NUKE
         gCameraParameterSuite = (NukeOfxCameraSuiteV1*) fetchSuite(kNukeOfxCameraSuite, 1, true );
         gImageEffectPlaneSuiteV1 = (FnOfxImageEffectPlaneSuiteV1*) fetchSuite(kFnOfxImageEffectPlaneSuite, 1, true );
@@ -3137,6 +3205,26 @@ namespace OFX {
           // call the end edit function
           instance->endEdit();
         }
+#ifdef OFX_SUPPORTS_OPENGLRENDER
+        else if(action == kOfxActionOpenGLContextAttached) {
+          checkMainHandles(actionRaw, handleRaw, inArgsRaw, outArgsRaw, false, true, true);
+
+          // fetch our pointer out of the props on the handle
+          ImageEffect *instance = retrieveImageEffectPointer(handle);
+
+          // call the context attached function
+          instance->contextAttached();
+        }
+        else if(action == kOfxActionOpenGLContextDetached) {
+          checkMainHandles(actionRaw, handleRaw, inArgsRaw, outArgsRaw, false, true, true);
+
+          // fetch our pointer out of the props on the handle
+          ImageEffect *instance = retrieveImageEffectPointer(handle);
+
+          // call the context detached function
+          instance->contextDetached();
+        }
+#endif
 #ifdef OFX_EXTENSIONS_VEGAS
         else if(action == kOfxImageEffectActionVegasKeyframeUplift) {
           checkMainHandles(actionRaw, handleRaw, inArgsRaw, outArgsRaw, false, false, true);

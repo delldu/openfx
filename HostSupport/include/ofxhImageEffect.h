@@ -41,6 +41,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "ofxhParam.h"
 #include "ofxhMemory.h"
 #include "ofxhInteract.h"
+#ifdef OFX_SUPPORTS_OPENGLRENDER
+#include "ofxOpenGLRender.h"
+#endif
 
 #ifdef _MSC_VER
 //Use visual studio extension

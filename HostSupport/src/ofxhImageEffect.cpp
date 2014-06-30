@@ -881,7 +881,7 @@ namespace OFX {
         return st;
       }
 
-#   ifdef OFX_SUPPORTS_OPENGLRENDER
+#ifdef OFX_SUPPORTS_OPENGLRENDER
       // attach/detach OpenGL context
       OfxStatus Instance::contextAttachedAction(){
 #       ifdef OFX_DEBUG_ACTIONS
@@ -904,7 +904,7 @@ namespace OFX {
 #       endif
         return st;
       }
-#   endif
+#endif
 
       OfxStatus Instance::beginRenderAction(OfxTime  startFrame,
                                             OfxTime  endFrame,
@@ -2400,6 +2400,85 @@ namespace OFX {
 #ifdef OFX_EXTENSIONS_VEGAS
       static const struct OfxVegasStereoscopicImageEffectSuiteV1 gVegasStereoscopicImageEffectSuite = {
         clipGetStereoscopicImage
+      };
+#endif
+
+#ifdef OFX_SUPPORTS_OPENGLRENDER
+      ////////////////////////////////////////////////////////////////////////////////
+      ////////////////////////////////////////////////////////////////////////////////
+      ////////////////////////////////////////////////////////////////////////////////
+      /// The OpenGL render suite functions
+#error "TODO"
+      // current status:
+      // the Texture class still has to be written.
+      // A good way to do it is to make an ImageBase class
+      // which has everything from Image except kOfxImagePropData.
+      // Texture and Image would derive from ImageBase.
+      // See how it is done in the Support library.
+      static OfxStatus clipLoadTexture(OfxImageClipHandle h1,
+                                       OfxTime time,
+                                       const char   *format,
+                                       const OfxRectD *h2,
+                                       OfxPropertySetHandle *h3)
+      {
+        try {
+        ClipInstance *clipInstance = reinterpret_cast<ClipInstance*>(h1);
+
+        if (!clipInstance || !clipInstance->verifyMagic()) {
+          return kOfxStatErrBadHandle;
+        }
+
+        if(clipInstance){
+          Texture* texture = clipInstance->loadTexture(time,format,h2);
+          if(!texture) {
+            *h3 = NULL;
+            return kOfxStatFailed;
+          }
+
+          *h3 = texture->getPropHandle();
+
+          return kOfxStatOK;
+        }
+        
+        return kOfxStatErrBadHandle;
+        } catch (...) {
+          *h3 = NULL;
+          return kOfxStatErrBadHandle;
+        }
+      }
+
+      static OfxStatus clipFreeTexture(OfxPropertySetHandle h1)
+      {
+        try {
+        Property::Set *pset = reinterpret_cast<Property::Set*>(h1);
+
+        if (!pset || !pset->verifyMagic()) {
+          return kOfxStatErrBadHandle;
+        }
+
+        Texture *texture = dynamic_cast<Texture*>(pset);
+
+        if(texture){
+          // clip::texture has a virtual destructor for derived classes
+          texture->releaseReference();
+          return kOfxStatOK;
+        }
+        else 
+          return kOfxStatErrBadHandle;
+        } catch (...) {
+          return kOfxStatErrBadHandle;
+        }
+      }
+
+      static OfxStatus flushResources( )
+      {
+        return gImageEffectHost->flushOpenGLResources();
+      }
+
+      static const struct OfxImageEffectOpenGLRenderSuiteV1 gOpenGLRenderSuite = {
+        clipLoadTexture,
+        clipFreeTexture,
+        flushResources
       };
 #endif
 

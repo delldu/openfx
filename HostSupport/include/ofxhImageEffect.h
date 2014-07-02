@@ -41,9 +41,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "ofxhParam.h"
 #include "ofxhMemory.h"
 #include "ofxhInteract.h"
-#ifdef OFX_SUPPORTS_OPENGLRENDER
-#include "ofxOpenGLRender.h"
-#endif
 
 #ifdef _MSC_VER
 //Use visual studio extension
@@ -147,6 +144,11 @@ namespace OFX {
         /// @see OfxMultiThreadSuiteV1.mutexTryLock()
         virtual OfxStatus mutexTryLock(const OfxMutexHandle mutex) = 0;
 #endif // OFX_SUPPORTS_MULTITHREAD
+
+#     ifdef OFX_SUPPORTS_OPENGLRENDER
+        /// @see OfxImageEffectOpenGLRenderSuiteV1.flushResources()
+        virtual OfxStatus flushOpenGLResources() const = 0;
+#     endif
       };
 
       /// our global host object, set when the plugin cache is created

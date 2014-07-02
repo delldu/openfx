@@ -40,6 +40,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifdef OFX_EXTENSIONS_VEGAS
 #include "ofxSonyVegas.h"
 #endif
+#ifdef OFX_SUPPORTS_OPENGLRENDER
+#include "ofxOpenGLRender.h"
+#endif
 
 namespace OFX {
 
@@ -485,7 +488,7 @@ namespace OFX {
       // Image
       //
 
-      static const Property::PropSpec imageStuffs[] = {
+      static const Property::PropSpec imageBaseStuffs[] = {
         { kOfxPropType, Property::eString, 1, false, kOfxTypeImage },
         { kOfxImageEffectPropPixelDepth, Property::eString, 1, true, kOfxBitDepthNone  },
         { kOfxImageEffectPropComponents, Property::eString, 1, true, kOfxImageComponentNone },
@@ -580,7 +583,7 @@ namespace OFX {
         return rod;
       }
 
-      Image::~Image() {
+      ImageBase::~ImageBase() {
         //assert(_referenceCount <= 0);
       }
 
@@ -673,7 +676,7 @@ namespace OFX {
       }
 
 
-      Texture::~Texture() {
+      Texture::Texture() {
         //assert(_referenceCount <= 0);
       }
 #   endif

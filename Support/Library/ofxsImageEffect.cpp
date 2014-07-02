@@ -918,7 +918,7 @@ namespace OFX {
   ImageBase::ImageBase(OfxPropertySetHandle props)
     : _imageProps(props)
   {
-    //OFX::Validation::validateImageProperties(props);
+    OFX::Validation::validateImageBaseProperties(props);
 
     // and fetch all the properties
     _rowBytes         = _imageProps.propGetInt(kOfxImagePropRowBytes);
@@ -1042,7 +1042,7 @@ namespace OFX {
   Texture::Texture(OfxPropertySetHandle props)
     : ImageBase(props)
   {
-    //OFX::Validation::validateTextureProperties(props);
+    OFX::Validation::validateTextureProperties(props);
   
     _index = _imageProps.propGetInt(kOfxImageEffectPropOpenGLTextureIndex, 0);
     _target = _imageProps.propGetInt(kOfxImageEffectPropOpenGLTextureTarget, 0);

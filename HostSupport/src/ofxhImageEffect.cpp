@@ -1115,7 +1115,7 @@ namespace OFX {
 
       /// calculate the default rod for this effect instance
       OfxRectD Instance::calcDefaultRegionOfDefinition(OfxTime  time,
-                                                       OfxPointD   /*renderScale*/)
+                                                       OfxPointD   /*renderScale*/) const
       {
         OfxRectD rod;
 

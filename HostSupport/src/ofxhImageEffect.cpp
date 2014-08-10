@@ -77,8 +77,6 @@ namespace OFX {
         { kOfxPropLabel,                        Property::eString,     1, false, "" },
         { kOfxPropShortLabel,                   Property::eString,     1, false, "" },
         { kOfxPropLongLabel,                    Property::eString,     1, false, "" },
-        { kOfxPropVersion,                      Property::eInt,        0, false, "0" },
-        { kOfxPropVersionLabel,                 Property::eString,     1, false, "" },
         { kOfxPropPluginDescription,            Property::eString,     1, false, "" },
         { kOfxImageEffectPropSupportedContexts, Property::eString,     0, false, "" },
         { kOfxImageEffectPluginPropGrouping,    Property::eString,     1, false, "" },
@@ -96,8 +94,6 @@ namespace OFX {
         { kOfxImageEffectPropClipPreferencesSlaveParam, Property::eString, 0, false, "" },
         { kOfxImageEffectInstancePropSequentialRender, Property::eInt, 1, false, "0" },
         { kOfxPluginPropFilePath, Property::eString, 1, true, ""},
-        { kOfxPropPluginDescription, Property::eString, 1,false, ""},
-        { kOfxImageEffectInstancePropSequentialRender, Property::eInt, 1, false , "0" },
 #ifdef OFX_EXTENSIONS_NUKE
         { kFnOfxImageEffectPropMultiPlanar,   Property::eInt, 1, false, "0" },
         { kFnOfxImageEffectPropViewAware,   Property::eInt, 1, false, "0" },
@@ -356,6 +352,7 @@ namespace OFX {
         { kOfxImageEffectPropProjectExtent,     Property::eDouble,     2, true,  "0" },
         { kOfxImageEffectPropProjectPixelAspectRatio, Property::eDouble, 1, true,  "0" },
         { kOfxImageEffectInstancePropEffectDuration, Property::eDouble, 1, true,  "0" },
+        { kOfxImageEffectInstancePropSequentialRender, Property::eInt, 1, false, "0" },
         { kOfxImageEffectPropFrameRate ,        Property::eDouble,     1, true,  "0" },
         { kOfxPropIsInteractive,                Property::eInt,        1, true, "0" },
         { kOfxImageEffectPropInAnalysis,        Property::eInt,        1, false, "0" },
@@ -385,6 +382,8 @@ namespace OFX {
       {
         int i = 0;
         _properties.setChainedSet(&other.getProps());
+
+        _properties.setPointerProperty(kOfxImageEffectPropPluginHandle, _plugin->getPluginHandle()->getOfxPlugin());
 
         _properties.setStringProperty(kOfxImageEffectPropContext,context);
         _properties.setIntProperty(kOfxPropIsInteractive,interactive);

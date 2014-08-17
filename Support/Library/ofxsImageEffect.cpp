@@ -1691,7 +1691,7 @@ namespace OFX {
 
   /** @brief client is identity function, returns the clip and time for the identity function 
   */
-  bool ImageEffect::isIdentity(const RenderArguments &/*args*/, Clip * &/*identityClip*/, double &/*identityTime*/)
+  bool ImageEffect::isIdentity(const IsIdentityArguments &/*args*/, Clip * &/*identityClip*/, double &/*identityTime*/)
   {
     return false; // by default, we are not an identity operation
   }

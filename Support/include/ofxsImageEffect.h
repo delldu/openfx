@@ -848,6 +848,14 @@ namespace OFX {
     bool      interactiveRenderStatus;
   };
 
+  /** @brief POD struct to pass rendering arguments into @ref OFX::ImageEffect::isIdentity */
+  struct IsIdentityArguments {
+    double    time;
+    OfxPointD renderScale;
+    OfxRectI  renderWindow;
+    FieldEnum fieldToRender;
+  };
+
   /** @brief POD struct to pass arguments into  @ref OFX::ImageEffect::render */
   struct BeginSequenceRenderArguments {
     OfxRangeD frameRange;

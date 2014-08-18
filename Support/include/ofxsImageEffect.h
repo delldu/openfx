@@ -71,6 +71,9 @@ of the direct OFX objects and any library side only functions.
 #define mDeclareProtectedAssignAndCC(CLASS) \
   CLASS &operator=(const CLASS &) {assert(false); return *this;}	\
   CLASS(const CLASS &) {assert(false); } 
+#define mDeclareProtectedAssignAndCCBase(CLASS,BASE) \
+  CLASS &operator=(const CLASS &) {assert(false); return *this;}	\
+  CLASS(const CLASS &c) : BASE(c) {assert(false); }
 
 namespace OFX
 {

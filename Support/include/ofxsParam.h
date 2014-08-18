@@ -62,6 +62,9 @@ each represent the actions that can be carried out on those particular OFX objec
 #define mDeclareProtectedAssignAndCC(CLASS) \
   CLASS &operator=(const CLASS &) {assert(false); return *this;}	\
   CLASS(const CLASS &) {assert(false); } 
+#define mDeclareProtectedAssignAndCCBase(CLASS,BASE) \
+  CLASS &operator=(const CLASS &) {assert(false); return *this;}	\
+  CLASS(const CLASS &c) : BASE(c) {assert(false); }
 
 /** @brief The core 'OFX Support' namespace, used by plugin implementations. All code for these are defined in the common support libraries.
  */
@@ -752,7 +755,7 @@ namespace OFX {
     class ParametricParamDescriptor : public ParamDescriptor
     {
     protected:
-        mDeclareProtectedAssignAndCC(ParametricParamDescriptor);
+        mDeclareProtectedAssignAndCCBase(ParametricParamDescriptor,ParamDescriptor);
         ParametricParamDescriptor(void) {assert(false);}
 
     protected:
@@ -1730,7 +1733,7 @@ namespace OFX {
     /** @brief Wraps up a parametric param */
     class ParametricParam : public Param {
     private:
-        mDeclareProtectedAssignAndCC(ParametricParam);
+        mDeclareProtectedAssignAndCCBase(ParametricParam,Param);
         ParametricParam(void) {assert( false);}
 
     protected:
@@ -1775,7 +1778,7 @@ namespace OFX {
     /** @brief Wraps up a camera param */
     class CameraParam : public Param {
     private:
-        mDeclareProtectedAssignAndCC(CameraParam);
+        mDeclareProtectedAssignAndCCBase(CameraParam,Param);
         CameraParam(void) {assert(false);}
 
     protected:

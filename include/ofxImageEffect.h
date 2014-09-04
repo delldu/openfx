@@ -114,10 +114,10 @@ typedef struct OfxImageMemoryStruct *OfxImageMemoryHandle;
 #define kOfxImageEffectContextWriter "OfxImageEffectContextWriter"
 
 /** @brief The parameter name to use in reader and writer contexts for the file name. */
-#define kOfxParamFileName "filename"
+#define kOfxImageEffectFileParamName "filename"
 
 /** @brief The parameter name to use in reader and writer contexts for the proxy file name. */
-#define kOfxParamProxyName "proxy"
+#define kOfxImageEffectProxyParamName "proxy"
 #endif
 
 /** @brief Used as a value for ::kOfxPropType on image effect host handles */

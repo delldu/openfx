@@ -115,6 +115,9 @@ typedef struct OfxImageMemoryStruct *OfxImageMemoryHandle;
 
 /** @brief The parameter name to use in reader and writer contexts for the file name. */
 #define kOfxParamFileName "filename"
+
+/** @brief The parameter name to use in reader and writer contexts for the proxy file name. */
+#define kOfxParamProxyName "proxy"
 #endif
 
 /** @brief Used as a value for ::kOfxPropType on image effect host handles */

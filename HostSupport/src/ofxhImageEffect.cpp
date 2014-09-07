@@ -2005,10 +2005,15 @@ namespace OFX {
                                       OfxPropertySetHandle *h2)
       {        
         try {
+        if (!h2) {
+          return kOfxStatErrBadHandle;
+        }
+
         Base *effectBase = reinterpret_cast<Base*>(h1);
 
         if (!effectBase || !effectBase->verifyMagic()) {
           *h2 = NULL;
+
           return kOfxStatErrBadHandle;
         }
 
@@ -2017,6 +2022,7 @@ namespace OFX {
         return kOfxStatOK;
         } catch (...) {
           *h2 = NULL;
+
           return kOfxStatErrBadHandle;
         }
       }
@@ -2025,10 +2031,15 @@ namespace OFX {
                                    OfxParamSetHandle *h2)
       {
         try {
+        if (!h2) {
+          return kOfxStatErrBadHandle;
+        }
+
         ImageEffect::Base *effectBase = reinterpret_cast<ImageEffect::Base*>(h1);
 
         if (!effectBase || !effectBase->verifyMagic()) {
           *h2 = NULL;
+
           return kOfxStatErrBadHandle;
         }
 
@@ -2049,9 +2060,11 @@ namespace OFX {
         }
 
         *h2 = NULL;
+
         return kOfxStatErrBadHandle;
         } catch (...) {
           *h2 = NULL;
+
           return kOfxStatErrBadHandle;
         }
       }
@@ -2061,10 +2074,15 @@ namespace OFX {
                                   OfxPropertySetHandle *h2)
       {
         try {
+        if (!h2) {
+          return kOfxStatErrBadHandle;
+        }
+
         ImageEffect::Base *effectBase = reinterpret_cast<ImageEffect::Base*>(h1);
         
         if (!effectBase || !effectBase->verifyMagic()) {
           *h2 = NULL;
+
           return kOfxStatErrBadHandle;
         }
 
@@ -2078,9 +2096,11 @@ namespace OFX {
         }
 
         *h2 = NULL;
+
         return kOfxStatErrBadHandle;
         } catch (...) {
           *h2 = NULL;
+
           return kOfxStatErrBadHandle;
         }
       }
@@ -2088,6 +2108,10 @@ namespace OFX {
       static OfxStatus clipGetPropertySet(OfxImageClipHandle clip,
                                           OfxPropertySetHandle *propHandle){        
         try {
+        if (!propHandle) {
+          return kOfxStatErrBadHandle;
+        }
+
         ClipInstance *clipInstance = reinterpret_cast<ClipInstance*>(clip);
 
         if (!clipInstance || !clipInstance->verifyMagic()) {
@@ -2103,13 +2127,6 @@ namespace OFX {
 
           return kOfxStatErrBadHandle;
         }
-
-        *propHandle = NULL;
-        return kOfxStatErrBadHandle;
-        } catch (...) {
-          *propHandle = NULL;
-          return kOfxStatErrBadHandle;
-        }
       }
       
       static OfxStatus clipGetImage(OfxImageClipHandle h1, 
@@ -2118,6 +2135,10 @@ namespace OFX {
                                     OfxPropertySetHandle *h3)
       {
         try {
+        if (!h3) {
+          return kOfxStatErrBadHandle;
+        }
+
         ClipInstance *clipInstance = reinterpret_cast<ClipInstance*>(h1);
 
         if (!clipInstance || !clipInstance->verifyMagic()) {
@@ -2125,12 +2146,9 @@ namespace OFX {
           return kOfxStatErrBadHandle;
         }
 
-        if(clipInstance){
-          Image* image = clipInstance->getImage(time,h2);
-          if(!image) {
-            *h3 = NULL;
-            return kOfxStatFailed;
-          }
+        Image* image = clipInstance->getImage(time,h2);
+        if(!image) {
+          *h3 = NULL;
 
           return kOfxStatFailed;
         }
@@ -2143,12 +2161,6 @@ namespace OFX {
 
           return kOfxStatErrBadHandle;
         }
-        
-        return kOfxStatErrBadHandle;
-        } catch (...) {
-          *h3 = NULL;
-          return kOfxStatErrBadHandle;
-        }
       }
 
 #ifdef OFX_EXTENSIONS_VEGAS
@@ -2159,27 +2171,30 @@ namespace OFX {
                                                 OfxPropertySetHandle *h3)
       {
         try {
+        if (!h3) {
+          return kOfxStatErrBadHandle;
+        }
         ClipInstance *clipInstance = reinterpret_cast<ClipInstance*>(h1);
 
         if (!clipInstance || !clipInstance->verifyMagic()) {
+          *h3 = NULL;
+
           return kOfxStatErrBadHandle;
         }
 
-        if(clipInstance){
-          Image* image = clipInstance->getStereoscopicImage(time,view,h2);
-          if(!image) {
-            *h3 = NULL;
-            return kOfxStatFailed;
-          }
+        Image* image = clipInstance->getStereoscopicImage(time,view,h2);
+        if(!image) {
+          *h3 = NULL;
 
-          *h3 = image->getPropHandle();
-
-          return kOfxStatOK;
+          return kOfxStatFailed;
         }
-        
-        return kOfxStatErrBadHandle;
+
+        *h3 = image->getPropHandle();
+
+        return kOfxStatOK;
         } catch (...) {
           *h3 = NULL;
+
           return kOfxStatErrBadHandle;
         }
       }
@@ -2206,8 +2221,6 @@ namespace OFX {
         return kOfxStatErrBadHandle;
         } catch (...) {
           return kOfxStatErrBadHandle;
-        } catch (...) {
-          return kOfxStatErrBadHandle;
         }
       }
       
@@ -2217,6 +2230,10 @@ namespace OFX {
                                      OfxPropertySetHandle *propertySet)
       {
         try {
+        if (!clip) {
+          return kOfxStatErrBadHandle;
+        }
+
         ImageEffect::Base *effectBase = reinterpret_cast<ImageEffect::Base*>(imageEffect);
 
         if (!effectBase || !effectBase->verifyMagic()) {
@@ -2246,6 +2263,10 @@ namespace OFX {
                                                  OfxRectD *bounds)
       {
         try {
+        if (!bounds) {
+          return kOfxStatErrBadHandle;
+        }
+
         ClipInstance *clipInstance = reinterpret_cast<ClipInstance*>(clip);
 
         if (!clipInstance || !clipInstance->verifyMagic()) {
@@ -2254,16 +2275,14 @@ namespace OFX {
           return kOfxStatErrBadHandle;
         }
 
-        if(clipInstance) {
-          *bounds = clipInstance->getRegionOfDefinition(time);
-          if (bounds->x2 <= bounds->x1 || bounds->y2 <= bounds->y1) {
-            // the RoD is empty
-            return kOfxStatFailed;
-          }
-          return kOfxStatOK;
+        *bounds = clipInstance->getRegionOfDefinition(time);
+        if (bounds->x2 <= bounds->x1 || bounds->y2 <= bounds->y1) {
+          // the RoD is empty
+
+          return kOfxStatFailed;
         }
-         
-        return kOfxStatErrBadHandle;
+
+        return kOfxStatOK;
         } catch (...) {
           return kOfxStatErrBadHandle;
         }
@@ -2295,6 +2314,10 @@ namespace OFX {
                                         OfxImageMemoryHandle *memoryHandle)
       {
         try {
+        if (!memoryHandle) {
+          return kOfxStatErrBadHandle;
+        }
+
         ImageEffect::Base *effectBase = reinterpret_cast<ImageEffect::Base*>(instanceHandle);
         ImageEffect::Instance *effectInstance = reinterpret_cast<ImageEffect::Instance*>(effectBase);
         Memory::Instance* memory;
@@ -2348,15 +2371,21 @@ namespace OFX {
       OfxStatus imageMemoryLock(OfxImageMemoryHandle memoryHandle,
                                 void **returnedPtr){
         try {
+        if (!returnedPtr) {
+          return kOfxStatErrBadHandle;
+        }
+
         Memory::Instance *memoryInstance = reinterpret_cast<Memory::Instance*>(memoryHandle);
 
         if(memoryInstance && memoryInstance->verifyMagic()) {
           memoryInstance->lock();          
           *returnedPtr = memoryInstance->getPtr();
+
           return (*returnedPtr) ? kOfxStatOK : kOfxStatErrMemory;
         }
 
         *returnedPtr = NULL;
+
         return kOfxStatErrBadHandle; 
         } catch (...) {
           *returnedPtr = NULL;
@@ -2415,6 +2444,10 @@ namespace OFX {
                                        OfxPropertySetHandle *h3)
       {
         try {
+        if (!h3) {
+          return kOfxStatErrBadHandle;
+        }
+
         ClipInstance *clipInstance = reinterpret_cast<ClipInstance*>(h1);
 
         if (!clipInstance || !clipInstance->verifyMagic()) {
@@ -2425,6 +2458,7 @@ namespace OFX {
           Texture* texture = clipInstance->loadTexture(time,format,h2);
           if(!texture) {
             *h3 = NULL;
+
             return kOfxStatFailed;
           }
 
@@ -2436,6 +2470,7 @@ namespace OFX {
         return kOfxStatErrBadHandle;
         } catch (...) {
           *h3 = NULL;
+
           return kOfxStatErrBadHandle;
         }
       }

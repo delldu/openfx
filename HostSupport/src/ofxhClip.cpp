@@ -578,7 +578,7 @@ namespace OFX {
 
       OfxRectI ImageBase::getROD() const
       {
-        OfxRectI rod;
+        OfxRectI rod = {0, 0, 0, 0};
         getIntPropertyN(kOfxImagePropRegionOfDefinition, &rod.x1, 4);
         return rod;
       }

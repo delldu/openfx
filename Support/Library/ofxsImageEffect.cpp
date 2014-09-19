@@ -38,10 +38,9 @@ England
 
 #include "ofxsSupportPrivate.h"
 #include <algorithm> // for find
-#include <cstring> // for strlen
 #ifdef DEBUG
 #include <iostream>
-#include <sstream>
+#endif
 #include <stdexcept>
 #ifdef OFX_EXTENSIONS_NUKE
 #include "nuke/fnOfxExtensions.h"
@@ -3421,7 +3420,9 @@ namespace OFX {
       // Catch anything else, unknown
       catch (const std::exception &e)
       {
+#      ifdef DEBUG
         std::cout << "Caught exception: " << e.what() << std::endl;
+#      endif
         stat = kOfxStatFailed;
       }
       catch (...)
@@ -3476,21 +3477,27 @@ namespace OFX {
       // catch suite exceptions
       catch (OFX::Exception::Suite &ex)
       {
+#      ifdef DEBUG
         std::cout << "Caught OFX::Exception::Suite" << std::endl;
+#      endif
         stat = ex.status();
       }
 
       // catch host inadequate exceptions
       catch (OFX::Exception::HostInadequate)
       {
+#      ifdef DEBUG
         std::cout << "Caught OFX::Exception::HostInadequate" << std::endl;
+#      endif
         stat = kOfxStatErrMissingHostFeature;
       }
 
       // catch exception due to a property being unknown to the host, implies something wrong with host if not caught further down
       catch (OFX::Exception::PropertyUnknownToHost)
       {
+#      ifdef DEBUG
         std::cout << "Caught OFX::Exception::PropertyUnknownToHost" << std::endl;
+#      endif
         stat = kOfxStatErrMissingHostFeature;
       }
 
@@ -3510,7 +3517,9 @@ namespace OFX {
       // Catch anything else, unknown
       catch (...)
       {
+#      ifdef DEBUG
         std::cout << "Caught Unknown exception" << std::endl;
+#      endif
         stat = kOfxStatFailed;
       }
 

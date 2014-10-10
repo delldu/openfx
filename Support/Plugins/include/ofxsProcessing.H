@@ -39,8 +39,6 @@ England
 */
 
 #include <cassert>
-#include <algorithm>
-
 #include "ofxsImageEffect.h"
 #include "ofxsMultiThread.h"
 
@@ -115,19 +113,21 @@ namespace OFX {
         /** @brief called to process everything */
         virtual void process(void)
         {
-            // If _dstImg was set, check that the _renderWindow is lying into dstBounds
-            if (_dstImg) {
-                const OfxRectI& dstBounds = _dstImg->getBounds();
-                // is the renderWindow within dstBounds ?
-                assert(dstBounds.x1 <= _renderWindow.x1 && _renderWindow.x2 <= dstBounds.x2 &&
-                       dstBounds.y1 <= _renderWindow.y1 && _renderWindow.y2 <= dstBounds.y2);
-                // exit gracefully in case of error
-                if (!(dstBounds.x1 <= _renderWindow.x1 && _renderWindow.x2 <= dstBounds.x2 &&
-                      dstBounds.y1 <= _renderWindow.y1 && _renderWindow.y2 <= dstBounds.y2) ||
-                    (_renderWindow.x1 >= _renderWindow.x2) ||
-                    (_renderWindow.y1 >= _renderWindow.y2)) {
-                    return;
-                }
+            // is it OK ?
+            assert(_dstImg);
+            if (!_dstImg) {
+                return;
+            }
+            const OfxRectI& dstBounds = _dstImg->getBounds();
+            // is the renderWindow woithin dstBounds ?
+            assert(dstBounds.x1 <= _renderWindow.x1 && _renderWindow.x2 <= dstBounds.x2 &&
+                   dstBounds.y1 <= _renderWindow.y1 && _renderWindow.y2 <= dstBounds.y2);
+            // exit gracefully in case of error
+            if (!(dstBounds.x1 <= _renderWindow.x1 && _renderWindow.x2 <= dstBounds.x2 &&
+                  dstBounds.y1 <= _renderWindow.y1 && _renderWindow.y2 <= dstBounds.y2) ||
+                (_renderWindow.x1 >= _renderWindow.x2) ||
+                (_renderWindow.y1 >= _renderWindow.y2)) {
+                return;
             }
 
             // call the pre MP pass

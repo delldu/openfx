@@ -610,6 +610,11 @@ namespace OFX {
       {
       }
       
+      /// callback which should set range
+      void Instance::setRange()
+      {
+      }
+      
       /// callback which should set display range
       void Instance::setDisplayRange()
       {

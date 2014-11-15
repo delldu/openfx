@@ -988,7 +988,7 @@ namespace OFX {
 #endif
                                        )
       {
-        Property::PropSpec stuff[] = {
+        static const Property::PropSpec inStuff[] = {
           { kOfxPropTime, Property::eDouble, 1, true, "0" },
           { kOfxImageEffectPropFieldToRender, Property::eString, 1, true, "" }, 
           { kOfxImageEffectPropRenderWindow, Property::eInt, 4, true, "0" },
@@ -1067,7 +1067,7 @@ namespace OFX {
 #endif
                                           )
       {
-        Property::PropSpec stuff[] = {
+        static const Property::PropSpec inStuff[] = {
           { kOfxImageEffectPropFrameRange, Property::eDouble, 2, true, "0" },
           { kOfxImageEffectPropFrameStep, Property::eDouble, 1, true, "0" }, 
           { kOfxPropIsInteractive, Property::eInt, 1, true, "0" },

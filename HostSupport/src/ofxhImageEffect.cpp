@@ -1830,37 +1830,28 @@ namespace OFX {
 
           Property::PropSpec specPAR = {parParamName.c_str(),         Property::eDouble, 1, false,          "1"};
           outArgs.createProperty(specPAR);
-          if (!clip->isOutput()) {
-            // If the clip is input, use the same par for all inputs unless the plug-in supports multiple clips PAR
-            double par;
-            if (!multipleClipsPAR && inputParSet) {
-                par = inputPar;
-            } else if (multipleClipsPAR) {
-                par = clip->getAspectRatio();
-            } else {
-                par = projectPAR;
-            }
-            outArgs.setDoubleProperty(parParamName, par);
+          // If the clip is output we should propagate the pixel aspect ratio of the inputs unless it does support multiple clip PARs,
+          // in which case the plug-in should set the output clip's aspect ratio in the ::kOfxImageEffectActionGetClipPreferences action. See \ref ImageEffectClipPreferences.
+          if (!clip->isOutput() || supportsMultipleClipPARs()) {
+            outArgs.setDoubleProperty(parParamName, clip->getAspectRatio());
           } else {
-            // If the clip is output we should propagate the pixel aspect ratio of the inputs
-            outArgs.setDoubleProperty(parParamName, inputParSet ? inputPar : projectPAR);
-          }
-        }
-          
-        //Set the output frame rate according to what input clips have. Several inputs with different frame rates should be
-        //forbidden by the host.
-        bool outputFrameRateSet = false;
-        double outputFrameRate = _outputFrameRate;
-        for (std::map<std::string, ClipInstance*>::iterator it2 = _clips.begin(); it2 != _clips.end(); ++it2) {
-            if (!it2->second->isOutput() && it2->second->getConnected()) {
-                if (!outputFrameRateSet) {
-                    outputFrameRate = it2->second->getFrameRate();
-                    outputFrameRateSet = true;
-                } else if (outputFrameRate != it2->second->getFrameRate()) {
-                    // We have several inputs with different frame rates
+            double inputPar = 1.;
+            bool inputParSet = false;
+
+            for (std::map<std::string, ClipInstance*>::iterator it2 = _clips.begin(); it2 != _clips.end(); ++it2) {
+              if (!it2->second->isOutput() && it2->second->getConnected()) {
+                if (!inputParSet) {
+                  inputPar = it2->second->getAspectRatio();
+                } else {
+                  if (inputPar != it2->second->getAspectRatio()) {
+                    // We have several inputs with different aspect ratio, which should be forbidden by the host.
                     throw Property::Exception(kOfxStatErrValue);
+                  }
                 }
+              }
             }
+            outArgs.setDoubleProperty(parParamName, inputPar);
+          }
         }
           
         outArgs.setDoubleProperty(kOfxImageEffectPropFrameRate, outputFrameRate);

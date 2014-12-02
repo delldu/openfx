@@ -1842,15 +1842,16 @@ namespace OFX {
               if (!it2->second->isOutput() && it2->second->getConnected()) {
                 if (!inputParSet) {
                   inputPar = it2->second->getAspectRatio();
-                } else {
-                  if (inputPar != it2->second->getAspectRatio()) {
-                    // We have several inputs with different aspect ratio, which should be forbidden by the host.
-                    throw Property::Exception(kOfxStatErrValue);
-                  }
+                  inputParSet = true;
+                } else if (inputPar != it2->second->getAspectRatio()) {
+                  // We have several inputs with different aspect ratio, which should be forbidden by the host.
+                  throw Property::Exception(kOfxStatErrValue);
                 }
               }
             }
-            outArgs.setDoubleProperty(parParamName, inputPar);
+            if (inputParSet) {
+              outArgs.setDoubleProperty(parParamName, inputPar);
+            }
           }
         }
           

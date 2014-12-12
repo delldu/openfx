@@ -1116,6 +1116,9 @@ namespace OFX {
     , _clipProps(props)
     , _clipHandle(handle)
     , _effect(effect)
+#ifdef OFX_EXTENSIONS_VEGAS
+    , _pixelOrder(ePixelOrderRGBA)
+#endif
   {
     OFX::Validation::validateClipInstanceProperties(_clipProps);
   }
@@ -1953,6 +1956,10 @@ namespace OFX {
   ////////////////////////////////////////////////////////////////////////////////
   // Class used to uplift previous vegas keyframe data of the effect. */ 
   SonyVegasUpliftArguments::SonyVegasUpliftArguments(PropertySet args)
+    : guidUplift()
+    , keyframeCount(0)
+    , commonData(0)
+    , commonDataSize(0)
   {
       _argProps = args;
   }

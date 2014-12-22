@@ -247,20 +247,7 @@ namespace OFX {
   void 
     ParamDescriptor::setIcon(const std::string &v, bool pngFormat)
   {
-    _paramProps.propSetString(kOfxPropIcon, v, (int)pngFormat, false); // introduced in OFX 1.2
-  }
-    
-  bool
-  ParamDescriptor::getHostHasNativeOverlayHandle() const
-  {
-    bool v = _paramProps.propGetInt(kOfxParamPropHasHostOverlayHandle, 0, false) != 0; // OFX 1.2
-    return v;
-  }
-    
-  void
-  ParamDescriptor::setUseHostNativeOverlayHandle(bool use)
-  {
-    _paramProps.propSetInt(kOfxParamPropUseHostOverlayHandle, use, 0, false); // OFX 1.2
+    _paramProps.propSetString(kOfxPropIcon, v, (int)pngFormat);
   }
 
   ////////////////////////////////////////////////////////////////////////////////
@@ -1438,13 +1425,7 @@ namespace OFX {
   /** @brief get the icon file name (SVG or PNG) */
   std::string Param::getIcon(bool pngFormat) const
   {
-    std::string v  = _paramProps.propGetString(kOfxPropIcon, (int)pngFormat, false); // OFX 1.2
-    return v;
-  }
-    
-  bool Param::getHostHasNativeOverlayHandle() const
-  {
-    bool v = _paramProps.propGetInt(kOfxParamPropHasHostOverlayHandle, 0, false) != 0; // OFX 1.2
+    std::string v  = _paramProps.propGetString(kOfxPropIcon, (int)pngFormat, false);
     return v;
   }
 

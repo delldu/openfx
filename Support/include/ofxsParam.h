@@ -999,9 +999,6 @@ namespace OFX {
 
         /** @brief get the icon file name (SVG or PNG) */
         std::string getIcon(bool pngFormat) const;
-        
-        bool getHostHasNativeOverlayHandle() const;
-        
     };
   
     ////////////////////////////////////////////////////////////////////////////////

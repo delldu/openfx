@@ -2903,6 +2903,7 @@ namespace OFX {
 
 #ifdef OFX_EXTENSIONS_VEGAS
     /** @brief Library side uplift vegas keyframe action */
+    static
     void
       upliftVegasKeyframeAction(OfxImageEffectHandle handle, OFX::PropertySet inArgs)
     {
@@ -2921,6 +2922,7 @@ namespace OFX {
     }
 
     /** @brief Library side invoke About function */
+    static
     bool
       invokeAbout(OfxImageEffectHandle handle, const char* /*plugname*/)
     {
@@ -2932,6 +2934,7 @@ namespace OFX {
     }
 
     /** @brief Library side invoke Help function */
+    static
     bool
       invokeHelp(OfxImageEffectHandle handle, const char* /*plugname*/)
     {
@@ -2947,6 +2950,7 @@ namespace OFX {
     // TODO: framesViewsNeededAction(handle, inArgs, outargs, plugname); (see framesNeededAction())
 
     /** @brief Action called in place of a render to recover a transform matrix from an effect. */
+    static
     bool
       getTransform(OfxImageEffectHandle handle, OFX::PropertySet inArgs, OFX::PropertySet &outArgs)
     {

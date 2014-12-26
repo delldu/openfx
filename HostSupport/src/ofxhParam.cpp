@@ -177,7 +177,8 @@ namespace OFX {
         int propDimension;
       };
 
-      bool isDoubleParam(const std::string &paramType) 
+      static
+      bool isDoubleParam(const std::string &paramType)
       {
         return paramType == kOfxParamTypeDouble ||
                paramType == kOfxParamTypeDouble2D ||
@@ -188,14 +189,14 @@ namespace OFX {
           ;
       }
 
-      bool isColourParam(const std::string &paramType) 
+      bool isColourParam(const std::string &paramType)
       {
         return 
           paramType == kOfxParamTypeRGBA ||
           paramType == kOfxParamTypeRGB;
       }
 
-      bool isIntParam(const std::string &paramType) 
+      bool isIntParam(const std::string &paramType)
       {
         return paramType == kOfxParamTypeInteger ||
                paramType == kOfxParamTypeInteger2D ||
@@ -236,7 +237,8 @@ namespace OFX {
         return false;
       }
   
-      bool findType(const std::string paramType, Property::TypeEnum &propType, int &propDim) 
+      static
+      bool findType(const std::string paramType, Property::TypeEnum &propType, int &propDim)
       {
         const TypeMap *tm = typeMap;
         while (tm->paramType) {

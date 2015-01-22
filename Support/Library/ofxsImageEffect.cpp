@@ -265,7 +265,6 @@ namespace OFX {
     }
   }
 
-#ifdef OFX_SUPPORTS_OPENGLRENDER
     /** @brief turns a bit depth string into and enum */
     static std::string mapBitDepthEnumToStr(BitDepthEnum bitDepth)
     {
@@ -292,7 +291,6 @@ namespace OFX {
         return std::string();
         }
     }
-#endif
 
   /** @brief turns a pixel component string into and enum */
   PixelComponentEnum mapStrToPixelComponentEnum(const std::string &str) throw(std::invalid_argument)

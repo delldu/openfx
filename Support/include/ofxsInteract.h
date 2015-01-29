@@ -70,9 +70,7 @@ namespace OFX {
   struct DrawArgs : public InteractArgs {
     DrawArgs(const PropertySet &props);
 
-#ifdef kOfxInteractPropViewportSize // removed in OFX 1.4
     OfxPointD       viewportSize;      /**< @brief The openGL viewport size for the instance */
-#endif
     OfxPointD       pixelScale;        /**< @brief The current effect time to draw at */
     OfxRGBColourD   backGroundColour;  /**< @brief The current background colour, ignore the A */
   };
@@ -81,9 +79,7 @@ namespace OFX {
   struct PenArgs : public InteractArgs {
     PenArgs(const PropertySet &props);
 
-#ifdef kOfxInteractPropViewportSize // removed in OFX 1.4
     OfxPointD       viewportSize;      /**< @brief The openGL viewport size for the instance */
-#endif
     OfxPointD       pixelScale;        /**< @brief The current effect time to draw at */
     OfxRGBColourD   backGroundColour;  /**< @brief The current background colour, ignore the A */
     OfxPointD       penPosition;       /**< @brief The current pen position */
@@ -141,8 +137,8 @@ namespace OFX {
     /** @brief Returns the size of a real screen pixel under the interact's cannonical projection */
     OfxPointD getPixelScale(void) const;
 
-    /** @brief The suggested colour to draw a widget in an interact. Returns false if there is no suggestion. */
-    bool getSuggestedColour(OfxRGBColourD &c) const;
+    /** @brief The suggested colour to draw a widget in an interact */
+    OfxRGBColourD getSuggestedColour(void) const;
 
     /** @brief the background colour */
     OfxRGBColourD getBackgroundColour(void) const;

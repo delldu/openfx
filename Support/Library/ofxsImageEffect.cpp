@@ -290,6 +290,7 @@ namespace OFX {
       case eBitDepthCustom:
         return std::string();
         }
+      return std::string();
     }
 
   /** @brief turns a pixel component string into and enum */

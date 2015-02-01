@@ -50,6 +50,14 @@ England
 #endif
 #include "ofxsCore.h"
 
+#if defined __APPLE__ || defined linux || defined __FreeBSD__
+#  define EXPORT __attribute__((visibility("default")))
+#elif defined _WIN32
+#  define EXPORT OfxExport
+#else
+#  error Not building on your operating system quite yet
+#endif
+
 /** @brief The core 'OFX Support' namespace, used by plugin implementations. All code for these are defined in the common support libraries. */
 namespace OFX {
 

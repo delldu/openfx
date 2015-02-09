@@ -176,27 +176,6 @@ namespace OFX {
     throw std::invalid_argument(s);
   }
 
-  const char* mapContextEnumToStr(ContextEnum context) throw(std::invalid_argument)
-  {
-    switch (context) {
-      case eContextGenerator:
-        return kOfxImageEffectContextGenerator;
-      case eContextFilter:
-        return kOfxImageEffectContextFilter;
-      case eContextTransition:
-        return kOfxImageEffectContextTransition;
-      case eContextPaint:
-        return kOfxImageEffectContextPaint;
-      case eContextGeneral:
-        return kOfxImageEffectContextGeneral;
-      case eContextRetimer:
-        return kOfxImageEffectContextRetimer;
-      default:
-        OFX::Log::error(true, "Unknown context enum '%d'", (int)context);
-        throw std::invalid_argument("unknown ContextEnum");
-    }
-  }
-
   const char* mapMessageTypeEnumToStr(OFX::Message::MessageTypeEnum type)
   {
     if(type == OFX::Message::eMessageFatal)
@@ -1606,22 +1585,6 @@ namespace OFX {
     if(!OFX::Private::gMessageSuiteV2){ throwHostMissingSuiteException("setPersistentMessage"); }
     if(!OFX::Private::gMessageSuiteV2->setPersistentMessage){ throwHostMissingSuiteException("setPersistentMessage"); }
     OfxStatus stat = OFX::Private::gMessageSuiteV2->setPersistentMessage(_effectHandle, mapMessageTypeEnumToStr(type), id.c_str(), msg.c_str());
-    return mapToMessageReplyEnum(stat);
-  }
-
-  OFX::Message::MessageReplyEnum ImageEffect::clearPersistentMessage()
-  {   
-    if(!OFX::Private::gMessageSuiteV2){ throwHostMissingSuiteException("clearPersistentMessage"); }
-    if(!OFX::Private::gMessageSuiteV2->clearPersistentMessage){ throwHostMissingSuiteException("clearPersistentMessage"); }
-    OfxStatus stat = OFX::Private::gMessageSuiteV2->clearPersistentMessage(_effectHandle);
-    return mapToMessageReplyEnum(stat);
-  }
-
-  OFX::Message::MessageReplyEnum ImageEffect::setPersistentMessage(OFX::Message::MessageTypeEnum type, const std::string& id, const std::string& msg)
-  {   
-    if(!OFX::Private::gMessageSuiteV2){ throwHostMissingSuiteException("setPersistentMessage"); }
-    if(!OFX::Private::gMessageSuiteV2->setPersistentMessage){ throwHostMissingSuiteException("setPersistentMessage"); }
-    OfxStatus stat = OFX::Private::gMessageSuiteV2->setPersistentMessage(_effectHandle, mapToMessageTypeEnum(type), id.c_str(), msg.c_str());
     return mapToMessageReplyEnum(stat);
   }
 

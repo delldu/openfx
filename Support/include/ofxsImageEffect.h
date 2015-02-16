@@ -1002,6 +1002,26 @@ namespace OFX {
     virtual void setFramesNeeded(const Clip &clip, const OfxRangeD &range) = 0;
   };
     
+  struct ClipComponentsArguments {
+    double time;
+    int view;
+  };
+    
+  class ClipComponentsSetter {
+      
+      OFX::PropertySet _outArgs;
+      std::string passThroughClipName;
+      int passThroughView;
+      double passThroughTime;
+      std::map<std::string, std::list<std::string> > clipComponents;
+      
+      
+  public:
+      
+      ClipComponentsSetter(OFX::PropertySet props);
+
+  };
+
   /** @brief Class used to set the clip preferences of the effect.
   */ 
   class ClipPreferencesSetter {

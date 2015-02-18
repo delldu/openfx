@@ -247,7 +247,7 @@ namespace OFX {
   void 
     ParamDescriptor::setIcon(const std::string &v, bool pngFormat)
   {
-    _paramProps.propSetString(kOfxPropIcon, v, (int)pngFormat);
+    _paramProps.propSetString(kOfxPropIcon, v, (int)pngFormat, false); // introduced in OFX 1.2
   }
 
   ////////////////////////////////////////////////////////////////////////////////
@@ -635,7 +635,7 @@ namespace OFX {
   /** @brief set the color wheel level value, default is 0.75 */
   void Double2DParamDescriptor::setColorWheelLevel(double x)
   {
-    _paramProps.propSetDouble(kOfxParamPropColorWheelLevel, x);
+    _paramProps.propSetDouble(kOfxParamPropColorWheelLevel, x, false);
   }
 #endif
 
@@ -747,16 +747,16 @@ namespace OFX {
     switch(v) 
     {
     case eColorSpaceRGB :
-      _paramProps.propSetString(kOfxParamColorDefaultColorspace, kOfxParamColorColorspaceRGB);
+      _paramProps.propSetString(kOfxParamColorDefaultColorspace, kOfxParamColorColorspaceRGB, false);
       break;
     case eColorSpaceHSV :
-      _paramProps.propSetString(kOfxParamColorDefaultColorspace, kOfxParamColorColorspaceHSV);
+      _paramProps.propSetString(kOfxParamColorDefaultColorspace, kOfxParamColorColorspaceHSV, false);
       break;
     case eColorSpaceHSL :
-      _paramProps.propSetString(kOfxParamColorDefaultColorspace, kOfxParamColorColorspaceHSL);
+      _paramProps.propSetString(kOfxParamColorDefaultColorspace, kOfxParamColorColorspaceHSL, false);
       break;
     case eColorSpaceLab :
-      _paramProps.propSetString(kOfxParamColorDefaultColorspace, kOfxParamColorColorspaceLab);
+      _paramProps.propSetString(kOfxParamColorDefaultColorspace, kOfxParamColorColorspaceLab, false);
       break;
     }
   }
@@ -826,16 +826,16 @@ namespace OFX {
     switch(v) 
     {
     case eColorSpaceRGB :
-      _paramProps.propSetString(kOfxParamColorDefaultColorspace, kOfxParamColorColorspaceRGB);
+      _paramProps.propSetString(kOfxParamColorDefaultColorspace, kOfxParamColorColorspaceRGB, false);
       break;
     case eColorSpaceHSV :
-      _paramProps.propSetString(kOfxParamColorDefaultColorspace, kOfxParamColorColorspaceHSV);
+      _paramProps.propSetString(kOfxParamColorDefaultColorspace, kOfxParamColorColorspaceHSV, false);
       break;
     case eColorSpaceHSL :
-      _paramProps.propSetString(kOfxParamColorDefaultColorspace, kOfxParamColorColorspaceHSL);
+      _paramProps.propSetString(kOfxParamColorDefaultColorspace, kOfxParamColorColorspaceHSL, false);
       break;
     case eColorSpaceLab :
-      _paramProps.propSetString(kOfxParamColorDefaultColorspace, kOfxParamColorColorspaceLab);
+      _paramProps.propSetString(kOfxParamColorDefaultColorspace, kOfxParamColorColorspaceLab, false);
       break;
     }
   }
@@ -994,13 +994,13 @@ namespace OFX {
   /** @brief whether the initial state of a group is open or closed in a hierarchical layout, defaults to false */
   void GroupParamDescriptor::setOpen(const bool v)
   {
-    _paramProps.propSetInt(kOfxParamPropGroupOpen, v);
+    _paramProps.propSetInt(kOfxParamPropGroupOpen, v, false); // introduced in OFX 1.2
   }
 
 #ifdef OFX_EXTENSIONS_NUKE
   void GroupParamDescriptor::setAsTab()
   {
-    _paramProps.propSetInt(kFnOfxParamPropGroupIsTab, 1);
+    _paramProps.propSetInt(kFnOfxParamPropGroupIsTab, 1, false); // Nuke extension
   }
 #endif
 

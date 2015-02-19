@@ -1372,6 +1372,12 @@ namespace OFX {
     _paramProps.propSetPointer(kOfxParamPropDataPtr, ptr);
   }
 
+  /** @brief fetch the label */
+  void Param::getLabel(std::string &label) const
+  {
+    label      = _paramProps.propGetString(kOfxPropLabel);
+  }
+
   /** @brief fetch the labels */
   void Param::getLabels(std::string &label, std::string &shortLabel, std::string &longLabel) const
   {

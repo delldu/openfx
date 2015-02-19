@@ -1274,20 +1274,6 @@ namespace OFX {
     /** @brief Have we informed the host we want to be seqentially renderred ? */
     bool getSequentialRender(void) const;
 
-    /** @brief Does the plugin support image tiling ? Can only be called from changedParam or changedClip. */
-    void setSupportsTiles(bool v);
-
-    /** @brief Have we informed the host we support image tiling ? */
-    bool getSupportsTiles(void) const;
-
-#ifdef OFX_SUPPORTS_OPENGLRENDER
-    /** @brief Does the plugin support OpenGL accelerated rendering (but is also capable of CPU rendering) ? Can only be called from changedParam or changedClip. */
-    void setSupportsOpenGLRender(bool v);
-
-    /** @brief Does the plugin require OpenGL accelerated rendering ? Can only be called from changedParam or changedClip. */
-    void setNeedsOpenGLRender(bool v);
-#endif
-
     /** @brief notify host that the internal data structures need syncing back to parameters for persistance and so on.  This is reset by the host after calling SyncPrivateData. */
     void setParamSetNeedsSyncing();
 

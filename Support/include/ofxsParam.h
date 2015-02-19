@@ -976,6 +976,9 @@ namespace OFX {
         /** @brief set the param data ptr */
         void setDataPtr(void* ptr);
 
+        /** @brief fetch the label */
+        void getLabel(std::string &label) const;
+
         /** @brief fetch the labels */
         void getLabels(std::string &label, std::string &shortLabel, std::string &longLabel) const;
 

@@ -1582,35 +1582,6 @@ namespace OFX {
     return _effectProps.propGetInt(kOfxImageEffectInstancePropSequentialRender) != 0;
   }
 
-  /** @brief Does the plugin support image tiling ? Can only be called from changedParam or changedClip. */
-  void ImageEffect::setSupportsTiles(bool v)
-  {
-    _effectProps.propSetInt(kOfxImageEffectPropSupportsTiles, int(v), false); // read/write from OFX 1.4
-  }
-
-  /** @brief Have we informed the host we support image tiling ? */
-  bool ImageEffect::getSupportsTiles(void) const
-  {
-    return _effectProps.propGetInt(kOfxImageEffectPropSupportsTiles) != 0;
-  }
-
-
-#ifdef OFX_SUPPORTS_OPENGLRENDER
-  /** @brief Does the plugin support OpenGL accelerated rendering (but is also capable of CPU rendering) ? Can only be called from changedParam or changedClip. */
-  void ImageEffect::setSupportsOpenGLRender(bool v) {
-    if (gHostDescription.supportsOpenGLRender) {
-      _effectProps.propSetString(kOfxImageEffectPropOpenGLRenderSupported, (v ? "true" : "false"), false); // read/write from OFX 1.4
-    }
-  }
-
-  /** @brief Does the plugin require OpenGL accelerated rendering ? Can only be called from changedParam or changedClip. */
-  void ImageEffect::setNeedsOpenGLRender(bool v) {
-    if (gHostDescription.supportsOpenGLRender) {
-      _effectProps.propSetString(kOfxImageEffectPropOpenGLRenderSupported, (v ? "needed" : "false"), false); // read/write from OFX 1.4
-    }
-  }
-#endif
-
   /** @brief notify host that the internal data structures need syncing back to parameters for persistance and so on.  This is reset by the host after calling SyncPrivateData. */
   void ImageEffect::setParamSetNeedsSyncing()
   {

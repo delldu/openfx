@@ -1783,7 +1783,7 @@ namespace OFX {
 
     protected:
         /** @brief hidden constructor */
-        CameraParam(OfxImageEffectHandle imageEffectHandle, const ParamSet* paramSet, const std::string& name, NukeOfxCameraHandle handle);
+        CameraParam(/*OfxImageEffectHandle imageEffectHandle, */const ParamSet* paramSet, const std::string& name, NukeOfxCameraHandle handle);
 
         // so it can make one
         friend class ParamSet;
@@ -1792,7 +1792,7 @@ namespace OFX {
         Param* getParameter( const std::string& name );
             
     private:
-        OfxImageEffectHandle _imageEffectHandle;
+        //OfxImageEffectHandle _imageEffectHandle;
     };
 #endif
 
@@ -1949,7 +1949,7 @@ namespace OFX {
             fetchRawCameraParam(pluginHandle, name, paramHandle);
 
             // make out support descriptor class
-            paramPtr = new T(pluginHandle, this, name, paramHandle);
+            paramPtr = new T(/*pluginHandle, */this, name, paramHandle);
             
             // add it to our map of described ones
             _fetchedParams[name] = paramPtr;

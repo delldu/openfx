@@ -1955,8 +1955,12 @@ namespace OFX {
           ClipInstance *clip = it->second;
 
           if (!clip->isOutput()) {
+              
+            bool connected = clip->getConnected();
              
-            frameRate = Maximum(frameRate, clip->getFrameRate());
+            if (connected) {
+              frameRate = Maximum(frameRate, clip->getFrameRate());
+            }
 
             std::string rawComp  = clip->getUnmappedComponents();
             rawComp = clip->findSupportedComp(rawComp); // turn that into a comp the plugin expects on that clip
@@ -1965,11 +1969,12 @@ namespace OFX {
             const std::string &rawPreMult = clip->getPremult();            
               
             if (isChromaticComponent(rawComp)) {
-              if (rawPreMult == kOfxImagePreMultiplied)
-                premult = kOfxImagePreMultiplied;
-              else if (rawPreMult == kOfxImageUnPreMultiplied && premult != kOfxImagePreMultiplied)
-                premult = kOfxImageUnPreMultiplied;                
-                
+              if (connected) {
+                if (rawPreMult == kOfxImagePreMultiplied)
+                  premult = kOfxImagePreMultiplied;
+                else if (rawPreMult == kOfxImageUnPreMultiplied && premult != kOfxImagePreMultiplied)
+                  premult = kOfxImageUnPreMultiplied;
+              }
                 
               if (!clip->isOptional()) {
                   hasSetCompsAndDepth = true;

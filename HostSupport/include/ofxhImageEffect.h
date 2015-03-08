@@ -618,6 +618,10 @@ namespace OFX {
                                        ,
                                        int nViews
 #                                    endif
+#                                    ifdef OFX_EXTENSIONS_NUKE
+                                       ,
+                                       const std::list<std::string>& planes
+#                                    endif
                                        );
 
         virtual OfxStatus endRenderAction(OfxTime  startFrame,

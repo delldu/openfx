@@ -2557,6 +2557,14 @@ namespace OFX {
       args.viewsToRender = inArgs.propGetInt(kOfxImageEffectPropViewsToRender, 0, false);
       args.renderView = inArgs.propGetInt(kOfxImageEffectPropRenderView, 0, false);
 #endif
+        
+#ifdef OFX_EXTENSIONS_NUKE
+        args.view = inArgs.propGetInt(kFnOfxImageEffectPropView, 0, false);
+        int numPlanes = inArgs.propGetDimension(kFnOfxImageEffectPropComponentsPresent, false);
+        for (int i = 0; i < numPlanes; ++i) {
+            args.planes.push_back(inArgs.propGetString(kFnOfxImageEffectPropComponentsPresent, i, false));
+        }
+#endif
 
       std::string str = inArgs.propGetString(kOfxImageEffectPropFieldToRender);
       try {
@@ -2625,6 +2633,10 @@ namespace OFX {
       // They appeared in OFX 1.2
       args.sequentialRenderStatus = inArgs.propGetInt(kOfxImageEffectPropSequentialRenderStatus, false) != 0;
       args.interactiveRenderStatus = inArgs.propGetInt(kOfxImageEffectPropInteractiveRenderStatus, false) != 0;
+        
+#ifdef OFX_EXTENSIONS_NUKE
+      args.view = inArgs.propGetInt(kFnOfxImageEffectPropView, 0, false);
+#endif
 
       // and call the plugin client render code
       effectInstance->beginSequenceRender(args);
@@ -2653,6 +2665,10 @@ namespace OFX {
       args.sequentialRenderStatus = inArgs.propGetInt(kOfxImageEffectPropSequentialRenderStatus, false) != 0;
       args.interactiveRenderStatus = inArgs.propGetInt(kOfxImageEffectPropInteractiveRenderStatus, false) != 0;
 
+#ifdef OFX_EXTENSIONS_NUKE
+      args.view = inArgs.propGetInt(kFnOfxImageEffectPropView, 0, false);
+#endif
+        
       // and call the plugin client render code
       effectInstance->endSequenceRender(args);
     }
@@ -2672,6 +2688,10 @@ namespace OFX {
       args.renderWindow.x2 = inArgs.propGetInt(kOfxImageEffectPropRenderWindow, 2);
       args.renderWindow.y2 = inArgs.propGetInt(kOfxImageEffectPropRenderWindow, 3);
 
+#ifdef OFX_EXTENSIONS_NUKE
+      args.view = inArgs.propGetInt(kFnOfxImageEffectPropView, 0, false);
+#endif
+        
       std::string str = inArgs.propGetString(kOfxImageEffectPropFieldToRender);
       try {
         args.fieldToRender = mapStrToFieldEnum(str);
@@ -2721,6 +2741,10 @@ namespace OFX {
 
       args.time = inArgs.propGetDouble(kOfxPropTime);
 
+#ifdef OFX_EXTENSIONS_NUKE
+      args.view = inArgs.propGetInt(kFnOfxImageEffectPropView, 0, false);
+#endif
+        
       // and call the plugin client code
       OfxRectD rod;
       bool v = effectInstance->getRegionOfDefinition(args, rod);
@@ -2792,6 +2816,10 @@ namespace OFX {
 
       args.time = inArgs.propGetDouble(kOfxPropTime);
         
+#ifdef OFX_EXTENSIONS_NUKE
+      args.view = inArgs.propGetInt(kFnOfxImageEffectPropView, 0, false);
+#endif
+
       // make a roi setter object
       ActualROISetter setRoIs(outArgs, gEffectDescriptors[plugname][effectInstance->getContext()]->getClipROIPropNames());
 

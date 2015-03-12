@@ -937,7 +937,7 @@ namespace OFX {
 #endif
     return clip;
   }
-
+#ifdef OFX_EXTENSIONS_NUKE
   void ImageBase::ofxCustomCompToNatronComp(const std::string& comp,std::string* layerName,std::vector<std::string>* channelNames)
   {
       std::string compsName;
@@ -973,7 +973,7 @@ namespace OFX {
           foundChannel = nextChannel;
       }
   }
-    
+#endif
   ////////////////////////////////////////////////////////////////////////////////
   // wraps up an image  
   ImageBase::ImageBase(OfxPropertySetHandle props)
@@ -986,35 +986,23 @@ namespace OFX {
     _pixelAspectRatio = _imageProps.propGetDouble(kOfxImagePropPixelAspectRatio);;
       
     std::string str  = _imageProps.propGetString(kOfxImageEffectPropComponents);
+    _pixelComponents = mapStrToPixelComponentEnum(str);
       
 #ifdef OFX_EXTENSIONS_NUKE
-    //Try to match str against ofxNatron extension
-    std::string layer;
-    bool gotNatronComponents = false;
-    try {
-        ofxCustomCompToNatronComp(str, &layer, &_channels);
-        gotNatronComponents = true;
-    } catch (const std::exception& /*e*/) {
-        //it is not components of the Natron extension
-    }
       
-    if (!gotNatronComponents) {
-        _pixelComponents = mapStrToPixelComponentEnum(str);
-    } else {
-        _pixelComponents = OFX::ePixelComponentCustom;
-    }
-      
-    str = _imageProps.propGetString(kOfxImageEffectPropPixelDepth);
-    _pixelDepth = mapStrToBitDepthEnum(str);
-      
-    // compute bytes per pixel
-    _pixelBytes = 0;
-    if (gotNatronComponents) {
+    if (_pixelComponents == OFX::ePixelComponentCustom) {
+        //Try to match str against ofxNatron extension
+        std::string layer;
+        try {
+            ofxCustomCompToNatronComp(str, &layer, &_channels);
+        } catch (const std::exception& /*e*/) {
+            //it is not components of the Natron extension
+        }
         _pixelBytes = (int)_channels.size();
     } else {
-#else
-    _pixelDepth = mapStrToBitDepthEnum(str);
 #endif
+        // compute bytes per pixel
+        _pixelBytes = 0;
         switch(_pixelComponents)
         {
             case ePixelComponentNone : _pixelBytes = 0; break;
@@ -1027,48 +1015,12 @@ namespace OFX {
 #endif
             case ePixelComponentCustom : _pixelBytes = 0; break;
         }
+
 #ifdef OFX_EXTENSIONS_NUKE
     }
 #endif
-    
-    _pixelComponents = mapStrToPixelComponentEnum(str);
-
-    switch (_pixelComponents) {
-      case ePixelComponentAlpha:
-        _pixelComponentCount = 1;
-        break;
-      case ePixelComponentNone:
-        _pixelComponentCount = 0;
-        break;
-      case ePixelComponentRGB:
-        _pixelComponentCount = 3;
-        break;
-      case ePixelComponentRGBA:
-        _pixelComponentCount = 4;
-        break;
-      case ePixelComponentCustom:
-      default:
-        _pixelComponentCount = 0;
-        break;
-    }
-
     str = _imageProps.propGetString(kOfxImageEffectPropPixelDepth);
     _pixelDepth = mapStrToBitDepthEnum(str);
-
-    // compute bytes per pixel
-    _pixelBytes = 0;
-    switch(_pixelComponents) 
-    {
-    case ePixelComponentNone : _pixelBytes = 0; break;
-    case ePixelComponentRGBA  : _pixelBytes = 4; break;
-    case ePixelComponentRGB  : _pixelBytes = 3; break;
-    case ePixelComponentAlpha : _pixelBytes = 1; break;
-#ifdef OFX_EXTENSIONS_NUKE
-    case ePixelComponentMotionVectors  : _pixelBytes = 2; break;
-    case ePixelComponentStereoDisparity : _pixelBytes = 2; break;
-#endif
-    case ePixelComponentCustom : _pixelBytes = 0; break;
-    }
 
     switch(_pixelDepth) 
     {

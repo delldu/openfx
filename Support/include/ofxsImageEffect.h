@@ -645,6 +645,8 @@ namespace OFX {
 
     /** @brief dtor */
     virtual ~ImageBase();
+      
+    static void ofxCustomCompToNatronComp(const std::string& comp,std::string* layerName,std::vector<std::string>* channelNames);
 
     const PropertySet &getPropertySet() const {return _imageProps;}
 

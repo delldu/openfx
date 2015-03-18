@@ -1250,6 +1250,9 @@ namespace OFX {
           }
         }
         else if(_context == kOfxImageEffectContextGeneral
+#ifdef OFX_EXTENSIONS_NATRON
+            || _context == kNatronOfxImageEffectContextTracker
+#endif
                 ) {
           // general context is the union of all the non optional clips
           bool gotOne = false;

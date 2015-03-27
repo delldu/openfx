@@ -473,6 +473,13 @@ namespace OFX {
       _clipProps.propSetString(kOfxImageEffectPropSupportedComponents, kFnOfxImageComponentStereoDisparity, n);
       break;
 #endif
+#ifdef OFX_EXTENSIONS_NATRON
+    case ePixelComponentsXY:
+      if (OFX::getImageEffectHostDescription()->isNatron) {
+        _clipProps.propSetString(kOfxImageEffectPropSupportedComponents, kNatronOfxImageComponentXY, n);
+      }
+      break;
+#endif
     case ePixelComponentCustom :
       break;
     }
@@ -1064,6 +1071,10 @@ namespace OFX {
       case ePixelComponentStereoDisparity:
         return 2;
 #endif
+#ifdef OFX_EXTENSIONS_NATRON
+      case ePixelComponentsXY:
+        return 2;
+#endif
       case ePixelComponentRGB:
         return 3;
       case ePixelComponentRGBA:
@@ -1071,7 +1082,7 @@ namespace OFX {
       case ePixelComponentCustom:
       default:
 #ifdef OFX_EXTENSIONS_NUKE
-        return _pixelComponentCustomNames.size();
+        return (int)_pixelComponentCustomNames.size();
 #else
         return 0;
 #endif
@@ -2170,6 +2181,10 @@ namespace OFX {
             compName = kFnOfxImageComponentStereoDisparity;
             break;
 #endif
+#ifdef OFX_EXTENSIONS_NATRON
+        case ePixelComponentsXY: // This is not supposed to be visible to the user via getClipComponents
+            break;
+#endif
         case ePixelComponentCustom :
             break;
       }
@@ -2259,6 +2274,10 @@ namespace OFX {
       break;
     case ePixelComponentStereoDisparity :
       outArgs_.propSetString(propName.c_str(), kFnOfxImageComponentStereoDisparity);
+      break;
+#endif
+#ifdef OFX_EXTENSIONS_NATRON
+    case ePixelComponentsXY: // This is not supposed to be used by the user
       break;
 #endif
     case ePixelComponentCustom :

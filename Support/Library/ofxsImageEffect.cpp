@@ -474,10 +474,8 @@ namespace OFX {
       break;
 #endif
 #ifdef OFX_EXTENSIONS_NATRON
-    case ePixelComponentsXY:
-      if (OFX::getImageEffectHostDescription()->isNatron) {
-        _clipProps.propSetString(kOfxImageEffectPropSupportedComponents, kNatronOfxImageComponentXY, n);
-      }
+    case ePixelComponentXY:
+      _clipProps.propSetString(kOfxImageEffectPropSupportedComponents, kNatronOfxImageComponentXY, n);
       break;
 #endif
     case ePixelComponentCustom :
@@ -2182,7 +2180,8 @@ namespace OFX {
             break;
 #endif
 #ifdef OFX_EXTENSIONS_NATRON
-        case ePixelComponentsXY: // This is not supposed to be visible to the user via getClipComponents
+        case ePixelComponentXY:
+            compName = kNatronOfxImageComponentXY;
             break;
 #endif
         case ePixelComponentCustom :
@@ -2277,7 +2276,8 @@ namespace OFX {
       break;
 #endif
 #ifdef OFX_EXTENSIONS_NATRON
-    case ePixelComponentsXY: // This is not supposed to be used by the user
+    case ePixelComponentXY:
+      outArgs_.propSetString(propName.c_str(), kNatronOfxImageComponentXY);
       break;
 #endif
     case ePixelComponentCustom :

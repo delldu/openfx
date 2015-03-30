@@ -1004,40 +1004,16 @@ namespace OFX {
     std::string str  = _imageProps.propGetString(kOfxImageEffectPropComponents);
     _pixelComponents = mapStrToPixelComponentEnum(str);
 
-    switch (_pixelComponents) {
-      case ePixelComponentAlpha:
-        _pixelComponentCount = 1;
-        break;
-      case ePixelComponentNone:
-        _pixelComponentCount = 0;
-        break;
-#ifdef OFX_EXTENSIONS_NUKE
-      case ePixelComponentMotionVectors:
-      case ePixelComponentStereoDisparity:
-        _pixelComponentCount = 2;
-        break;
-#endif
-      case ePixelComponentRGB:
-        _pixelComponentCount = 3;
-        break;
-      case ePixelComponentRGBA:
-        _pixelComponentCount = 4;
-        break;
-#ifdef OFX_EXTENSIONS_NATRON
-      case ePixelComponentXY:
-        _pixelComponentCount = 2;
-        break;
-#endif
-      case ePixelComponentCustom:
-      default:
-#ifdef OFX_EXTENSIONS_NATRON
-        // first element in the vector is the layer name (if any)
-        _pixelComponentCount = std::max((int)mapPixelComponentCustomToLayerChannels(str).size() - 1, 0);
-#else
-        _pixelComponentCount = 0;
-#endif
-        break;
+#if defined(OFX_EXTENSIONS_NATRON) && defined(OFX_EXTENSIONS_NUKE)
+    if (_pixelComponents == OFX::ePixelComponentCustom) {
+        // Try to match str against ofxNatron extension
+        ofxCustomCompToNatronComp(str, NULL, &_pixelComponentCustomNames);
     }
+#endif
+      
+    str = _imageProps.propGetString(kOfxImageEffectPropPixelDepth);
+    _pixelDepth = mapStrToBitDepthEnum(str);
+
 
     // compute bytes per pixel
     _pixelBytes = _pixelComponentCount;

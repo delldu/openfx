@@ -423,6 +423,16 @@ namespace OFX {
           if (count == 0) {
               return;
           }
+#ifdef OFX_EXTENSIONS_NUKE
+          if (name==kFnOfxImageEffectPropComponentsPresent) {
+              const std::vector<std::string>& componentsPresents = getComponentsPresent();
+              int minCount = (int)componentsPresents.size() < count ? (int)componentsPresents.size() : count;
+              for (int i = 0; i < minCount; ++i) {
+                  values[i] = componentsPresents[i].c_str();
+              }
+              return;
+          }
+#endif
           if(count!=1) throw Property::Exception(kOfxStatErrValue);
           if(name==kOfxImageEffectPropPixelDepth){
               values[0] = getPixelDepth().c_str();

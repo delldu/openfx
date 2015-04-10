@@ -2028,7 +2028,8 @@ namespace OFX {
                   premult = kOfxImageUnPreMultiplied;
               }
                 
-              if(!clip->isOptional()) {
+              if(connected) {
+                //Update deepest bitdepth and most components only if the infos are relevant, i.e: only if the clip is connected
                 hasSetCompsAndDepth = true;
                 deepestBitDepth = FindDeepestBitDepth(deepestBitDepth, rawDepth);
                 mostComponents  = findMostChromaticComponents(mostComponents, rawComp);

@@ -53,9 +53,16 @@ England
 #include "ofxsCore.h"
 
 #if defined __APPLE__ || defined linux || defined __FreeBSD__
+# if __GNUC__ >= 4
 #  define EXPORT __attribute__((visibility("default")))
+#  define LOCAL  __attribute__((visibility("hidden")))
+# else
+#  define EXPORT
+#  define LOCAL
+# endif
 #elif defined _WIN32
 #  define EXPORT OfxExport
+#  define LOCAL
 #else
 #  error Not building on your operating system quite yet
 #endif
@@ -2919,7 +2926,7 @@ namespace OFX {
       regionsOfInterestAction(OfxImageEffectHandle handle, OFX::PropertySet inArgs, OFX::PropertySet &outArgs, const char* plugname)
     {
       /** @brief local class to set the roi of a clip */
-      class ActualROISetter : public OFX::RegionOfInterestSetter {
+      class LOCAL ActualROISetter : public OFX::RegionOfInterestSetter {
         OFX::PropertySet &outArgs_;
         bool doneSomething_;
         const std::map<std::string, std::string>& clipROIPropNames_;

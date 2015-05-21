@@ -3414,6 +3414,7 @@ namespace OFX {
         { kNatronOfxHostIsNatron, Property::eInt, 1, true, "0" },
         { kNatronOfxParamHostPropSupportsDynamicChoices, Property::eInt, 1, true, "0" },
         { kNatronOfxParamPropChoiceCascading, Property::eInt, 1, true, "0" },
+        { kNatronOfxImageEffectPropChannelSelector, Property::eString, 1, true, kOfxImageComponentNone },
 #endif
         Property::propSpecEnd
       };    

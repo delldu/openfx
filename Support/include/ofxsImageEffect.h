@@ -1166,6 +1166,8 @@ namespace OFX {
       bool _doneSomething;
       typedef std::map<std::string, std::string> StringStringMap;
       const StringStringMap& _clipPlanesPropNames;
+      std::map<std::string,std::vector<std::string> > _clipComponents;
+      
       const std::string& extractValueForName(const StringStringMap& m, const std::string& name);
       
   public:
@@ -1175,11 +1177,12 @@ namespace OFX {
       : _outArgs(props)
       , _doneSomething(false)
       , _clipPlanesPropNames(clipPlanesPropNames)
+      , _clipComponents()
       {
           
       }
       
-      bool didSomething(void) const {return _doneSomething;}
+      bool setOutProperties();
       
       void addClipComponents(Clip& clip, PixelComponentEnum comps);
       
@@ -1201,6 +1204,10 @@ namespace OFX {
       bool _doneSomething;
       typedef std::map<std::string, std::string> StringStringMap;
       const StringStringMap& _clipFrameViewsPropnames;
+      
+      // For each clip and for each view a vector of ranges
+      std::map<std::string, std::map<int, std::vector<OfxRangeD> > > _frameViews;
+      
       const std::string& extractValueForName(const StringStringMap& m, const std::string& name);
   public:
       
@@ -1209,9 +1216,10 @@ namespace OFX {
       : _outArgs(props)
       , _doneSomething(false)
       , _clipFrameViewsPropnames(clipFrameViewsPropNames)
+      , _frameViews()
       {}
-      
-      bool didSomething(void) const {return _doneSomething;}
+            
+      bool setOutProperties();
       
       void addFrameViewsNeeded(const Clip& clip,const OfxRangeD &range, int view);
       

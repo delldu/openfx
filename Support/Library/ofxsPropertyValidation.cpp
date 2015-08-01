@@ -770,9 +770,7 @@ namespace OFX {
       PropertyDescription(kOfxParamPropIsAutoKeying,              OFX::eInt,    1, eDescFinished),
       PropertyDescription(kOfxParamPropPersistant,                OFX::eInt,    1, eDescDefault, 1, eDescFinished),
       PropertyDescription(kOfxParamPropEvaluateOnChange,          OFX::eInt,    1, eDescDefault, 1, eDescFinished),
-#    ifdef kOfxParamPropPluginMayWrite
-      PropertyDescription(kOfxParamPropPluginMayWrite,            OFX::eInt,    1, eDescDefault, 0, eDescFinished), // removed in OFX 1.4
-#    endif
+      //PropertyDescription(kOfxParamPropPluginMayWrite,            OFX::eInt,    1, eDescDefault, 0, eDescFinished), // removed in OFX 1.4
       PropertyDescription(kOfxParamPropCacheInvalidation,         OFX::eString, 1, eDescDefault, kOfxParamInvalidateValueChange, eDescFinished),
       PropertyDescription(kOfxParamPropCanUndo,                   OFX::eInt,    1, eDescDefault, 1, eDescFinished),
     };

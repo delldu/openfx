@@ -82,6 +82,14 @@ The interact can be slaved to multiple parameters (setting index 0, then index 1
 #define kOfxInteractPropPixelScale "OfxInteractPropPixelScale"
 
 
+    - Type - int X 2 
+    - Property Set - read only property on the interact instance and in argument to all the interact actions.
+
+This property is the redundant and its use will be deprecated in future releases.
+Note, this has been deprecated.
+#define kOfxInteractPropViewportSize "OfxInteractPropViewport"
+removed in v1.4
+ */
 
 /** @brief The background colour of the application behind an interact instance
 

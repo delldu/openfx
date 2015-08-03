@@ -621,7 +621,8 @@ namespace OFX {
                                        const OfxRectI &renderRoI,
                                        OfxPointD   renderScale,
                                        bool     sequentialRender,
-                                       bool     interactiveRender
+                                       bool     interactiveRender,
+                                       bool     draftRender
 #                                    if defined(OFX_EXTENSIONS_VEGAS) || defined(OFX_EXTENSIONS_NUKE)
                                        ,
                                        int view

@@ -395,8 +395,10 @@ namespace OFX {
     bool supportsChoiceAnimation;
     bool supportsBooleanAnimation;
     bool supportsCustomAnimation;
+    void* osHandle;
     bool supportsParametricParameter;
     bool supportsParametricAnimation;
+    bool supportsRenderQualityDraft;
 #ifdef OFX_SUPPORTS_OPENGLRENDER
     bool supportsOpenGLRender;
 #endif
@@ -1049,6 +1051,7 @@ namespace OFX {
 #endif
     bool      sequentialRenderStatus;
     bool      interactiveRenderStatus;
+    bool      renderQualityDraft;
 #ifdef OFX_EXTENSIONS_NUKE
     std::list<std::string> planes;
 #endif

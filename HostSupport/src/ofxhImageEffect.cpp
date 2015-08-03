@@ -2932,7 +2932,7 @@ namespace OFX {
         /// get the textual representation of the view
     static OfxStatus getViewName(OfxImageEffectHandle effect,
                                  int                  view,
-                                 char               **viewName)
+                                 char               ** const viewName)
     {
           try {
               if (!viewName) {

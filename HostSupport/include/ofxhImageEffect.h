@@ -781,7 +781,7 @@ namespace OFX {
           
         /// Returns the view textual representation
         /// The string is owned by the host and must be valid throughout the calling action
-        virtual OfxStatus getViewName(int viewIndex,char** name) const = 0;
+        virtual OfxStatus getViewName(int viewIndex,char** const name) const = 0;
 #endif
       };
 

@@ -50,7 +50,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "ofxOld.h" // old plugins may rely on deprecated properties being present
 
 
-
 #include <assert.h>
 #include <float.h>
 #include <limits.h>

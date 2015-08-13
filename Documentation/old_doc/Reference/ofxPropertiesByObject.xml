@@ -28,6 +28,7 @@
     <listitem><link linkend="kOfxPropHostOSHandle">kOfxPropHostOSHandle</link> - (read only) a pointer to an OS specific application handle (eg: the root hWnd on Windows) </listitem>
     <listitem><link linkend="kOfxParamHostPropSupportsParametricAnimation">kOfxParamHostPropSupportsParametricAnimation</link> - (read only) does the host support animation of parametric parameters</listitem>
     <listitem><link linkend="kOfxImageEffectInstancePropSequentialRender">kOfxImageEffectInstancePropSequentialRender</link> - (read only) does the host support sequential rendering</listitem>
+    <listitem><link linkend="kOfxImageEffectPropOpenGLRenderSupported">kOfxImageEffectPropOpenGLRenderSupported</link> - (read only) does the host support OpenGL accelerated rendering</listitem>
     <listitem><link linkend="kOfxImageEffectPropRenderQualityDraft">kOfxImageEffectPropRenderQualityDraft</link> - (read only) does the host support draft quality rendering</listitem>
     <listitem><link linkend="kOfxImageEffectHostPropNativeOrigin">kOfxImageEffectHostPropNativeOrigin</link> - (read only) native origin of the host</listitem>
   </itemizedlist>

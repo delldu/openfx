@@ -1624,8 +1624,6 @@ namespace OFX {
               for(std::map<std::string, ClipInstance*>::iterator it=_clips.begin();
                   it!=_clips.end();
                   ++it) {
-                  ClipInstance *clip = it->second;
-                  
                   std::string name = kFnOfxImageEffectActionGetClipComponentsPropString + it->first;
                   std::cout << it->first << "->[";
                   
@@ -1724,8 +1722,6 @@ namespace OFX {
               for(std::map<std::string, ClipInstance*>::iterator it=_clips.begin();
                   it!=_clips.end();
                   ++it) {
-                  ClipInstance *clip = it->second;
-                  
                   std::string name = "OfxImageClipPropFrameRangeView_" + it->first;
                   std::cout << it->first << "->[";
                   

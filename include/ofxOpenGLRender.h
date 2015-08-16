@@ -137,11 +137,6 @@ texture by the host
 
 	This value should be cast to a GLuint and used as the texture index when
         performing OpenGL texture operations.
-
-   The property set of the following actions should contain this property:
-      - ::kOfxImageEffectActionRender
-      - ::kOfxImageEffectActionBeginSequenceRender
-      - ::kOfxImageEffectActionEndSequenceRender
 */
 #define kOfxImageEffectPropOpenGLTextureIndex "OfxImageEffectPropOpenGLTextureIndex"
 
@@ -154,11 +149,6 @@ texture by the host
         OfxImageEffectOpenGLRenderSuiteV1::clipLoadTexture (read only)
 	This value should be cast to a GLenum and used as the texture target
 	when performing OpenGL texture operations.
-
-   The property set of the following actions should contain this property:
-      - ::kOfxImageEffectActionRender
-      - ::kOfxImageEffectActionBeginSequenceRender
-      - ::kOfxImageEffectActionEndSequenceRender
 */
 #define kOfxImageEffectPropOpenGLTextureTarget "OfxImageEffectPropOpenGLTextureTarget"
 

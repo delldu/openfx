@@ -576,6 +576,9 @@ namespace OFX {
     /** @brief Add a pixel depth to those supported, defaults to none, must be called at least once */
     void addSupportedBitDepth(BitDepthEnum v);
 
+    /** @brief Add a pixel depth to those supported for OpenGL rendering, defaults to all */
+    void addSupportedOpenGLBitDepth(BitDepthEnum v);
+
 #ifdef OFX_EXTENSIONS_TUTTLE
     /** @brief Add a file extension to those supported, defaults to none */
     void addSupportedExtension(const std::string& extension);
@@ -1049,6 +1052,9 @@ namespace OFX {
     OfxPointD renderScale;
     OfxRectI  renderWindow;
     FieldEnum fieldToRender;
+#ifdef OFX_SUPPORTS_OPENGLRENDER
+    bool      openGLEnabled;
+#endif
 #ifdef OFX_EXTENSIONS_VEGAS
     int         viewsToRender;      /// default is 1, for stereoscopic 3d: 2
 #endif
@@ -1083,6 +1089,9 @@ namespace OFX {
     double    frameStep;
     bool      isInteractive;
     OfxPointD renderScale;
+#ifdef OFX_SUPPORTS_OPENGLRENDER
+    bool      openGLEnabled;
+#endif
     bool      sequentialRenderStatus;
     bool      interactiveRenderStatus;
 #ifdef OFX_EXTENSIONS_NUKE
@@ -1094,6 +1103,9 @@ namespace OFX {
   struct EndSequenceRenderArguments {
     bool      isInteractive;
     OfxPointD renderScale;
+#ifdef OFX_SUPPORTS_OPENGLRENDER
+    bool      openGLEnabled;
+#endif
     bool      sequentialRenderStatus;
     bool      interactiveRenderStatus;
 #ifdef OFX_EXTENSIONS_NUKE

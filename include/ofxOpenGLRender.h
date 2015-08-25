@@ -257,7 +257,7 @@ returns
 
   OfxStatus (*clipLoadTexture)(OfxImageClipHandle clip,
                                OfxTime       time,
-			                   const char   *format,
+                               const char   *format,
                                const OfxRectD     *region,
                                OfxPropertySetHandle   *textureHandle);
 

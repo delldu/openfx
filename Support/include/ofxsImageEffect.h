@@ -1083,7 +1083,7 @@ namespace OFX {
 #endif
   };
 
-  /** @brief POD struct to pass arguments into  @ref OFX::ImageEffect::render */
+  /** @brief POD struct to pass arguments into  @ref OFX::ImageEffect::beginSequenceRender */
   struct BeginSequenceRenderArguments {
     OfxRangeD frameRange;
     double    frameStep;
@@ -1099,7 +1099,7 @@ namespace OFX {
 #endif
   };
 
-  /** @brief POD struct to pass arguments into  @ref OFX::ImageEffect::beginSequenceRender */
+  /** @brief POD struct to pass arguments into  @ref OFX::ImageEffect::endSequenceRender */
   struct EndSequenceRenderArguments {
     bool      isInteractive;
     OfxPointD renderScale;

@@ -156,8 +156,12 @@ namespace OFX {
     OfxMultiThreadSuiteV1 *gThreadSuite = 0;
     OfxMessageSuiteV1     *gMessageSuite = 0;
     OfxMessageSuiteV2     *gMessageSuiteV2 = 0;
-    OfxProgressSuiteV1     *gProgressSuite = 0;
-    OfxTimeLineSuiteV1     *gTimeLineSuite = 0;
+    OfxProgressSuiteV1    *gProgressSuiteV1 = 0;
+    OfxProgressSuiteV2    *gProgressSuiteV2 = 0;
+#ifdef OFX_SUPPORTS_DIALOG
+    OfxDialogSuiteV1      *gDialogSuite = 0;
+#endif
+    OfxTimeLineSuiteV1    *gTimeLineSuite = 0;
     OfxParametricParameterSuiteV1 *gParametricParameterSuite = 0;
 #ifdef OFX_SUPPORTS_OPENGLRENDER
     OfxImageEffectOpenGLRenderSuiteV1 *gOpenGLRenderSuite = 0;
@@ -1920,6 +1924,22 @@ namespace OFX {
     return mapToMessageReplyEnum(stat);
   }
 
+#ifdef OFX_SUPPORTS_DIALOG
+  void ImageEffect::requestDialog(void *userData)
+  {
+    if(!OFX::Private::gDialogSuite || !OFX::Private::gDialogSuite->RequestDialog){ throwHostMissingSuiteException("requestDialog"); }
+    OfxStatus stat = OFX::Private::gDialogSuite->RequestDialog(_effectHandle, userData);
+    throwSuiteStatusException(stat);
+  }
+
+  void ImageEffect::notifyRedrawPending()
+  {
+    if(!OFX::Private::gDialogSuite || !OFX::Private::gDialogSuite->NotifyRedrawPending){ throwHostMissingSuiteException("requestDialog"); }
+    OfxStatus stat = OFX::Private::gDialogSuite->NotifyRedrawPending();
+    throwSuiteStatusException(stat);
+  }
+#endif
+
   /** @brief Fetch the named clip from this instance */
   Clip *ImageEffect::fetchClip(const std::string &name)
   {
@@ -2098,6 +2118,13 @@ namespace OFX {
   void ImageEffect::endChanged(InstanceChangeReason /*reason*/)
   {
   }
+
+#ifdef OFX_SUPPORTS_DIALOG
+  /** @brief called in the host's UI thread after a plugin has requested a dialog @see requestDialog() */
+  void ImageEffect::dialog(void *userData)
+  {
+  }
+#endif
 
   /** @brief get the time domain */
   bool ImageEffect::getTimeDomain(OfxRangeD &/*range*/)
@@ -3419,6 +3446,21 @@ namespace OFX {
       effectInstance->endChanged(reason);
     }
 
+#ifdef OFX_SUPPORTS_DIALOG
+    /** @brief Library side dialog action */
+    static
+    void
+      dialogAction(OfxImageEffectHandle handle, OFX::PropertySet inArgs)
+    {
+      ImageEffect *effectInstance = retrieveImageEffectPointer(handle);
+
+      void *userData = inArgs.propGetPointer(kOfxPropUserData, false);
+
+      // and call the plugin client code
+      effectInstance->dialog(userData);
+    }
+#endif
+
 #ifdef OFX_EXTENSIONS_VEGAS
     /** @brief Library side uplift vegas keyframe action */
     static
@@ -3808,6 +3850,16 @@ namespace OFX {
           instance->contextDetached();
         }
 #endif
+
+#ifdef OFX_SUPPORTS_DIALOG
+        else if(action == kOfxActionDialog) {
+          checkMainHandles(actionRaw, handleRaw, inArgsRaw, outArgsRaw, false, true, true);
+
+          // call the dialog action
+          dialogAction(handle, inArgs);
+        }
+#endif
+
 #ifdef OFX_EXTENSIONS_VEGAS
         else if(action == kOfxImageEffectActionVegasKeyframeUplift) {
           checkMainHandles(actionRaw, handleRaw, inArgsRaw, outArgsRaw, false, false, true);

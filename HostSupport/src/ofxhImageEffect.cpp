@@ -1039,7 +1039,7 @@ namespace OFX {
 #endif
 
 #       ifdef OFX_DEBUG_ACTIONS
-          std::cout << "OFX: "<<(void*)this<<"->"<<kOfxImageEffectActionBeginSequenceRender<<"(("<<startFrame<<","<<endFrame<<"),"<<step<<","<<interactive<<",("<<renderScale.x<<","<<renderScale.y<<"),"<<sequentialRender<<","<<interactiveRender
+          std::cout << "OFX: "<<(void*)this<<"->"<<kOfxImageEffectActionBeginSequenceRender<<"(("<<startFrame<<","<<endFrame<<"),"<<step<<","<<interactive<<",("<<renderScale.x<<","<<renderScale.y<<"),"<<sequentialRender<<","<<interactiveRender<<","<<draftRender
 #         ifdef OFX_EXTENSIONS_NUKE
           <<","<<view
 #         endif
@@ -1048,7 +1048,7 @@ namespace OFX {
 
         OfxStatus st = mainEntry(kOfxImageEffectActionBeginSequenceRender, this->getHandle(), &inArgs, 0);
 #       ifdef OFX_DEBUG_ACTIONS
-          std::cout << "OFX: "<<(void*)this<<"->"<<kOfxImageEffectActionBeginSequenceRender<<"(("<<startFrame<<","<<endFrame<<"),"<<step<<","<<interactive<<",("<<renderScale.x<<","<<renderScale.y<<"),"<<sequentialRender<<","<<interactiveRender
+          std::cout << "OFX: "<<(void*)this<<"->"<<kOfxImageEffectActionBeginSequenceRender<<"(("<<startFrame<<","<<endFrame<<"),"<<step<<","<<interactive<<",("<<renderScale.x<<","<<renderScale.y<<"),"<<sequentialRender<<","<<interactiveRender<<","<<draftRender
 #         ifdef OFX_EXTENSIONS_NUKE
           <<","<<view
 #         endif
@@ -1127,7 +1127,7 @@ namespace OFX {
 #endif
 
 #       ifdef OFX_DEBUG_ACTIONS
-          std::cout << "OFX: "<<(void*)this<<"->"<<kOfxImageEffectActionRender<<"("<<time<<","<<field<<",("<<renderRoI.x1<<","<<renderRoI.y1<<","<<renderRoI.x2<<","<<renderRoI.y2<<"),("<<renderScale.x<<","<<renderScale.y<<"),"<<sequentialRender<<","<<interactiveRender
+          std::cout << "OFX: "<<(void*)this<<"->"<<kOfxImageEffectActionRender<<"("<<time<<","<<field<<",("<<renderRoI.x1<<","<<renderRoI.y1<<","<<renderRoI.x2<<","<<renderRoI.y2<<"),("<<renderScale.x<<","<<renderScale.y<<"),"<<sequentialRender<<","<<interactiveRender<<","<<draftRender
 #         if defined(OFX_EXTENSIONS_VEGAS) || defined(OFX_EXTENSIONS_NUKE)
           <<","<<view
 #         endif
@@ -1139,7 +1139,7 @@ namespace OFX {
 
         OfxStatus st = mainEntry(kOfxImageEffectActionRender,this->getHandle(), &inArgs, 0);
 #       ifdef OFX_DEBUG_ACTIONS
-          std::cout << "OFX: "<<(void*)this<<"->"<<kOfxImageEffectActionRender<<"("<<time<<","<<field<<",("<<renderRoI.x1<<","<<renderRoI.y1<<","<<renderRoI.x2<<","<<renderRoI.y2<<"),("<<renderScale.x<<","<<renderScale.y<<"),"<<sequentialRender<<","<<interactiveRender
+          std::cout << "OFX: "<<(void*)this<<"->"<<kOfxImageEffectActionRender<<"("<<time<<","<<field<<",("<<renderRoI.x1<<","<<renderRoI.y1<<","<<renderRoI.x2<<","<<renderRoI.y2<<"),("<<renderScale.x<<","<<renderScale.y<<"),"<<sequentialRender<<","<<interactiveRender<<","<<draftRender
 #         if defined(OFX_EXTENSIONS_VEGAS) || defined(OFX_EXTENSIONS_NUKE)
           <<","<<view
 #         endif
@@ -1194,7 +1194,7 @@ namespace OFX {
         inArgs.setIntProperty(kFnOfxImageEffectPropView,view);
 #endif
 #       ifdef OFX_DEBUG_ACTIONS
-          std::cout << "OFX: "<<(void*)this<<"->"<<kOfxImageEffectActionEndSequenceRender<<"(("<<startFrame<<","<<endFrame<<"),"<<step<<","<<interactive<<",("<<renderScale.x<<","<<renderScale.y<<"),"<<sequentialRender<<","<<interactiveRender
+          std::cout << "OFX: "<<(void*)this<<"->"<<kOfxImageEffectActionEndSequenceRender<<"(("<<startFrame<<","<<endFrame<<"),"<<step<<","<<interactive<<",("<<renderScale.x<<","<<renderScale.y<<"),"<<sequentialRender<<","<<interactiveRender<<","<<draftRender
 #         ifdef OFX_EXTENSIONS_NUKE
           <<","<<view
 #         endif
@@ -1203,7 +1203,7 @@ namespace OFX {
 
         OfxStatus st = mainEntry(kOfxImageEffectActionEndSequenceRender,this->getHandle(), &inArgs, 0);
 #       ifdef OFX_DEBUG_ACTIONS
-          std::cout << "OFX: "<<(void*)this<<"->"<<kOfxImageEffectActionEndSequenceRender<<"(("<<startFrame<<","<<endFrame<<"),"<<step<<","<<interactive<<",("<<renderScale.x<<","<<renderScale.y<<"),"<<sequentialRender<<","<<interactiveRender
+          std::cout << "OFX: "<<(void*)this<<"->"<<kOfxImageEffectActionEndSequenceRender<<"(("<<startFrame<<","<<endFrame<<"),"<<step<<","<<interactive<<",("<<renderScale.x<<","<<renderScale.y<<"),"<<sequentialRender<<","<<interactiveRender<<","<<draftRender
 #         ifdef OFX_EXTENSIONS_NUKE
           <<","<<view
 #         endif

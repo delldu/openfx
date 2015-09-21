@@ -2469,8 +2469,14 @@ namespace OFX {
       static OfxStatus getPropertySet(OfxImageEffectHandle h1, 
                                       OfxPropertySetHandle *h2)
       {        
+#       ifdef OFX_DEBUG_PROPERTIES
+        std::cout << "OFX: getPropertySet - " << h1 << " = ...";
+#       endif
         try {
         if (!h2) {
+#         ifdef OFX_DEBUG_PROPERTIES
+          std::cout << ' ' << StatStr(kOfxStatErrBadHandle) << std::endl;
+#         endif
           return kOfxStatErrBadHandle;
         }
 
@@ -2479,15 +2485,24 @@ namespace OFX {
         if (!effectBase || !effectBase->verifyMagic()) {
           *h2 = NULL;
 
+#         ifdef OFX_DEBUG_PROPERTIES
+          std::cout << ' ' << StatStr(kOfxStatErrBadHandle) << std::endl;
+#         endif
           return kOfxStatErrBadHandle;
         }
 
         *h2 = effectBase->getProps().getHandle();
 
+#       ifdef OFX_DEBUG_PROPERTIES
+        std::cout << *h2 << ' ' << StatStr(kOfxStatOK) << std::endl;
+#       endif
         return kOfxStatOK;
         } catch (...) {
           *h2 = NULL;
 
+#         ifdef OFX_DEBUG_PROPERTIES
+          std::cout << ' ' << StatStr(kOfxStatErrBadHandle) << std::endl;
+#         endif
           return kOfxStatErrBadHandle;
         }
       }
@@ -2495,6 +2510,9 @@ namespace OFX {
       static OfxStatus getParamSet(OfxImageEffectHandle h1, 
                                    OfxParamSetHandle *h2)
       {
+#       ifdef OFX_DEBUG_PARAMETERS
+        std::cout << "OFX: getParamSet - " << h1 << " = ...";
+#       endif
         try {
         if (!h2) {
           return kOfxStatErrBadHandle;
@@ -2505,6 +2523,9 @@ namespace OFX {
         if (!effectBase || !effectBase->verifyMagic()) {
           *h2 = NULL;
 
+#         ifdef OFX_DEBUG_PARAMETERS
+          std::cout << ' ' << StatStr(kOfxStatErrBadHandle) << std::endl;
+#         endif
           return kOfxStatErrBadHandle;
         }
 
@@ -2513,6 +2534,9 @@ namespace OFX {
         if(effectDescriptor) {
           *h2 = effectDescriptor->getParamSetHandle();
 
+#         ifdef OFX_DEBUG_PARAMETERS
+          std::cout << *h2 << ' ' << StatStr(kOfxStatOK) << std::endl;
+#         endif
           return kOfxStatOK;
         }
 
@@ -2521,15 +2545,24 @@ namespace OFX {
         if(effectInstance) {
           *h2 = effectInstance->getParamSetHandle();
 
+#         ifdef OFX_DEBUG_PARAMETERS
+          std::cout << *h2 << ' ' << StatStr(kOfxStatOK) << std::endl;
+#         endif
           return kOfxStatOK;
         }
 
         *h2 = NULL;
 
+#       ifdef OFX_DEBUG_PARAMETERS
+        std::cout << ' ' << StatStr(kOfxStatErrBadHandle) << std::endl;
+#       endif
         return kOfxStatErrBadHandle;
         } catch (...) {
           *h2 = NULL;
 
+#         ifdef OFX_DEBUG_PARAMETERS
+          std::cout << ' ' << StatStr(kOfxStatErrBadHandle) << std::endl;
+#         endif
           return kOfxStatErrBadHandle;
         }
       }
@@ -2572,6 +2605,9 @@ namespace OFX {
       
       static OfxStatus clipGetPropertySet(OfxImageClipHandle clip,
                                           OfxPropertySetHandle *propHandle){        
+#       ifdef OFX_DEBUG_PROPERTIES
+        std::cout << "OFX: clipGetPropertySet - " << clip << " = ...";
+#       endif
         try {
         if (!propHandle) {
           return kOfxStatErrBadHandle;
@@ -2582,14 +2618,23 @@ namespace OFX {
         if (!clipInstance || !clipInstance->verifyMagic()) {
           *propHandle = NULL;
 
+#         ifdef OFX_DEBUG_PROPERTIES
+          std::cout << ' ' << StatStr(kOfxStatErrBadHandle) << std::endl;
+#         endif
           return kOfxStatErrBadHandle;
         }
 
         *propHandle = clipInstance->getPropHandle();
+#       ifdef OFX_DEBUG_PROPERTIES
+        std::cout << *propHandle << ' ' << StatStr(kOfxStatOK) << std::endl;
+#       endif
         return kOfxStatOK;
         } catch (...) {
           *propHandle = NULL;
 
+#         ifdef OFX_DEBUG_PROPERTIES
+          std::cout << ' ' << StatStr(kOfxStatErrBadHandle) << std::endl;
+#         endif
           return kOfxStatErrBadHandle;
         }
       }

@@ -803,6 +803,10 @@ namespace OFX {
       /// implementation of var args function
       OfxStatus ChoiceInstance::getV(OfxTime time, va_list arg)
       {
+        if (time != time) {
+          // time is NaN
+          return kOfxStatErrValue;
+        }
         int *value = va_arg(arg, int*);
         OfxStatus stat = get(time, *value);
 #       ifdef OFX_DEBUG_PARAMETERS
@@ -826,6 +830,10 @@ namespace OFX {
       /// implementation of var args function
       OfxStatus ChoiceInstance::setV(OfxTime time, va_list arg)
       {
+        if (time != time) {
+          // time is NaN
+          return kOfxStatErrValue;
+        }
         int value = va_arg(arg, int);
 #       ifdef OFX_DEBUG_PARAMETERS
         std::cout << value;
@@ -868,6 +876,10 @@ namespace OFX {
       /// implementation of var args function
       OfxStatus IntegerInstance::getV(OfxTime time, va_list arg)
       {
+        if (time != time) {
+          // time is NaN
+          return kOfxStatErrValue;
+        }
         int *value = va_arg(arg, int*);
         OfxStatus stat = get(time, *value);
 #       ifdef OFX_DEBUG_PARAMETERS
@@ -891,6 +903,10 @@ namespace OFX {
       /// implementation of var args function
       OfxStatus IntegerInstance::setV(OfxTime time, va_list arg)
       {
+        if (time != time) {
+          // time is NaN
+          return kOfxStatErrValue;
+        }
         int value = va_arg(arg, int);
 #       ifdef OFX_DEBUG_PARAMETERS
         std::cout << value;
@@ -901,6 +917,10 @@ namespace OFX {
       /// implementation of var args function
       OfxStatus IntegerInstance::deriveV(OfxTime time, va_list arg)
       {
+        if (time != time) {
+          // time is NaN
+          return kOfxStatErrValue;
+        }
         int *value = va_arg(arg, int*);
         OfxStatus stat = derive(time, *value);
 #       ifdef OFX_DEBUG_PARAMETERS
@@ -914,6 +934,10 @@ namespace OFX {
       /// implementation of var args function
       OfxStatus IntegerInstance::integrateV(OfxTime time1, OfxTime time2, va_list arg)
       {
+        if (time1 != time1 || time2 != time2) {
+          // time is NaN
+          return kOfxStatErrValue;
+        }
         int *value = va_arg(arg, int*);
         OfxStatus stat = integrate(time1, time2, *value);
 #       ifdef OFX_DEBUG_PARAMETERS
@@ -966,6 +990,10 @@ namespace OFX {
       /// implementation of var args function
       OfxStatus DoubleInstance::setV(OfxTime time, va_list arg)
       {
+        if (time != time) {
+          // time is NaN
+          return kOfxStatErrValue;
+        }
         double value = va_arg(arg, double);
 #       ifdef OFX_DEBUG_PARAMETERS
         std::cout << value;
@@ -976,6 +1004,10 @@ namespace OFX {
       /// implementation of var args function
       OfxStatus DoubleInstance::deriveV(OfxTime time, va_list arg)
       {
+        if (time != time) {
+          // time is NaN
+          return kOfxStatErrValue;
+        }
         double *value = va_arg(arg, double*);
         OfxStatus stat = derive(time, *value);
 #       ifdef OFX_DEBUG_PARAMETERS
@@ -989,6 +1021,10 @@ namespace OFX {
       /// implementation of var args function
       OfxStatus DoubleInstance::integrateV(OfxTime time1, OfxTime time2, va_list arg)
       {
+        if (time1 != time1 || time2 != time2) {
+          // time is NaN
+          return kOfxStatErrValue;
+        }
         double *value = va_arg(arg, double*);
         OfxStatus stat = integrate(time1, time2, *value);
 #       ifdef OFX_DEBUG_PARAMETERS
@@ -1021,6 +1057,10 @@ namespace OFX {
       /// implementation of var args function
       OfxStatus BooleanInstance::getV(OfxTime time, va_list arg)
       {
+        if (time != time) {
+          // time is NaN
+          return kOfxStatErrValue;
+        }
         bool v;
         OfxStatus stat = get(time, v);
 
@@ -1047,6 +1087,10 @@ namespace OFX {
       /// implementation of var args function
       OfxStatus BooleanInstance::setV(OfxTime time, va_list arg)
       {
+        if (time != time) {
+          // time is NaN
+          return kOfxStatErrValue;
+        }
         bool value = va_arg(arg, int) != 0;
 #       ifdef OFX_DEBUG_PARAMETERS
         std::cout << value;
@@ -1086,6 +1130,10 @@ namespace OFX {
       /// implementation of var args function
       OfxStatus RGBAInstance::getV(OfxTime time, va_list arg)
       {
+        if (time != time) {
+          // time is NaN
+          return kOfxStatErrValue;
+        }
         double *r = va_arg(arg, double*);
         double *g = va_arg(arg, double*);
         double *b = va_arg(arg, double*);
@@ -1115,6 +1163,10 @@ namespace OFX {
       /// implementation of var args function
       OfxStatus RGBAInstance::setV(OfxTime time, va_list arg)
       {
+        if (time != time) {
+          // time is NaN
+          return kOfxStatErrValue;
+        }
         double r = va_arg(arg, double);
         double g = va_arg(arg, double);
         double b = va_arg(arg, double);
@@ -1128,6 +1180,10 @@ namespace OFX {
       /// implementation of var args function
       OfxStatus RGBAInstance::deriveV(OfxTime time, va_list arg)
       {
+        if (time != time) {
+          // time is NaN
+          return kOfxStatErrValue;
+        }
         double *r = va_arg(arg, double*);
         double *g = va_arg(arg, double*);
         double *b = va_arg(arg, double*);
@@ -1144,6 +1200,10 @@ namespace OFX {
       /// implementation of var args function
       OfxStatus RGBAInstance::integrateV(OfxTime time1, OfxTime time2, va_list arg)
       {
+        if (time1 != time1 || time2 != time2) {
+          // time is NaN
+          return kOfxStatErrValue;
+        }
         double *r = va_arg(arg, double*);
         double *g = va_arg(arg, double*);
         double *b = va_arg(arg, double*);
@@ -1186,6 +1246,10 @@ namespace OFX {
       /// implementation of var args function
       OfxStatus RGBInstance::getV(OfxTime time, va_list arg)
       {
+        if (time != time) {
+          // time is NaN
+          return kOfxStatErrValue;
+        }
         double *r = va_arg(arg, double*);
         double *g = va_arg(arg, double*);
         double *b = va_arg(arg, double*);
@@ -1213,6 +1277,10 @@ namespace OFX {
       /// implementation of var args function
       OfxStatus RGBInstance::setV(OfxTime time, va_list arg)
       {
+        if (time != time) {
+          // time is NaN
+          return kOfxStatErrValue;
+        }
         double r = va_arg(arg, double);
         double g = va_arg(arg, double);
         double b = va_arg(arg, double);
@@ -1225,6 +1293,10 @@ namespace OFX {
       /// implementation of var args function
       OfxStatus RGBInstance::deriveV(OfxTime time, va_list arg)
       {
+        if (time != time) {
+          // time is NaN
+          return kOfxStatErrValue;
+        }
         double *r = va_arg(arg, double*);
         double *g = va_arg(arg, double*);
         double *b = va_arg(arg, double*);
@@ -1240,6 +1312,10 @@ namespace OFX {
       /// implementation of var args function
       OfxStatus RGBInstance::integrateV(OfxTime time1, OfxTime time2, va_list arg)
       {
+        if (time1 != time1 || time2 != time2) {
+          // time is NaN
+          return kOfxStatErrValue;
+        }
         double *r = va_arg(arg, double*);
         double *g = va_arg(arg, double*);
         double *b = va_arg(arg, double*);
@@ -1280,6 +1356,10 @@ namespace OFX {
       /// implementation of var args function
       OfxStatus Double2DInstance::getV(OfxTime time, va_list arg)
       {
+        if (time != time) {
+          // time is NaN
+          return kOfxStatErrValue;
+        }
         double *value1 = va_arg(arg, double*);
         double *value2 = va_arg(arg, double*);
         OfxStatus stat = get(time, *value1, *value2);
@@ -1305,6 +1385,10 @@ namespace OFX {
       /// implementation of var args function
       OfxStatus Double2DInstance::setV(OfxTime time, va_list arg)
       {
+        if (time != time) {
+          // time is NaN
+          return kOfxStatErrValue;
+        }
         double value1 = va_arg(arg, double);
         double value2 = va_arg(arg, double);
 #       ifdef OFX_DEBUG_PARAMETERS
@@ -1316,6 +1400,10 @@ namespace OFX {
       /// implementation of var args function
       OfxStatus Double2DInstance::deriveV(OfxTime time, va_list arg)
       {
+        if (time != time) {
+          // time is NaN
+          return kOfxStatErrValue;
+        }
         double *value1 = va_arg(arg, double*);
         double *value2 = va_arg(arg, double*);
         OfxStatus stat = derive(time, *value1, *value2);
@@ -1330,6 +1418,10 @@ namespace OFX {
       /// implementation of var args function
       OfxStatus Double2DInstance::integrateV(OfxTime time1, OfxTime time2, va_list arg)
       {
+        if (time1 != time1 || time2 != time2) {
+          // time is NaN
+          return kOfxStatErrValue;
+        }
         double *value1 = va_arg(arg, double*);
         double *value2 = va_arg(arg, double*);
         OfxStatus stat = integrate(time1, time2, *value1, *value2);
@@ -1369,6 +1461,10 @@ namespace OFX {
       /// implementation of var args function
       OfxStatus Integer2DInstance::getV(OfxTime time, va_list arg)
       {
+        if (time != time) {
+          // time is NaN
+          return kOfxStatErrValue;
+        }
         int *value1 = va_arg(arg, int*);
         int *value2 = va_arg(arg, int*);
         OfxStatus stat = get(time, *value1, *value2);
@@ -1394,6 +1490,10 @@ namespace OFX {
       /// implementation of var args function
       OfxStatus Integer2DInstance::setV(OfxTime time, va_list arg)
       {
+        if (time != time) {
+          // time is NaN
+          return kOfxStatErrValue;
+        }
         int value1 = va_arg(arg, int);
         int value2 = va_arg(arg, int);
 #       ifdef OFX_DEBUG_PARAMETERS
@@ -1405,6 +1505,10 @@ namespace OFX {
       /// implementation of var args function
       OfxStatus Integer2DInstance::deriveV(OfxTime time, va_list arg)
       {
+        if (time != time) {
+          // time is NaN
+          return kOfxStatErrValue;
+        }
         int *value1 = va_arg(arg, int*);
         int *value2 = va_arg(arg, int*);
         OfxStatus stat = derive(time, *value1, *value2);
@@ -1419,6 +1523,10 @@ namespace OFX {
       /// implementation of var args function
       OfxStatus Integer2DInstance::integrateV(OfxTime time1, OfxTime time2, va_list arg)
       {
+        if (time1 != time1 || time2 != time2) {
+          // time is NaN
+          return kOfxStatErrValue;
+        }
         int *value1 = va_arg(arg, int*);
         int *value2 = va_arg(arg, int*);
         OfxStatus stat = integrate(time1, time2, *value1, *value2);
@@ -1459,6 +1567,10 @@ namespace OFX {
       /// implementation of var args function
       OfxStatus Double3DInstance::getV(OfxTime time, va_list arg)
       {
+        if (time != time) {
+          // time is NaN
+          return kOfxStatErrValue;
+        }
         double *value1 = va_arg(arg, double*);
         double *value2 = va_arg(arg, double*);
         double *value3 = va_arg(arg, double*);
@@ -1486,6 +1598,10 @@ namespace OFX {
       /// implementation of var args function
       OfxStatus Double3DInstance::setV(OfxTime time, va_list arg)
       {
+        if (time != time) {
+          // time is NaN
+          return kOfxStatErrValue;
+        }
         double value1 = va_arg(arg, double);
         double value2 = va_arg(arg, double);
         double value3 = va_arg(arg, double);
@@ -1498,6 +1614,10 @@ namespace OFX {
       /// implementation of var args function
       OfxStatus Double3DInstance::deriveV(OfxTime time, va_list arg)
       {
+        if (time != time) {
+          // time is NaN
+          return kOfxStatErrValue;
+        }
         double *value1 = va_arg(arg, double*);
         double *value2 = va_arg(arg, double*);
         double *value3 = va_arg(arg, double*);
@@ -1513,6 +1633,10 @@ namespace OFX {
       /// implementation of var args function
       OfxStatus Double3DInstance::integrateV(OfxTime time1, OfxTime time2, va_list arg)
       {
+        if (time1 != time1 || time2 != time2) {
+          // time is NaN
+          return kOfxStatErrValue;
+        }
         double *value1 = va_arg(arg, double*);
         double *value2 = va_arg(arg, double*);
         double *value3 = va_arg(arg, double*);
@@ -1553,6 +1677,10 @@ namespace OFX {
       /// implementation of var args function
       OfxStatus Integer3DInstance::getV(OfxTime time, va_list arg)
       {
+        if (time != time) {
+          // time is NaN
+          return kOfxStatErrValue;
+        }
         int *value1 = va_arg(arg, int*);
         int *value2 = va_arg(arg, int*);
         int *value3 = va_arg(arg, int*);
@@ -1580,6 +1708,10 @@ namespace OFX {
       /// implementation of var args function
       OfxStatus Integer3DInstance::setV(OfxTime time, va_list arg)
       {
+        if (time != time) {
+          // time is NaN
+          return kOfxStatErrValue;
+        }
         int value1 = va_arg(arg, int);
         int value2 = va_arg(arg, int);
         int value3 = va_arg(arg, int);
@@ -1592,6 +1724,10 @@ namespace OFX {
       /// implementation of var args function
       OfxStatus Integer3DInstance::deriveV(OfxTime time, va_list arg)
       {
+        if (time != time) {
+          // time is NaN
+          return kOfxStatErrValue;
+        }
         int *value1 = va_arg(arg, int*);
         int *value2 = va_arg(arg, int*);
         int *value3 = va_arg(arg, int*);
@@ -1607,6 +1743,10 @@ namespace OFX {
       /// implementation of var args function
       OfxStatus Integer3DInstance::integrateV(OfxTime time1, OfxTime time2, va_list arg)
       {
+        if (time1 != time1 || time2 != time2) {
+          // time is NaN
+          return kOfxStatErrValue;
+        }
         int *value1 = va_arg(arg, int*);
         int *value2 = va_arg(arg, int*);
         int *value3 = va_arg(arg, int*);
@@ -1638,6 +1778,10 @@ namespace OFX {
       /// implementation of var args function
       OfxStatus StringInstance::getV(OfxTime time, va_list arg)
       {
+        if (time != time) {
+          // time is NaN
+          return kOfxStatErrValue;
+        }
         const char **value = va_arg(arg, const char **);
 
         OfxStatus stat = get(time, _returnValue); // I so don't like this, temp storage should be delegated to the implementation
@@ -1663,6 +1807,10 @@ namespace OFX {
       /// implementation of var args function
       OfxStatus StringInstance::setV(OfxTime time, va_list arg)
       {
+        if (time != time) {
+          // time is NaN
+          return kOfxStatErrValue;
+        }
         char *value = va_arg(arg, char*);
 #       ifdef OFX_DEBUG_PARAMETERS
         std::cout << value;
@@ -1936,6 +2084,10 @@ namespace OFX {
                                            OfxTime time,
                                            ...)
       {
+        if (time != time) {
+          // time is NaN
+          return kOfxStatErrValue;
+        }
 #       ifdef OFX_DEBUG_PARAMETERS
         std::cout << "OFX: paramGetValueAtTime - " << paramHandle << ' ' << time << " ...";
 #       endif
@@ -1970,6 +2122,10 @@ namespace OFX {
                                           OfxTime time,
                                           ...)
       {
+        if (time != time) {
+          // time is NaN
+          return kOfxStatErrValue;
+        }
 #       ifdef OFX_DEBUG_PARAMETERS
         std::cout << "OFX: paramGetDerivative - " << paramHandle << ' ' << time << " ...";
 #       endif
@@ -2002,6 +2158,10 @@ namespace OFX {
                                         OfxTime time1, OfxTime time2,
                                         ...)
       {
+        if (time1 != time1 || time2 != time2) {
+          // time is NaN
+          return kOfxStatErrValue;
+        }
 #       ifdef OFX_DEBUG_PARAMETERS
         std::cout << "OFX: paramGetIntegral - " << paramHandle << ' ' << time1 << ' ' << time2 << " ...";
 #       endif
@@ -2072,6 +2232,10 @@ namespace OFX {
                                            OfxTime time,  // time in frames
                                            ...)
       {
+        if (time != time) {
+          // time is NaN
+          return kOfxStatErrValue;
+        }
 #       ifdef OFX_DEBUG_PARAMETERS
         std::cout << "OFX: paramSetValueAtTime - " << paramHandle << ' ' << time << ' ';
 #       endif
@@ -2171,6 +2335,10 @@ namespace OFX {
                                         int     direction,
                                         int    *index) 
       {
+        if (time != time) {
+          // time is NaN
+          return kOfxStatErrValue;
+        }
 #       ifdef OFX_DEBUG_PARAMETERS
         std::cout << "OFX: paramGetKeyIndex - " << paramHandle << " ...";
 #       endif
@@ -2200,6 +2368,10 @@ namespace OFX {
       static OfxStatus paramDeleteKey(OfxParamHandle  paramHandle,
                                       OfxTime time)
       {
+        if (time != time) {
+          // time is NaN
+          return kOfxStatErrValue;
+        }
 #       ifdef OFX_DEBUG_PARAMETERS
         std::cout << "OFX: paramDeleteKey - " << paramHandle << " ...";
 #       endif

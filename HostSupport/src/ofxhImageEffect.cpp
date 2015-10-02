@@ -875,6 +875,10 @@ namespace OFX {
         if (!param) {
           return kOfxStatFailed;
         }
+        if (time != time) {
+          // time is NaN
+          return kOfxStatFailed;
+        }
 
         Property::PropSpec stuff[] = {
           { kOfxPropType, Property::eString, 1, true, kOfxTypeParameter },
@@ -910,6 +914,10 @@ namespace OFX {
                                                     OfxTime     time,
                                                     OfxPointD   renderScale)
       {
+        if (time != time) {
+          // time is NaN
+          return kOfxStatFailed;
+        }
         _clipPrefsDirty = true;
         std::map<std::string,ClipInstance*>::iterator it=_clips.find(clipName);
         if(it!=_clips.end())
@@ -1034,6 +1042,12 @@ namespace OFX {
 #                                         endif
                                             )
       {
+        if (startFrame != startFrame ||
+            endFrame != endFrame ||
+            step != step) {
+          // time is NaN
+          return kOfxStatFailed;
+        }
         Property::PropSpec stuff[] = {
           { kOfxImageEffectPropFrameRange, Property::eDouble, 2, true, "0" },
           { kOfxImageEffectPropFrameStep, Property::eDouble, 1, true, "0" }, 
@@ -1108,6 +1122,10 @@ namespace OFX {
 #endif
                                        )
       {
+        if (time != time) {
+          // time is NaN
+          return kOfxStatFailed;
+        }
         static const Property::PropSpec inStuff[] = {
           { kOfxPropTime, Property::eDouble, 1, true, "0" },
           { kOfxImageEffectPropFieldToRender, Property::eString, 1, true, "" }, 
@@ -1195,6 +1213,12 @@ namespace OFX {
 #endif
                                           )
       {
+        if (startFrame != startFrame ||
+            endFrame != endFrame ||
+            step != step) {
+          // time is NaN
+          return kOfxStatFailed;
+        }
         static const Property::PropSpec inStuff[] = {
           { kOfxImageEffectPropFrameRange, Property::eDouble, 2, true, "0" },
           { kOfxImageEffectPropFrameStep, Property::eDouble, 1, true, "0" }, 
@@ -1250,6 +1274,10 @@ namespace OFX {
                                              std::string& clip,
                                              double transform[9])
       {
+        if (time != time) {
+          // time is NaN
+          return kOfxStatFailed;
+        }
         static const Property::PropSpec inStuff[] = {
           { kOfxPropTime, Property::eDouble, 1, true, "0" },
           { kOfxImageEffectPropFieldToRender, Property::eString, 1, true, "" }, 
@@ -1300,6 +1328,11 @@ namespace OFX {
                                                        OfxPointD   /*renderScale*/) const
       {
         OfxRectD rod;
+        if (time != time) {
+          // time is NaN
+          rod.x1 = rod. x2 = rod.y1 = rod.y2 = 0.;
+          return rod;
+        }
 
         // figure out the default contexts
         if(
@@ -1399,6 +1432,10 @@ namespace OFX {
 #endif
                                                       OfxRectD &rod)
       {
+        if (time != time) {
+          // time is NaN
+          return kOfxStatFailed;
+        }
         static const Property::PropSpec inStuff[] = {
           { kOfxPropTime, Property::eDouble, 1, true, "0" },
           { kOfxImageEffectPropRenderScale, Property::eDouble, 2, true, "0" },
@@ -1457,6 +1494,10 @@ namespace OFX {
                                                     const OfxRectD &roi,
                                                     std::map<ClipInstance *, OfxRectD>& rois) 
       {
+        if (time != time) {
+          // time is NaN
+          return kOfxStatFailed;
+        }
         OfxStatus stat = kOfxStatReplyDefault;
 
         // reset the map
@@ -1604,6 +1645,10 @@ namespace OFX {
                                                   OfxTime& passThroughTime,
                                                   int& passThroughView)
       {
+          if (time != time) {
+              // time is NaN
+              return kOfxStatFailed;
+          }
           OfxStatus stat = kOfxStatReplyDefault;
           
           
@@ -1726,6 +1771,10 @@ namespace OFX {
                                               int view,
                                               ViewsRangeMap& rangeMap)
       {
+          if (time != time) {
+              // time is NaN
+              return kOfxStatFailed;
+          }
           OfxStatus stat = kOfxStatReplyDefault;
           Property::Set outArgs;
           
@@ -1852,6 +1901,10 @@ namespace OFX {
       OfxStatus Instance::getFrameNeededAction(OfxTime time, 
                                                RangeMap &rangeMap)
       {
+        if (time != time) {
+          // time is NaN
+          return kOfxStatFailed;
+        }
         OfxStatus stat = kOfxStatReplyDefault;
         Property::Set outArgs;
       
@@ -1975,6 +2028,10 @@ namespace OFX {
 #endif
                                            std::string &clip)
       {
+        if (time != time) {
+          // time is NaN
+          return kOfxStatFailed;
+        }
         static const Property::PropSpec inStuff[] = {
           { kOfxPropTime, Property::eDouble, 1, true, "0" },
           { kOfxImageEffectPropFieldToRender, Property::eString, 1, true, "" }, 
@@ -2678,6 +2735,10 @@ namespace OFX {
                                     const OfxRectD *h2,
                                     OfxPropertySetHandle *h3)
       {
+        if (time != time) {
+          // time is NaN
+          return kOfxStatFailed;
+        }
         try {
         if (!h3) {
           return kOfxStatErrBadHandle;
@@ -2714,6 +2775,10 @@ namespace OFX {
                                                 OfxRectD *h2,
                                                 OfxPropertySetHandle *h3)
       {
+        if (time != time) {
+          // time is NaN
+          return kOfxStatFailed;
+        }
         try {
         if (!h3) {
           return kOfxStatErrBadHandle;
@@ -2806,6 +2871,10 @@ namespace OFX {
                                                  OfxTime time,
                                                  OfxRectD *bounds)
       {
+        if (time != time) {
+          // time is NaN
+          return kOfxStatFailed;
+        }
         try {
         if (!bounds) {
           return kOfxStatErrBadHandle;
@@ -2994,7 +3063,11 @@ namespace OFX {
                 *imageHandle = NULL;
                 return kOfxStatErrBadHandle;
             }
-            
+            if (time != time) {
+                // time is NaN                *imageHandle = NULL;
+
+                return kOfxStatFailed;
+            }
             Image* image = clipInstance->getImagePlane(time, view, plane, region);
             if(!image) {
                 *imageHandle = NULL;
@@ -3044,6 +3117,10 @@ namespace OFX {
                 return kOfxStatErrBadHandle;
             }
             
+            if (time != time) {
+                // time is NaN
+                return kOfxStatFailed;
+            }
             *bounds = clipInstance->getRegionOfDefinition(time,view);
             if (bounds->x2 < bounds->x1 || bounds->y2 < bounds->y1) {
                 // the RoD is invalid (empty is OK)
@@ -3155,6 +3232,11 @@ namespace OFX {
         }
 
         if(clipInstance){
+          if (time != time) {
+            // time is NaN            *h3 = NULL;
+
+            return kOfxStatFailed;
+          }
           Texture* texture = clipInstance->loadTexture(time,format,h2);
           if(!texture) {
             *h3 = NULL;

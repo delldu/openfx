@@ -3752,7 +3752,7 @@ namespace OFX {
       }
 
       /// Use this in any dialogue etc... showing progress
-      void Host::loadingStatus(const std::string &, int, int)
+      void Host::loadingStatus(bool loading, const std::string &, int, int)
       {
       }
 

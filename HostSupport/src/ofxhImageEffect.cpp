@@ -3398,6 +3398,8 @@ namespace OFX {
       };
 
 #ifdef OFX_SUPPORTS_DIALOG
+        
+#ifdef OFX_SUPPORTS_DIALOG_V1
       ////////////////////////////////////////////////////////////////////////////////
       ////////////////////////////////////////////////////////////////////////////////
       // Dialog suite functions
@@ -3413,7 +3415,7 @@ namespace OFX {
         return gImageEffectHost->notifyRedrawPending(NULL, NULL);
       }
 
-#ifdef OFX_SUPPORTS_DIALOG_V1
+
       /// dialog suite for an image effect plugin
       static const struct OfxDialogSuiteV1 gDialogSuiteV1 = {
         requestDialogV1,
@@ -3802,7 +3804,11 @@ namespace OFX {
 #ifdef OFX_SUPPORTS_DIALOG
         else if (strcmp(suiteName, kOfxDialogSuite)==0) {
           if(suiteVersion==1)
+#ifdef OFX_SUPPORTS_DIALOG_V1
             return (void *)&gDialogSuiteV1;
+#else
+            return (void *)0;
+#endif
           else if(suiteVersion==2)
             return (void *)&gDialogSuiteV2;
           else 

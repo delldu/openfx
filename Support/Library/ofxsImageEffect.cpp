@@ -3719,7 +3719,7 @@ namespace OFX {
         ImageEffect *effectInstance = retrieveImageEffectPointer(handle);
         FrameViewsNeededArguments args;
         args.time = inArgs.propGetDouble(kOfxPropTime);
-        args.view = inArgs.propGetInt(kFnOfxImageEffectPropView);
+        args.view = inArgs.propGetInt(kFnOfxImageEffectPropView, 0, false);
         
         
         OFX::Private::VersionIDKey key;
@@ -3742,7 +3742,7 @@ namespace OFX {
         ImageEffect *effectInstance = retrieveImageEffectPointer(handle);
         ClipComponentsArguments args;
         args.time = inArgs.propGetDouble(kOfxPropTime);
-        args.view = inArgs.propGetInt(kFnOfxImageEffectPropView);
+        args.view = inArgs.propGetInt(kFnOfxImageEffectPropView, 0, false);
         
         OFX::Private::VersionIDKey key;
         key.id = plugname;

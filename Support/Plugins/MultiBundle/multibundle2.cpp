@@ -50,8 +50,6 @@ England
 #include "ofxsMultiThread.h"
 #include "../include/ofxsProcessing.H"
 
-#include "multibundle2.h"
-
 static const OfxPointD kBoxSize = {20, 20};
 
 class DotExampleInteract : public OFX::OverlayInteract 
@@ -393,6 +391,8 @@ using namespace OFX;
 
 class DotExampleOverlayDescriptor : public DefaultEffectOverlayDescriptor<DotExampleOverlayDescriptor, DotExampleInteract> {};
 
+mDeclarePluginFactory(DotExamplePluginFactory, {}, {});
+
 void DotExamplePluginFactory::describe(OFX::ImageEffectDescriptor &desc)
 {
   desc.setLabels("Dot Generator", "Dot Generator", "Dot Generator");
@@ -466,3 +466,5 @@ ImageEffect* DotExamplePluginFactory::createInstance(OfxImageEffectHandle handle
   return new DotExamplePlugin(handle);
 }
 
+static DotExamplePluginFactory p("net.sf.openfx.dotexample", 1, 0);
+mRegisterPluginFactoryInstance(p)

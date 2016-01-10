@@ -53,6 +53,9 @@ namespace OFX {
 
   namespace Host {
 
+    typedef int(*OfxGetNumberOfPluginsFunc)(void);
+    typedef OfxPlugin*(*OfxGetPluginFunc)(int);
+    
     class Host;
 
     // forward delcarations
@@ -230,7 +233,9 @@ namespace OFX {
       friend class PluginHandle;
 
     protected :
-      Binary _binary;                 ///< our binary object, abstracted layer ontop of OS calls, defined in ofxhBinary.h
+      Binary* _binary;                 ///< our binary object, abstracted layer ontop of OS calls, defined in ofxhBinary.h, may not be valid if function pointers below are already set
+      OfxGetNumberOfPluginsFunc _getNumberOfPlugins;
+      OfxGetPluginFunc _getPluginFunc;
       std::string _filePath;          ///< full path to the file
       std::string _bundlePath;        ///< path to the .bundle directory
       std::vector<Plugin *> _plugins; ///< my plugins
@@ -243,7 +248,9 @@ namespace OFX {
       /// create one from the cache.  this will invoke the Binary() constructor which
       /// will stat() the file.
       explicit PluginBinary(const std::string &file, const std::string &bundlePath, time_t mtime, off_t size)
-        : _binary(file)
+        : _binary(new Binary(file))
+        , _getNumberOfPlugins(0)
+        , _getPluginFunc(0)
         , _filePath(file)
         , _bundlePath(bundlePath)
         , _fileModificationTime(mtime)
@@ -253,7 +260,7 @@ namespace OFX {
         if (isInvalid()) {
           return;
         }
-        if (_fileModificationTime != _binary.getTime() || _fileSize != _binary.getSize()) {
+        if (_fileModificationTime != _binary->getTime() || _fileSize != _binary->getSize()) {
           _binaryChanged = true;
         }
       }
@@ -262,17 +269,39 @@ namespace OFX {
       /// constructor which will open a library file, call things inside it, and then 
       /// create Plugin objects as appropriate for the plugins exported therefrom
       explicit PluginBinary(const std::string &file, const std::string &bundlePath, PluginCache *cache)
-        : _binary(file)
+        : _binary(new Binary(file))
+        , _getNumberOfPlugins(0)
+        , _getPluginFunc(0)
         , _filePath(file)
         , _bundlePath(bundlePath)
         , _binaryChanged(false)
       {
         loadPluginInfo(cache);
       }
+      
+       /// create the plug-in object from function pointers directly, this is useful for statically linked plug-ins.
+      explicit PluginBinary(const std::string& staticBundleIdentifier, OfxGetNumberOfPluginsFunc getNumberOfPlugins, OfxGetPluginFunc getPlugins)
+      : _binary(0)
+      , _getNumberOfPlugins(getNumberOfPlugins)
+      , _getPluginFunc(getPlugins)
+      , _filePath()
+      , _bundlePath(staticBundleIdentifier)
+      , _plugins()
+      , _fileModificationTime()
+      , _fileSize()
+      , _binaryChanged(true)
+      {
+      }
+
     
       /// dtor
       virtual ~PluginBinary();
 
+      
+      bool isStaticallyLinkedPlugin() const
+      {
+        return _binary == 0;
+      }
 
       time_t getFileModificationTime() const {
       	return _fileModificationTime;
@@ -290,19 +319,28 @@ namespace OFX {
         return _bundlePath;
       }
       
+      std::string getStaticIdentifier() const {
+        return isStaticallyLinkedPlugin() ? _bundlePath : std::string();
+      }
+      
       bool hasBinaryChanged() const {
         return _binaryChanged;
       }
 
       bool isLoaded() const {
-        return _binary.isLoaded();
+        return _binary ? _binary->isLoaded() : true;
       }
         
       bool isInvalid() const {
-        return _binary.isInvalid();
+        return _binary ? _binary->isInvalid() : false;
       }
 
       void addPlugin(Plugin *pe) {
+        //This is called by the cache, in the case of a statically linked plug-in
+        //that means the cache could loead it
+        if (isStaticallyLinkedPlugin()) {
+          _binaryChanged = false;
+        }
         _plugins.push_back(pe);
       }
 
@@ -366,6 +404,7 @@ namespace OFX {
       std::set<std::string>     _nonrecursePath; ///< list of directories to look in (non-recursively)
       std::list<std::string>    _pluginDirs;  ///< list of directories we found
       std::list<PluginBinary *> _binaries; ///< all the binaries we know about, we own these
+      std::map<std::string,PluginBinary*> _staticBinaries; /// < the statically linked binaries
       std::list<Plugin *>       _plugins;  ///< all the plugins inside the binaries, we don't own these, populated from _binaries
       std::set<std::string>     _knownBinFiles;
 
@@ -441,6 +480,11 @@ namespace OFX {
       void setCacheVersion(const std::string &cacheVersion) {
         _cacheVersion = cacheVersion;
       }
+      
+      // Register a statically linked plug-in, the plugin identifier should be a unique identifying the binary (note that a binary may
+      // contain multiple plug-ins).
+      // To be called before readCache() and scanPluginFiles()
+      void registerStaticallyLinkedPlugin(const std::string& staticPluginIdentifier, OfxGetNumberOfPluginsFunc getNo, OfxGetPluginFunc getPlug);
 
       // populate the cache.  must call scanPluginFiles() after to check for changes.
       void readCache(std::istream &is);

@@ -91,6 +91,25 @@
 		1E3CB8D01799364A0032B538 /* libexpat.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E3CB8AF179934420032B538 /* libexpat.a */; };
 		1E3CB8D1179936810032B538 /* libexpat.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E3CB8AF179934420032B538 /* libexpat.a */; };
 		1EF4C7091B6D3C4700D6746A /* ofxDialog.h in Headers */ = {isa = PBXBuildFile; fileRef = 1EF4C7081B6D3C4700D6746A /* ofxDialog.h */; };
+		ACAE938D1C43022600D76C26 /* ofxsCore.h in Headers */ = {isa = PBXBuildFile; fileRef = ACAE924D1C43022600D76C26 /* ofxsCore.h */; };
+		ACAE938E1C43022600D76C26 /* ofxsHWNDInteract.h in Headers */ = {isa = PBXBuildFile; fileRef = ACAE924E1C43022600D76C26 /* ofxsHWNDInteract.h */; };
+		ACAE938F1C43022600D76C26 /* ofxsImageEffect.h in Headers */ = {isa = PBXBuildFile; fileRef = ACAE924F1C43022600D76C26 /* ofxsImageEffect.h */; };
+		ACAE93901C43022600D76C26 /* ofxsInteract.h in Headers */ = {isa = PBXBuildFile; fileRef = ACAE92501C43022600D76C26 /* ofxsInteract.h */; };
+		ACAE93911C43022600D76C26 /* ofxsLog.h in Headers */ = {isa = PBXBuildFile; fileRef = ACAE92511C43022600D76C26 /* ofxsLog.h */; };
+		ACAE93921C43022600D76C26 /* ofxsMemory.h in Headers */ = {isa = PBXBuildFile; fileRef = ACAE92521C43022600D76C26 /* ofxsMemory.h */; };
+		ACAE93931C43022600D76C26 /* ofxsMessage.h in Headers */ = {isa = PBXBuildFile; fileRef = ACAE92531C43022600D76C26 /* ofxsMessage.h */; };
+		ACAE93941C43022600D76C26 /* ofxsMultiThread.h in Headers */ = {isa = PBXBuildFile; fileRef = ACAE92541C43022600D76C26 /* ofxsMultiThread.h */; };
+		ACAE93951C43022600D76C26 /* ofxsParam.h in Headers */ = {isa = PBXBuildFile; fileRef = ACAE92551C43022600D76C26 /* ofxsParam.h */; };
+		ACAE939F1C43022600D76C26 /* ofxsCore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ACAE92641C43022600D76C26 /* ofxsCore.cpp */; };
+		ACAE93A01C43022600D76C26 /* ofxsHWNDInteract.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ACAE92651C43022600D76C26 /* ofxsHWNDInteract.cpp */; };
+		ACAE93A11C43022600D76C26 /* ofxsImageEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ACAE92661C43022600D76C26 /* ofxsImageEffect.cpp */; };
+		ACAE93A21C43022600D76C26 /* ofxsInteract.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ACAE92671C43022600D76C26 /* ofxsInteract.cpp */; };
+		ACAE93A31C43022600D76C26 /* ofxsLog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ACAE92681C43022600D76C26 /* ofxsLog.cpp */; };
+		ACAE93A41C43022600D76C26 /* ofxsMultiThread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ACAE92691C43022600D76C26 /* ofxsMultiThread.cpp */; };
+		ACAE93A51C43022600D76C26 /* ofxsParams.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ACAE926A1C43022600D76C26 /* ofxsParams.cpp */; };
+		ACAE93A61C43022600D76C26 /* ofxsProperty.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ACAE926B1C43022600D76C26 /* ofxsProperty.cpp */; };
+		ACAE93A71C43022600D76C26 /* ofxsPropertyValidation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = ACAE926C1C43022600D76C26 /* ofxsPropertyValidation.cpp */; };
+		ACAE93A81C43022600D76C26 /* ofxsSupportPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = ACAE926D1C43022600D76C26 /* ofxsSupportPrivate.h */; };
 		ACF5B53E1AA3651200B4BC6A /* ofxNatron.h in Headers */ = {isa = PBXBuildFile; fileRef = ACF5B53D1AA3651200B4BC6A /* ofxNatron.h */; };
 /* End PBXBuildFile section */
 
@@ -272,6 +291,28 @@
 		1EC2BF3718C4E39000AA53D5 /* fnOfxExtensions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fnOfxExtensions.h; sourceTree = "<group>"; };
 		1EEF23C7188E98E4009A07EE /* ofxReadWrite.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxReadWrite.h; sourceTree = "<group>"; };
 		1EF4C7081B6D3C4700D6746A /* ofxDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxDialog.h; sourceTree = "<group>"; };
+		ACAE924C1C43022600D76C26 /* linuxSymbols */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = linuxSymbols; sourceTree = "<group>"; };
+		ACAE924D1C43022600D76C26 /* ofxsCore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxsCore.h; sourceTree = "<group>"; };
+		ACAE924E1C43022600D76C26 /* ofxsHWNDInteract.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxsHWNDInteract.h; sourceTree = "<group>"; };
+		ACAE924F1C43022600D76C26 /* ofxsImageEffect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxsImageEffect.h; sourceTree = "<group>"; };
+		ACAE92501C43022600D76C26 /* ofxsInteract.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxsInteract.h; sourceTree = "<group>"; };
+		ACAE92511C43022600D76C26 /* ofxsLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxsLog.h; sourceTree = "<group>"; };
+		ACAE92521C43022600D76C26 /* ofxsMemory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxsMemory.h; sourceTree = "<group>"; };
+		ACAE92531C43022600D76C26 /* ofxsMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxsMessage.h; sourceTree = "<group>"; };
+		ACAE92541C43022600D76C26 /* ofxsMultiThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxsMultiThread.h; sourceTree = "<group>"; };
+		ACAE92551C43022600D76C26 /* ofxsParam.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxsParam.h; sourceTree = "<group>"; };
+		ACAE92561C43022600D76C26 /* osxDeploy.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = osxDeploy.sh; sourceTree = "<group>"; };
+		ACAE92571C43022600D76C26 /* osxSymbols */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = osxSymbols; sourceTree = "<group>"; };
+		ACAE92641C43022600D76C26 /* ofxsCore.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxsCore.cpp; sourceTree = "<group>"; };
+		ACAE92651C43022600D76C26 /* ofxsHWNDInteract.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxsHWNDInteract.cpp; sourceTree = "<group>"; };
+		ACAE92661C43022600D76C26 /* ofxsImageEffect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxsImageEffect.cpp; sourceTree = "<group>"; };
+		ACAE92671C43022600D76C26 /* ofxsInteract.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxsInteract.cpp; sourceTree = "<group>"; };
+		ACAE92681C43022600D76C26 /* ofxsLog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxsLog.cpp; sourceTree = "<group>"; };
+		ACAE92691C43022600D76C26 /* ofxsMultiThread.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxsMultiThread.cpp; sourceTree = "<group>"; };
+		ACAE926A1C43022600D76C26 /* ofxsParams.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxsParams.cpp; sourceTree = "<group>"; };
+		ACAE926B1C43022600D76C26 /* ofxsProperty.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxsProperty.cpp; sourceTree = "<group>"; };
+		ACAE926C1C43022600D76C26 /* ofxsPropertyValidation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxsPropertyValidation.cpp; sourceTree = "<group>"; };
+		ACAE926D1C43022600D76C26 /* ofxsSupportPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxsSupportPrivate.h; sourceTree = "<group>"; };
 		ACF5B53D1AA3651200B4BC6A /* ofxNatron.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxNatron.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -403,6 +444,7 @@
 		1E3CB84F17992EAB0032B538 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				ACAE90A91C43022500D76C26 /* Support */,
 				1E3CB85017992EDF0032B538 /* ofxhBinary.cpp */,
 				1E3CB85117992EDF0032B538 /* ofxhClip.cpp */,
 				1E3CB85217992EDF0032B538 /* ofxhHost.cpp */,
@@ -457,7 +499,7 @@
 				1E3CB8C1179935430032B538 /* xmltok.c */,
 			);
 			name = "Expat Sources";
-			path = "expat-2.2.4/lib";
+			path = "expat-2.1.0/lib";
 			sourceTree = "<group>";
 		};
 		1E742FE117992CF9007D295B = {
@@ -509,6 +551,52 @@
 			path = tuttle;
 			sourceTree = "<group>";
 		};
+		ACAE90A91C43022500D76C26 /* Support */ = {
+			isa = PBXGroup;
+			children = (
+				ACAE924B1C43022600D76C26 /* include */,
+				ACAE92581C43022600D76C26 /* Library */,
+			);
+			name = Support;
+			path = ../../Support;
+			sourceTree = "<group>";
+		};
+		ACAE924B1C43022600D76C26 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				ACAE924C1C43022600D76C26 /* linuxSymbols */,
+				ACAE924D1C43022600D76C26 /* ofxsCore.h */,
+				ACAE924E1C43022600D76C26 /* ofxsHWNDInteract.h */,
+				ACAE924F1C43022600D76C26 /* ofxsImageEffect.h */,
+				ACAE92501C43022600D76C26 /* ofxsInteract.h */,
+				ACAE92511C43022600D76C26 /* ofxsLog.h */,
+				ACAE92521C43022600D76C26 /* ofxsMemory.h */,
+				ACAE92531C43022600D76C26 /* ofxsMessage.h */,
+				ACAE92541C43022600D76C26 /* ofxsMultiThread.h */,
+				ACAE92551C43022600D76C26 /* ofxsParam.h */,
+				ACAE92561C43022600D76C26 /* osxDeploy.sh */,
+				ACAE92571C43022600D76C26 /* osxSymbols */,
+			);
+			path = include;
+			sourceTree = "<group>";
+		};
+		ACAE92581C43022600D76C26 /* Library */ = {
+			isa = PBXGroup;
+			children = (
+				ACAE92641C43022600D76C26 /* ofxsCore.cpp */,
+				ACAE92651C43022600D76C26 /* ofxsHWNDInteract.cpp */,
+				ACAE92661C43022600D76C26 /* ofxsImageEffect.cpp */,
+				ACAE92671C43022600D76C26 /* ofxsInteract.cpp */,
+				ACAE92681C43022600D76C26 /* ofxsLog.cpp */,
+				ACAE92691C43022600D76C26 /* ofxsMultiThread.cpp */,
+				ACAE926A1C43022600D76C26 /* ofxsParams.cpp */,
+				ACAE926B1C43022600D76C26 /* ofxsProperty.cpp */,
+				ACAE926C1C43022600D76C26 /* ofxsPropertyValidation.cpp */,
+				ACAE926D1C43022600D76C26 /* ofxsSupportPrivate.h */,
+			);
+			path = Library;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -537,32 +625,42 @@
 				1E3CB82B17992E520032B538 /* ofxhHost.h in Headers */,
 				1E3CB82C17992E520032B538 /* ofxhImageEffect.h in Headers */,
 				ACF5B53E1AA3651200B4BC6A /* ofxNatron.h in Headers */,
+				ACAE938E1C43022600D76C26 /* ofxsHWNDInteract.h in Headers */,
 				1E31EC3217F5CA44004AB554 /* ofxParametricParam.h in Headers */,
 				1E3CB82D17992E520032B538 /* ofxhImageEffectAPI.h in Headers */,
 				1E3CB82E17992E520032B538 /* ofxhInteract.h in Headers */,
 				1E3CB82F17992E520032B538 /* ofxhMemory.h in Headers */,
 				1E3CB83017992E520032B538 /* ofxhParam.h in Headers */,
 				1E3CB83117992E520032B538 /* ofxhPluginAPICache.h in Headers */,
+				ACAE93901C43022600D76C26 /* ofxsInteract.h in Headers */,
 				1E1A06991B7D0D0C00ED08EF /* ofxOld.h in Headers */,
 				1E3CB83217992E520032B538 /* ofxhPluginCache.h in Headers */,
 				1E3CB83317992E520032B538 /* ofxhProgress.h in Headers */,
+				ACAE93931C43022600D76C26 /* ofxsMessage.h in Headers */,
 				1E3CB83417992E520032B538 /* ofxhPropertySuite.h in Headers */,
 				1E3CB83517992E520032B538 /* ofxhTimeLine.h in Headers */,
 				1E3CB83617992E520032B538 /* ofxhUtilities.h in Headers */,
+				ACAE93951C43022600D76C26 /* ofxsParam.h in Headers */,
 				1E3CB83717992E520032B538 /* ofxhXml.h in Headers */,
 				1E3CB84417992E990032B538 /* ofxCore.h in Headers */,
 				1E3CB84517992E990032B538 /* ofxImageEffect.h in Headers */,
 				1E3CB84617992E990032B538 /* ofxInteract.h in Headers */,
 				1E3CB84717992E990032B538 /* ofxKeySyms.h in Headers */,
 				1E3CB84817992E990032B538 /* ofxMemory.h in Headers */,
+				ACAE938D1C43022600D76C26 /* ofxsCore.h in Headers */,
 				1E3CB84917992E990032B538 /* ofxMessage.h in Headers */,
 				1E31EC3317F5CA44004AB554 /* ofxSonyVegas.h in Headers */,
+				ACAE938F1C43022600D76C26 /* ofxsImageEffect.h in Headers */,
+				ACAE93941C43022600D76C26 /* ofxsMultiThread.h in Headers */,
 				1E3CB84A17992E990032B538 /* ofxMultiThread.h in Headers */,
 				1E3CB84B17992E990032B538 /* ofxParam.h in Headers */,
+				ACAE93A81C43022600D76C26 /* ofxsSupportPrivate.h in Headers */,
 				1E3CB84C17992E990032B538 /* ofxProgress.h in Headers */,
+				ACAE93921C43022600D76C26 /* ofxsMemory.h in Headers */,
 				1E3CB84D17992E990032B538 /* ofxProperty.h in Headers */,
 				1E31EC3117F5CA44004AB554 /* ofxOpenGLRender.h in Headers */,
 				1E3CB84E17992E990032B538 /* ofxTimeLine.h in Headers */,
+				ACAE93911C43022600D76C26 /* ofxsLog.h in Headers */,
 				1EF4C7091B6D3C4700D6746A /* ofxDialog.h in Headers */,
 				1E3CB8AA179932800032B538 /* ofxPixels.h in Headers */,
 			);
@@ -713,15 +811,24 @@
 				1E3CB85C17992EDF0032B538 /* ofxhBinary.cpp in Sources */,
 				1E3CB85D17992EDF0032B538 /* ofxhClip.cpp in Sources */,
 				1E3CB85E17992EDF0032B538 /* ofxhHost.cpp in Sources */,
+				ACAE93A01C43022600D76C26 /* ofxsHWNDInteract.cpp in Sources */,
 				1E3CB85F17992EDF0032B538 /* ofxhImageEffect.cpp in Sources */,
+				ACAE93A71C43022600D76C26 /* ofxsPropertyValidation.cpp in Sources */,
+				ACAE93A31C43022600D76C26 /* ofxsLog.cpp in Sources */,
+				ACAE93A21C43022600D76C26 /* ofxsInteract.cpp in Sources */,
 				1E3CB86017992EDF0032B538 /* ofxhImageEffectAPI.cpp in Sources */,
+				ACAE93A61C43022600D76C26 /* ofxsProperty.cpp in Sources */,
 				1E3CB86117992EDF0032B538 /* ofxhInteract.cpp in Sources */,
 				1E3CB86217992EDF0032B538 /* ofxhMemory.cpp in Sources */,
 				1E3CB86317992EDF0032B538 /* ofxhParam.cpp in Sources */,
+				ACAE93A11C43022600D76C26 /* ofxsImageEffect.cpp in Sources */,
 				1E3CB86417992EDF0032B538 /* ofxhPluginAPICache.cpp in Sources */,
+				ACAE93A51C43022600D76C26 /* ofxsParams.cpp in Sources */,
 				1E3CB86517992EDF0032B538 /* ofxhPluginCache.cpp in Sources */,
+				ACAE939F1C43022600D76C26 /* ofxsCore.cpp in Sources */,
 				1E3CB86617992EDF0032B538 /* ofxhPropertySuite.cpp in Sources */,
 				1E3CB86717992EDF0032B538 /* ofxhUtilities.cpp in Sources */,
+				ACAE93A41C43022600D76C26 /* ofxsMultiThread.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -811,13 +918,14 @@
 		1E3CB8B1179934420032B538 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
 				EXECUTABLE_PREFIX = lib;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"HAVE_MEMMOVE=1",
 					"HAVE_BCOPY=1",
-					"HAVE_ARC4RANDOM=1",
 					"$(inherited)",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
@@ -828,13 +936,14 @@
 		1E3CB8B2179934420032B538 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
 				EXECUTABLE_PREFIX = lib;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"HAVE_MEMMOVE=1",
 					"HAVE_BCOPY=1",
-					"HAVE_ARC4RANDOM=1",
 					"$(inherited)",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
@@ -862,13 +971,23 @@
 					OFX_EXTENSIONS_NATRON,
 					OFX_EXTENSIONS_NUKE,
 					OFX_EXTENSIONS_TUTTLE,
-					OFX_EXTENSIONS_RESOLVE,
 					OFX_DEBUG_ACTIONS,
 					OFX_DEBUG_PARAMETERS,
 					OFX_DEBUG_PROPERTIES,
 					OFX_SUPPORTS_OPENGLRENDER,
 					OFX_SUPPORTS_DIALOG,
 					OFX_SUPPORTS_DIALOG_V1,
+				);
+				"GCC_PREPROCESSOR_DEFINITIONS[arch=*]" = (
+					"DEBUG=1",
+					"$(inherited)",
+					OFX_EXTENSIONS_VEGAS,
+					OFX_EXTENSIONS_NATRON,
+					OFX_EXTENSIONS_NUKE,
+					OFX_EXTENSIONS_TUTTLE,
+					OFX_DEBUG_ACTIONS,
+					OFX_DEBUG_PARAMETERS,
+					OFX_SUPPORTS_DIALOG,
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -879,7 +998,7 @@
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					../include,
-					"expat-2.2.4/lib",
+					../Support/include,
 				);
 				ONLY_ACTIVE_ARCH = YES;
 			};
@@ -897,21 +1016,6 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"NDEBUG=1",
-					"$(inherited)",
-					OFX_EXTENSIONS_VEGAS,
-					OFX_EXTENSIONS_NATRON,
-					OFX_EXTENSIONS_NUKE,
-					OFX_EXTENSIONS_TUTTLE,
-					OFX_EXTENSIONS_RESOLVE,
-					OFX_DEBUG_ACTIONS,
-					OFX_DEBUG_PARAMETERS,
-					OFX_DEBUG_PROPERTIES,
-					OFX_SUPPORTS_OPENGLRENDER,
-					OFX_SUPPORTS_DIALOG,
-					OFX_SUPPORTS_DIALOG_V1,
-				);
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
@@ -920,7 +1024,7 @@
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					../include,
-					"expat-2.2.4/lib",
+					../Support/include,
 				);
 			};
 			name = Release;

@@ -264,7 +264,7 @@ PluginCache::~PluginCache()
   _binaries.clear();
 }
 
-PluginCache::PluginCache() : _hostSpec(NULL), _xmlCurrentBinary(NULL), _xmlCurrentPlugin(NULL) {
+PluginCache::PluginCache() : _hostSpec(0), _staticBinary(0),  _xmlCurrentBinary(0), _xmlCurrentPlugin(0) {
   
   _cacheVersion = "";
   _ignoreCache = false;
@@ -453,13 +453,6 @@ void PluginCache::scanDirectory(std::set<std::string> &foundBinFiles, const std:
 #endif
 }
 
-void
-PluginCache::registerStaticallyLinkedPlugin(const std::string& staticPluginIdentifier, OfxGetNumberOfPluginsFunc getNo, OfxGetPluginFunc getPlug)
-{
-  PluginBinary* pb = new PluginBinary(staticPluginIdentifier, getNo, getPlug);
-  _staticBinaries[staticPluginIdentifier] = (pb);
-}
-
 std::string PluginCache::seekPluginFile(const std::string &baseName) const {
   // Exit early if disabled
   if (!_enablePluginSeek)
@@ -488,10 +481,10 @@ void PluginCache::scanPluginFiles()
     scanDirectory(foundBinFiles, *paths, _nonrecursePath.find(*paths) == _nonrecursePath.end());
   }
   
-  // Now add all static plug-ins to the binaries
-  for (std::map<std::string, PluginBinary*>::iterator it = _staticBinaries.begin(); it!=_staticBinaries.end(); ++it) {
-    _binaries.push_back(it->second);
-  }
+  // Now add all static plug-ins
+  _staticBinary = new PluginBinary(&OfxGetNumberOfPlugins,&OfxGetPlugin,this);
+  _binaries.push_back(_staticBinary);
+  
   
   std::list<PluginBinary *>::iterator i=_binaries.begin();
   while (i!=_binaries.end()) {
@@ -594,30 +587,22 @@ void PluginCache::elementBeginCallback(void */*userData*/, const XML_Char *name,
   }
   
   if (ename == "binary") {
-    const char *binAtts[] = {"staticIdentifier", "path", "bundle_path", "mtime", "size", NULL};
+    const char *binAtts[] = {"path", "bundle_path", "mtime", "size", NULL};
     
     if (!mapHasAll(attmap, binAtts)) {
       // no path: bad XML
     }
     
-    std::string staticIdentifier = attmap["staticIdentifier"];
-    if (staticIdentifier.empty()) {
-      std::string fname = attmap["path"];
-      std::string bname = attmap["bundle_path"];
-      time_t mtime = OFX::Host::Property::stringToInt(attmap["mtime"]);
-      size_t size = OFX::Host::Property::stringToInt(attmap["size"]);
-      
-      
-      _xmlCurrentBinary = new PluginBinary(fname, bname, mtime, size);
-      _binaries.push_back(_xmlCurrentBinary);
-      _knownBinFiles.insert(fname);
-    } else {
-      // find the plugin binary in the statically registered plug-ins
-      std::map<std::string,PluginBinary*>::iterator found = _staticBinaries.find(staticIdentifier);
-      if (found != _staticBinaries.end()) {
-        _xmlCurrentBinary = found->second;
-      }
-    }
+    std::string fname = attmap["path"];
+    std::string bname = attmap["bundle_path"];
+    time_t mtime = OFX::Host::Property::stringToInt(attmap["mtime"]);
+    size_t size = OFX::Host::Property::stringToInt(attmap["size"]);
+    
+    
+    _xmlCurrentBinary = new PluginBinary(fname, bname, mtime, size);
+    _binaries.push_back(_xmlCurrentBinary);
+    _knownBinFiles.insert(fname);
+    
     return;
   }
   
@@ -749,6 +734,13 @@ void PluginCache::writePluginCache(std::ostream &os) const {
   for (std::list<PluginBinary *>::const_iterator i=_binaries.begin();i!=_binaries.end();i++) {
     PluginBinary *b = *i;
     
+    if (b->isStaticallyLinkedPlugin()) {
+      //Do not cache the statically linked plugin binary as it is pointless we have no way to know
+      //if the properties are still valid or not: the timestamp on the binary changes with the host
+      //executable
+      continue;
+    }
+    
     std::vector<Plugin*> plugins(b->getNPlugins());
     for (std::size_t j = 0; j < plugins.size(); ++j) {
       plugins[j] = &b->getPlugin((int)j);
@@ -762,8 +754,7 @@ void PluginCache::writePluginCache(std::ostream &os) const {
     
     os << "<bundle>\n";
     os << "  <binary "
-       << XML::attribute("staticIdentifier", b->getStaticIdentifier())
-       << XML::attribute("bundle_path", b->getBundlePath()) 
+       << XML::attribute("bundle_path", b->getBundlePath())
        << XML::attribute("path", b->getFilePath())
        << XML::attribute("mtime", int(b->getFileModificationTime()))
        << XML::attribute("size", int(b->getFileSize())) << "/>\n";

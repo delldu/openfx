@@ -280,17 +280,18 @@ namespace OFX {
       }
       
        /// create the plug-in object from function pointers directly, this is useful for statically linked plug-ins.
-      explicit PluginBinary(const std::string& staticBundleIdentifier, OfxGetNumberOfPluginsFunc getNumberOfPlugins, OfxGetPluginFunc getPlugins)
+      explicit PluginBinary(OfxGetNumberOfPluginsFunc getNumberOfPlugins, OfxGetPluginFunc getPlugins, PluginCache *cache)
       : _binary(0)
       , _getNumberOfPlugins(getNumberOfPlugins)
       , _getPluginFunc(getPlugins)
       , _filePath()
-      , _bundlePath(staticBundleIdentifier)
+      , _bundlePath()
       , _plugins()
       , _fileModificationTime()
       , _fileSize()
       , _binaryChanged(true)
       {
+        loadPluginInfo(cache);
       }
 
     
@@ -319,10 +320,6 @@ namespace OFX {
         return _bundlePath;
       }
       
-      std::string getStaticIdentifier() const {
-        return isStaticallyLinkedPlugin() ? _bundlePath : std::string();
-      }
-      
       bool hasBinaryChanged() const {
         return _binaryChanged;
       }
@@ -337,7 +334,7 @@ namespace OFX {
 
       void addPlugin(Plugin *pe) {
         //This is called by the cache, in the case of a statically linked plug-in
-        //that means the cache could loead it
+        //that means the cache could load it
         if (isStaticallyLinkedPlugin()) {
           _binaryChanged = false;
         }
@@ -404,7 +401,7 @@ namespace OFX {
       std::set<std::string>     _nonrecursePath; ///< list of directories to look in (non-recursively)
       std::list<std::string>    _pluginDirs;  ///< list of directories we found
       std::list<PluginBinary *> _binaries; ///< all the binaries we know about, we own these
-      std::map<std::string,PluginBinary*> _staticBinaries; /// < the statically linked binaries
+      PluginBinary* _staticBinary; /// < the statically linked binary
       std::list<Plugin *>       _plugins;  ///< all the plugins inside the binaries, we don't own these, populated from _binaries
       std::set<std::string>     _knownBinFiles;
 
@@ -480,11 +477,6 @@ namespace OFX {
       void setCacheVersion(const std::string &cacheVersion) {
         _cacheVersion = cacheVersion;
       }
-      
-      // Register a statically linked plug-in, the plugin identifier should be a unique identifying the binary (note that a binary may
-      // contain multiple plug-ins).
-      // To be called before readCache() and scanPluginFiles()
-      void registerStaticallyLinkedPlugin(const std::string& staticPluginIdentifier, OfxGetNumberOfPluginsFunc getNo, OfxGetPluginFunc getPlug);
 
       // populate the cache.  must call scanPluginFiles() after to check for changes.
       void readCache(std::istream &is);

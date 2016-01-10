@@ -456,7 +456,7 @@ void PluginCache::scanDirectory(std::set<std::string> &foundBinFiles, const std:
 void
 PluginCache::registerStaticallyLinkedPlugin(const std::string& staticPluginIdentifier, OfxGetNumberOfPluginsFunc getNo, OfxGetPluginFunc getPlug)
 {
-  PluginBinary* pb = new PluginBinary(staticPluginIdentifier, getNo, getPlug, this);
+  PluginBinary* pb = new PluginBinary(staticPluginIdentifier, getNo, getPlug);
   _staticBinaries[staticPluginIdentifier] = (pb);
 }
 

@@ -1777,8 +1777,8 @@ namespace OFX {
       // time is NaN
       throwSuiteStatusException(kOfxStatErrValue);
     }
-    if (!OFX::Private::gImageEffectPlaneSuiteV2) {
-      throwHostMissingSuiteException("clipGetImagePlane");
+    if (!OFX::Private::gImageEffectPlaneSuiteV2 || !OFX::Private::gImageEffectPlaneSuiteV2->clipGetImagePlane) {
+      throwHostMissingSuiteException(kFnOfxImageEffectPlaneSuite"V2");
     }
     OfxPropertySetHandle imageHandle;
     OfxStatus stat = OFX::Private::gImageEffectPlaneSuiteV2->clipGetImagePlane(_clipHandle, t, view, plane, NULL, &imageHandle);
@@ -1797,8 +1797,8 @@ namespace OFX {
       // time is NaN
       throwSuiteStatusException(kOfxStatErrValue);
     }
-    if (!OFX::Private::gImageEffectPlaneSuiteV1) {
-      throwHostMissingSuiteException("clipGetImagePlane");
+    if (!OFX::Private::gImageEffectPlaneSuiteV1 || !OFX::Private::gImageEffectPlaneSuiteV1->clipGetImagePlane) {
+      throwHostMissingSuiteException(kFnOfxImageEffectPlaneSuite"V1");
     }
     OfxPropertySetHandle imageHandle;
     OfxStatus stat = OFX::Private::gImageEffectPlaneSuiteV1->clipGetImagePlane(_clipHandle, t, plane, NULL, &imageHandle);
@@ -1817,13 +1817,12 @@ namespace OFX {
       // time is NaN
       throwSuiteStatusException(kOfxStatErrValue);
     }
-    if (!OFX::Private::gImageEffectPlaneSuiteV2) {
-      throwHostMissingSuiteException("clipGetImagePlane");
+    if (!OFX::Private::gImageEffectPlaneSuiteV2 || !OFX::Private::gImageEffectPlaneSuiteV2->clipGetImagePlane) {
+      throwHostMissingSuiteException(kFnOfxImageEffectPlaneSuite"V2");
     }
     OfxPropertySetHandle imageHandle;
-    OfxRectD boundsCopy = bounds;
 
-    OfxStatus stat = OFX::Private::gImageEffectPlaneSuiteV2->clipGetImagePlane(_clipHandle, t, view, plane, &boundsCopy, &imageHandle);
+    OfxStatus stat = OFX::Private::gImageEffectPlaneSuiteV2->clipGetImagePlane(_clipHandle, t, view, plane, &bounds, &imageHandle);
     if(stat == kOfxStatFailed) {
       return NULL; // not an error, fetched images out of range/region, assume black and transparent
     }
@@ -1839,13 +1838,12 @@ namespace OFX {
       // time is NaN
       throwSuiteStatusException(kOfxStatErrValue);
     }
-    if (!OFX::Private::gImageEffectPlaneSuiteV1) {
-      throwHostMissingSuiteException("clipGetImagePlane");
+    if (!OFX::Private::gImageEffectPlaneSuiteV1 || !OFX::Private::gImageEffectPlaneSuiteV1->clipGetImagePlane) {
+      throwHostMissingSuiteException(kFnOfxImageEffectPlaneSuite"V1");
     }
     OfxPropertySetHandle imageHandle;
-    OfxRectD boundsCopy = bounds;
 
-    OfxStatus stat = OFX::Private::gImageEffectPlaneSuiteV1->clipGetImagePlane(_clipHandle, t, plane, &boundsCopy, &imageHandle);
+    OfxStatus stat = OFX::Private::gImageEffectPlaneSuiteV1->clipGetImagePlane(_clipHandle, t, plane, &bounds, &imageHandle);
     if(stat == kOfxStatFailed) {
       return NULL; // not an error, fetched images out of range/region, assume black and transparent
     }
@@ -1860,9 +1858,9 @@ namespace OFX {
     std::list<std::string> ret = _clipProps.propGetNString(kFnOfxImageEffectPropComponentsPresent, false);
     return ret;
   }
-#endif
+#endif // OFX_EXTENSIONS_NUKE
 
-#ifdef OFX_EXTENSIONS_VEGAS
+#if defined(OFX_EXTENSIONS_VEGAS) || defined(OFX_EXTENSIONS_NUKE)
   /** @brief fetch an image */
   Image *Clip::fetchStereoscopicImage(double t, int view)
   {
@@ -1870,17 +1868,37 @@ namespace OFX {
       // time is NaN
       throwSuiteStatusException(kOfxStatErrValue);
     }
-    if(!OFX::Private::gVegasStereoscopicImageSuite){ throwHostMissingSuiteException("clipGetStereoscopicImage"); }
-    if(!OFX::Private::gVegasStereoscopicImageSuite->clipGetStereoscopicImage){ throwHostMissingSuiteException("clipGetStereoscopicImage"); }
-    OfxPropertySetHandle imageHandle;
-    OfxStatus stat = OFX::Private::gVegasStereoscopicImageSuite->clipGetStereoscopicImage(_clipHandle, t, view, NULL, &imageHandle);
-    if(stat == kOfxStatFailed) {
-      return NULL; // not an error, fetched images out of range/region, assume black and transparent
+#ifdef OFX_EXTENSIONS_NUKE
+    if (OFX::Private::gImageEffectPlaneSuiteV2 && OFX::Private::gImageEffectPlaneSuiteV2->clipGetImagePlane) {
+      return fetchImagePlane(t, view, kFnOfxImagePlaneColour);
     }
     else
-      throwSuiteStatusException(stat);
-
-    return new Image(imageHandle);
+#endif
+#ifdef OFX_EXTENSIONS_VEGAS
+    if (OFX::Private::gVegasStereoscopicImageSuite && OFX::Private::gVegasStereoscopicImageSuite->clipGetStereoscopicImage) {
+      OfxPropertySetHandle imageHandle;
+      OfxStatus stat = OFX::Private::gVegasStereoscopicImageSuite->clipGetStereoscopicImage(_clipHandle, t, view, NULL, &imageHandle);
+      if (stat == kOfxStatFailed) {
+        return NULL; // not an error, fetched images out of range/region, assume black and transparent
+      } else {
+        throwSuiteStatusException(stat);
+      }
+      return new Image(imageHandle);
+    }
+    else
+#endif
+    {
+#if defined(OFX_EXTENSIONS_VEGAS) && defined(OFX_EXTENSIONS_NUKE)
+      throwHostMissingSuiteException(kFnOfxImageEffectPlaneSuite"V2 & "kOfxVegasStereoscopicImageEffectSuite);
+#else
+#ifdef OFX_EXTENSIONS_VEGAS
+      throwHostMissingSuiteException(kOfxVegasStereoscopicImageEffectSuite);
+#else
+      throwHostMissingSuiteException(kFnOfxImageEffectPlaneSuite"V2");
+#endif
+#endif
+    }
+    return NULL;
   }
 #endif
 
@@ -2604,12 +2622,12 @@ namespace OFX {
       }
       _doneSomething = true;
       if (clip) {
-        _outArgs.propSetString(kFnOfxImageEffectPropPassThroughClip, clip->name(), 0, false);
+        _outArgs.propSetString(kFnOfxImageEffectPropPassThroughClip, clip->name(), 0);
       } else {
-        _outArgs.propSetString(kFnOfxImageEffectPropPassThroughClip, "", 0, false);
+        _outArgs.propSetString(kFnOfxImageEffectPropPassThroughClip, "", 0);
       }
-      _outArgs.propSetDouble(kFnOfxImageEffectPropPassThroughTime, time, 0, false);
-      _outArgs.propSetInt(kFnOfxImageEffectPropPassThroughView, view, 0, false);
+      _outArgs.propSetDouble(kFnOfxImageEffectPropPassThroughTime, time, 0);
+      _outArgs.propSetInt(kFnOfxImageEffectPropPassThroughView, view, 0);
   }
 
     

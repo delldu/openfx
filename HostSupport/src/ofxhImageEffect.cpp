@@ -129,7 +129,10 @@ namespace OFX {
         { kNatronOfxImageEffectPropChannelSelector, Property::eString, 1, true, kOfxImageComponentRGBA },
         { kNatronOfxImageEffectPropHostMasking, Property::eInt, 1, true, "0" },
         { kNatronOfxImageEffectPropHostMixing, Property::eInt, 1, true, "0" },
-        { kNatronOFXImageEffectPropDeprecated, Property::eInt, 1, true, "0" },
+        { kNatronOfxImageEffectPropDeprecated, Property::eInt, 1, true, "0" },
+        { kNatronOfxImageEffectPropProjectId, Property::eString, 1, true, "" },
+        { kNatronOfxImageEffectPropGroupId, Property::eString, 1, true, "" },
+        { kNatronOfxImageEffectPropInstanceId, Property::eString, 1, true, "" },
 #endif
         Property::propSpecEnd
       };
@@ -369,7 +372,7 @@ namespace OFX {
       /// does this effect handle transform effects
       bool Base::isDeprecated() const
       {
-        return _properties.getIntProperty(kNatronOFXImageEffectPropDeprecated) != 0;
+        return _properties.getIntProperty(kNatronOfxImageEffectPropDeprecated) != 0;
       }
 #endif
       ////////////////////////////////////////////////////////////////////////////////

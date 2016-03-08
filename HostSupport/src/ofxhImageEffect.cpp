@@ -695,13 +695,15 @@ namespace OFX {
       Instance::~Instance(){
         // destroy the instance, only if succesfully created
         if (_created) {
-#       ifdef OFX_DEBUG_ACTIONS
-            std::cout << "OFX: "<<(void*)this<<"->"<<kOfxActionDestroyInstance<<"()"<<std::endl;
-#       endif
+#         ifdef OFX_DEBUG_ACTIONS
+            OfxPlugin *ofxp = _plugin->getPluginHandle()->getOfxPlugin();
+            const char* id = ofxp->pluginIdentifier;
+            std::cout << "OFX: "<<id<<"("<<(void*)ofxp<<")->"<<kOfxActionDestroyInstance<<"()"<<std::endl;
+#         endif
           OfxStatus st = mainEntry(kOfxActionDestroyInstance,this->getHandle(),0,0);
-#       ifdef OFX_DEBUG_ACTIONS
-            std::cout << "OFX: "<<(void*)this<<"->"<<kOfxActionDestroyInstance<<"()->"<<StatStr(st)<<std::endl;
-#       endif
+#         ifdef OFX_DEBUG_ACTIONS
+            std::cout << "OFX: "<<id<<"("<<(void*)ofxp<<")->"<<kOfxActionDestroyInstance<<"()->"<<StatStr(st)<<std::endl;
+#         endif
           (void)st;
         }
         
@@ -827,12 +829,14 @@ namespace OFX {
         setDefaultClipPreferences();
 
 #       ifdef OFX_DEBUG_ACTIONS
-          std::cout << "OFX: "<<(void*)this<<"->"<<kOfxActionCreateInstance<<"()"<<std::endl;
+          OfxPlugin *ofxp = _plugin->getPluginHandle()->getOfxPlugin();
+          const char* id = ofxp->pluginIdentifier;
+          std::cout << "OFX: "<<id<<"("<<(void*)ofxp<<")->"<<kOfxActionCreateInstance<<"()"<<std::endl;
 #       endif
         // now tell the plug-in to create instance
         OfxStatus st = mainEntry(kOfxActionCreateInstance,this->getHandle(),0,0);
 #       ifdef OFX_DEBUG_ACTIONS
-          std::cout << "OFX: "<<(void*)this<<"->"<<kOfxActionCreateInstance<<"()->"<<StatStr(st)<<std::endl;
+          std::cout << "OFX: "<<id<<"("<<(void*)ofxp<<")->"<<kOfxActionCreateInstance<<"()->"<<StatStr(st)<<std::endl;
 #       endif
 
         if (st == kOfxStatOK) {
@@ -1193,7 +1197,9 @@ namespace OFX {
 #     endif
 
 #       ifdef OFX_DEBUG_ACTIONS
-          std::cout << "OFX: "<<(void*)this<<"->"<<kOfxImageEffectActionRender<<"("<<time<<","<<field<<",("<<renderRoI.x1<<","<<renderRoI.y1<<","<<renderRoI.x2<<","<<renderRoI.y2<<"),("<<renderScale.x<<","<<renderScale.y<<"),"<<sequentialRender<<","<<interactiveRender<<","<<draftRender
+          OfxPlugin *ofxp = _plugin->getPluginHandle()->getOfxPlugin();
+          const char* id = ofxp->pluginIdentifier;
+          std::cout << "OFX: "<<id<<"("<<(void*)ofxp<<")->"<<kOfxImageEffectActionRender<<"("<<time<<","<<field<<",("<<renderRoI.x1<<","<<renderRoI.y1<<","<<renderRoI.x2<<","<<renderRoI.y2<<"),("<<renderScale.x<<","<<renderScale.y<<"),"<<sequentialRender<<","<<interactiveRender<<","<<draftRender
 #         if defined(OFX_EXTENSIONS_VEGAS) || defined(OFX_EXTENSIONS_NUKE)
           <<","<<view
 #         endif
@@ -1205,7 +1211,7 @@ namespace OFX {
 
         OfxStatus st = mainEntry(kOfxImageEffectActionRender,this->getHandle(), &inArgs, 0);
 #       ifdef OFX_DEBUG_ACTIONS
-          std::cout << "OFX: "<<(void*)this<<"->"<<kOfxImageEffectActionRender<<"("<<time<<","<<field<<",("<<renderRoI.x1<<","<<renderRoI.y1<<","<<renderRoI.x2<<","<<renderRoI.y2<<"),("<<renderScale.x<<","<<renderScale.y<<"),"<<sequentialRender<<","<<interactiveRender<<","<<draftRender
+          std::cout << "OFX: "<<id<<"("<<(void*)ofxp<<")->"<<kOfxImageEffectActionRender<<"("<<time<<","<<field<<",("<<renderRoI.x1<<","<<renderRoI.y1<<","<<renderRoI.x2<<","<<renderRoI.y2<<"),("<<renderScale.x<<","<<renderScale.y<<"),"<<sequentialRender<<","<<interactiveRender<<","<<draftRender
 #         if defined(OFX_EXTENSIONS_VEGAS) || defined(OFX_EXTENSIONS_NUKE)
           <<","<<view
 #         endif
@@ -1275,7 +1281,9 @@ namespace OFX {
         inArgs.setIntProperty(kFnOfxImageEffectPropView,view);
 #     endif
 #       ifdef OFX_DEBUG_ACTIONS
-          std::cout << "OFX: "<<(void*)this<<"->"<<kOfxImageEffectActionEndSequenceRender<<"(("<<startFrame<<","<<endFrame<<"),"<<step<<","<<interactive<<",("<<renderScale.x<<","<<renderScale.y<<"),"<<sequentialRender<<","<<interactiveRender<<","<<draftRender
+          OfxPlugin *ofxp = _plugin->getPluginHandle()->getOfxPlugin();
+          const char* id = ofxp->pluginIdentifier;
+          std::cout << "OFX: "<<id<<"("<<(void*)ofxp<<")->"<<kOfxImageEffectActionEndSequenceRender<<"(("<<startFrame<<","<<endFrame<<"),"<<step<<","<<interactive<<",("<<renderScale.x<<","<<renderScale.y<<"),"<<sequentialRender<<","<<interactiveRender<<","<<draftRender
 #         ifdef OFX_EXTENSIONS_NUKE
           <<","<<view
 #         endif
@@ -1284,7 +1292,7 @@ namespace OFX {
 
         OfxStatus st = mainEntry(kOfxImageEffectActionEndSequenceRender,this->getHandle(), &inArgs, 0);
 #       ifdef OFX_DEBUG_ACTIONS
-          std::cout << "OFX: "<<(void*)this<<"->"<<kOfxImageEffectActionEndSequenceRender<<"(("<<startFrame<<","<<endFrame<<"),"<<step<<","<<interactive<<",("<<renderScale.x<<","<<renderScale.y<<"),"<<sequentialRender<<","<<interactiveRender<<","<<draftRender
+          std::cout << "OFX: "<<id<<"("<<(void*)ofxp<<")->"<<kOfxImageEffectActionEndSequenceRender<<"(("<<startFrame<<","<<endFrame<<"),"<<step<<","<<interactive<<",("<<renderScale.x<<","<<renderScale.y<<"),"<<sequentialRender<<","<<interactiveRender<<","<<draftRender
 #         ifdef OFX_EXTENSIONS_NUKE
           <<","<<view
 #         endif
@@ -1333,12 +1341,14 @@ namespace OFX {
         }
 
 #       ifdef OFX_DEBUG_ACTIONS
-          std::cout << "OFX: "<<(void*)this<<"->"<<kFnOfxImageEffectActionGetTransform<<"("<<time<<","<<field<<",("<<renderScale.x<<","<<renderScale.y<<"),"<<view<<")"<<std::endl;
+          OfxPlugin *ofxp = _plugin->getPluginHandle()->getOfxPlugin();
+          const char* id = ofxp->pluginIdentifier;
+          std::cout << "OFX: "<<id<<"("<<(void*)ofxp<<")->"<<kFnOfxImageEffectActionGetTransform<<"("<<time<<","<<field<<",("<<renderScale.x<<","<<renderScale.y<<"),"<<view<<")"<<std::endl;
 #       endif
 
         OfxStatus st = mainEntry(kFnOfxImageEffectActionGetTransform,this->getHandle(), &inArgs, &outArgs);
 #       ifdef OFX_DEBUG_ACTIONS
-          std::cout << "OFX: "<<(void*)this<<"->"<<kFnOfxImageEffectActionGetTransform<<"("<<time<<","<<field<<",("<<renderScale.x<<","<<renderScale.y<<"),"<<view<<")->"<<StatStr(st)<<std::endl;
+          std::cout << "OFX: "<<id<<"("<<(void*)ofxp<<")->"<<kFnOfxImageEffectActionGetTransform<<"("<<time<<","<<field<<",("<<renderScale.x<<","<<renderScale.y<<"),"<<view<<")->"<<StatStr(st)<<std::endl;
 #       endif
 
         if(st == kOfxStatOK) {
@@ -1487,7 +1497,9 @@ namespace OFX {
         inArgs.setDoublePropertyN(kOfxImageEffectPropRenderScale, &renderScale.x, 2);
 
 #       ifdef OFX_DEBUG_ACTIONS
-          std::cout << "OFX: "<<(void*)this<<"->"<<kOfxImageEffectActionGetRegionOfDefinition<<"("<<time<<",("<<renderScale.x<<","<<renderScale.y<<"))"<<std::endl;
+          OfxPlugin *ofxp = _plugin->getPluginHandle()->getOfxPlugin();
+          const char* id = ofxp->pluginIdentifier;
+          std::cout << "OFX: "<<id<<"("<<(void*)ofxp<<")->"<<kOfxImageEffectActionGetRegionOfDefinition<<"("<<time<<",("<<renderScale.x<<","<<renderScale.y<<"))"<<std::endl;
 #       endif
         OfxStatus stat = mainEntry(kOfxImageEffectActionGetRegionOfDefinition,
                                    this->getHandle(),
@@ -1502,7 +1514,7 @@ namespace OFX {
 
 
 #       ifdef OFX_DEBUG_ACTIONS
-          std::cout << "OFX: "<<(void*)this<<"->"<<kOfxImageEffectActionGetRegionOfDefinition<<"("<<time<<",("<<renderScale.x<<","<<renderScale.y<<"))->"<<StatStr(stat);
+          std::cout << "OFX: "<<id<<"("<<(void*)ofxp<<")->"<<kOfxImageEffectActionGetRegionOfDefinition<<"("<<time<<",("<<renderScale.x<<","<<renderScale.y<<"))->"<<StatStr(stat);
           if(stat == kOfxStatOK) {
               std::cout << ": ("<<rod.x1<<","<<rod.y1<<","<<rod.x2<<","<<rod.y2<<")";
           }
@@ -1594,7 +1606,9 @@ namespace OFX {
           }
 
 #         ifdef OFX_DEBUG_ACTIONS
-            std::cout << "OFX: "<<(void*)this<<"->"<<kOfxImageEffectActionGetRegionsOfInterest<<"("<<time<<",("<<renderScale.x<<","<<renderScale.y<<"),("<<roi.x1<<","<<roi.y1<<","<<roi.x2<<","<<roi.y2<<"))"<<std::endl;
+            OfxPlugin *ofxp = _plugin->getPluginHandle()->getOfxPlugin();
+            const char* id = ofxp->pluginIdentifier;
+            std::cout << "OFX: "<<id<<"("<<(void*)ofxp<<")->"<<kOfxImageEffectActionGetRegionsOfInterest<<"("<<time<<",("<<renderScale.x<<","<<renderScale.y<<"),("<<roi.x1<<","<<roi.y1<<","<<roi.x2<<","<<roi.y2<<"))"<<std::endl;
 #         endif
           /// call the action
           stat = mainEntry(kOfxImageEffectActionGetRegionsOfInterest,
@@ -1603,7 +1617,7 @@ namespace OFX {
                            &outArgs);
 
 #         ifdef OFX_DEBUG_ACTIONS
-            std::cout << "OFX: "<<(void*)this<<"->"<<kOfxImageEffectActionGetRegionsOfInterest<<"("<<time<<",("<<renderScale.x<<","<<renderScale.y<<"),("<<roi.x1<<","<<roi.y1<<","<<roi.x2<<","<<roi.y2<<"))->"<<StatStr(stat);
+            std::cout << "OFX: "<<id<<"("<<(void*)ofxp<<")->"<<kOfxImageEffectActionGetRegionsOfInterest<<"("<<time<<",("<<renderScale.x<<","<<renderScale.y<<"),("<<roi.x1<<","<<roi.y1<<","<<roi.x2<<","<<roi.y2<<"))->"<<StatStr(stat);
             if (stat == kOfxStatOK) {
                 std::cout << ": ";
                 for(std::map<std::string, ClipInstance*>::iterator it=_clips.begin();
@@ -1733,7 +1747,9 @@ namespace OFX {
           }
           
 #         ifdef OFX_DEBUG_ACTIONS
-          std::cout << "OFX: "<<(void*)this<<"->"<<kFnOfxImageEffectActionGetClipComponents<<"("<<time<<"," <<  view << ")"<<std::endl;
+          OfxPlugin *ofxp = _plugin->getPluginHandle()->getOfxPlugin();
+          const char* id = ofxp->pluginIdentifier;
+          std::cout << "OFX: "<<id<<"("<<(void*)ofxp<<")->"<<kFnOfxImageEffectActionGetClipComponents<<"("<<time<<"," <<  view << ")"<<std::endl;
 #         endif
           
           stat = mainEntry(kFnOfxImageEffectActionGetClipComponents,
@@ -1742,7 +1758,7 @@ namespace OFX {
                            &outArgs);
           
 #         ifdef OFX_DEBUG_ACTIONS
-          std::cout << "OFX: "<<(void*)this<<"->"<<kFnOfxImageEffectActionGetClipComponents<<"("<<time<<"," <<  view << ")->"<<StatStr(stat);
+          std::cout << "OFX: "<<id<<"("<<(void*)ofxp<<")->"<<kFnOfxImageEffectActionGetClipComponents<<"("<<time<<"," <<  view << ")->"<<StatStr(stat);
           if (stat == kOfxStatOK) {
               std::cout << ": ";
               for(std::map<std::string, ClipInstance*>::iterator it=_clips.begin();
@@ -1835,7 +1851,9 @@ namespace OFX {
           }
           
 #         ifdef OFX_DEBUG_ACTIONS
-          std::cout << "OFX: "<<(void*)this<<"->"<<kFnOfxImageEffectActionGetFrameViewsNeeded<<"("<<time<<"," <<  view << ")"<<std::endl;
+          OfxPlugin *ofxp = _plugin->getPluginHandle()->getOfxPlugin();
+          const char* id = ofxp->pluginIdentifier;
+          std::cout << "OFX: "<<id<<"("<<(void*)ofxp<<")->"<<kFnOfxImageEffectActionGetFrameViewsNeeded<<"("<<time<<"," <<  view << ")"<<std::endl;
 #         endif
           
           stat = mainEntry(kFnOfxImageEffectActionGetFrameViewsNeeded,
@@ -1844,7 +1862,7 @@ namespace OFX {
                            &outArgs);
           
 #         ifdef OFX_DEBUG_ACTIONS
-          std::cout << "OFX: "<<(void*)this<<"->"<<kFnOfxImageEffectActionGetFrameViewsNeeded<<"("<<time<<"," <<  view << ")->"<<StatStr(stat);
+          std::cout << "OFX: "<<id<<"("<<(void*)ofxp<<")->"<<kFnOfxImageEffectActionGetFrameViewsNeeded<<"("<<time<<"," <<  view << ")->"<<StatStr(stat);
           if (stat == kOfxStatOK) {
               std::cout << ": ";
               for(std::map<std::string, ClipInstance*>::iterator it=_clips.begin();
@@ -1967,14 +1985,16 @@ namespace OFX {
           }
 
 #         ifdef OFX_DEBUG_ACTIONS
-            std::cout << "OFX: "<<(void*)this<<"->"<<kOfxImageEffectActionGetFramesNeeded<<"("<<time<<")"<<std::endl;
+            OfxPlugin *ofxp = _plugin->getPluginHandle()->getOfxPlugin();
+            const char* id = ofxp->pluginIdentifier;
+            std::cout << "OFX: "<<id<<"("<<(void*)ofxp<<")->"<<kOfxImageEffectActionGetFramesNeeded<<"("<<time<<")"<<std::endl;
 #         endif
           stat = mainEntry(kOfxImageEffectActionGetFramesNeeded,
                            this->getHandle(),
                            &inArgs,
                            &outArgs);
 #         ifdef OFX_DEBUG_ACTIONS
-            std::cout << "OFX: "<<(void*)this<<"->"<<kOfxImageEffectActionGetFramesNeeded<<"("<<time<<")->"<<StatStr(stat);
+            std::cout << "OFX: "<<id<<"("<<(void*)ofxp<<")->"<<kOfxImageEffectActionGetFramesNeeded<<"("<<time<<")->"<<StatStr(stat);
             if (stat == kOfxStatOK) {
                 std::cout << ": ";
                 for(std::map<std::string, ClipInstance*>::iterator it=_clips.begin();
@@ -2089,7 +2109,9 @@ namespace OFX {
         Property::Set outArgs(outStuff);
 
 #       ifdef OFX_DEBUG_ACTIONS
-          std::cout << "OFX: "<<(void*)this<<"->"<<kOfxImageEffectActionIsIdentity<<"("<<time<<","<<field<<",("<<renderRoI.x1<<","<<renderRoI.y1<<","<<renderRoI.x2<<","<<renderRoI.y2<<"),("<<renderScale.x<<","<<renderScale.y<<"))"<<std::endl;
+          OfxPlugin *ofxp = _plugin->getPluginHandle()->getOfxPlugin();
+          const char* id = ofxp->pluginIdentifier;
+          std::cout << "OFX: "<<id<<"("<<(void*)ofxp<<")->"<<kOfxImageEffectActionIsIdentity<<"("<<time<<","<<field<<",("<<renderRoI.x1<<","<<renderRoI.y1<<","<<renderRoI.x2<<","<<renderRoI.y2<<"),("<<renderScale.x<<","<<renderScale.y<<"))"<<std::endl;
 #       endif
         outArgs.setDoubleProperty(kOfxPropTime,time);
 
@@ -2099,7 +2121,7 @@ namespace OFX {
                                  &outArgs);        
 
 #       ifdef OFX_DEBUG_ACTIONS
-          std::cout << "OFX: "<<(void*)this<<"->"<<kOfxImageEffectActionIsIdentity<<"("<<time<<","<<field<<",("<<renderRoI.x1<<","<<renderRoI.y1<<","<<renderRoI.x2<<","<<renderRoI.y2<<"),("<<renderScale.x<<","<<renderScale.y<<"))->"<<StatStr(st);
+          std::cout << "OFX: "<<id<<"("<<(void*)ofxp<<")->"<<kOfxImageEffectActionIsIdentity<<"("<<time<<","<<field<<",("<<renderRoI.x1<<","<<renderRoI.y1<<","<<renderRoI.x2<<","<<renderRoI.y2<<"),("<<renderScale.x<<","<<renderScale.y<<"))->"<<StatStr(st);
           if(st==kOfxStatOK){
               std::cout << ": "<<outArgs.getDoubleProperty(kOfxPropTime)<<","<<outArgs.getStringProperty(kOfxPropName);
           }
@@ -2386,14 +2408,16 @@ namespace OFX {
 
 
 #       ifdef OFX_DEBUG_ACTIONS
-          std::cout << "OFX: "<<(void*)this<<"->"<<kOfxImageEffectActionGetClipPreferences<<"()"<<std::endl;
+          OfxPlugin *ofxp = _plugin->getPluginHandle()->getOfxPlugin();
+          const char* id = ofxp->pluginIdentifier;
+          std::cout << "OFX: "<<id<<"("<<(void*)ofxp<<")->"<<kOfxImageEffectActionGetClipPreferences<<"()"<<std::endl;
 #       endif
         OfxStatus st = mainEntry(kOfxImageEffectActionGetClipPreferences,
                                  this->getHandle(),
                                  0,
                                  &outArgs);
 #       ifdef OFX_DEBUG_ACTIONS
-          std::cout << "OFX: "<<(void*)this<<"->"<<kOfxImageEffectActionGetClipPreferences<<"()->"<<StatStr(st);
+          std::cout << "OFX: "<<id<<"("<<(void*)ofxp<<")->"<<kOfxImageEffectActionGetClipPreferences<<"()->"<<StatStr(st);
 #       endif
 
         if(st!=kOfxStatOK && st!=kOfxStatReplyDefault) {
@@ -2523,14 +2547,16 @@ namespace OFX {
         Property::Set outArgs(outStuff);  
 
 #       ifdef OFX_DEBUG_ACTIONS
-          std::cout << "OFX: "<<(void*)this<<"->"<<kOfxImageEffectActionGetTimeDomain<<"()"<<std::endl;
+          OfxPlugin *ofxp = _plugin->getPluginHandle()->getOfxPlugin();
+          const char* id = ofxp->pluginIdentifier;
+          std::cout << "OFX: "<<id<<"("<<(void*)ofxp<<")->"<<kOfxImageEffectActionGetTimeDomain<<"()"<<std::endl;
 #       endif
         OfxStatus st = mainEntry(kOfxImageEffectActionGetTimeDomain,
                                  this->getHandle(),
                                  0,
                                  &outArgs);
 #       ifdef OFX_DEBUG_ACTIONS
-          std::cout << "OFX: "<<(void*)this<<"->"<<kOfxImageEffectActionGetTimeDomain<<"()->"<<StatStr(st);
+          std::cout << "OFX: "<<id<<"("<<(void*)ofxp<<")->"<<kOfxImageEffectActionGetTimeDomain<<"()->"<<StatStr(st);
           if (st == kOfxStatOK) {
               std::cout << ": ("<<outArgs.getDoubleProperty(kOfxImageEffectPropFrameRange,0)<<","<<outArgs.getDoubleProperty(kOfxImageEffectPropFrameRange,1)<<")";
           }          std::cout << std::endl;
@@ -2558,14 +2584,16 @@ namespace OFX {
         inArgs.setPointerProperty(kOfxPropInstanceData, instanceData);
 
 #       ifdef OFX_DEBUG_ACTIONS
-          std::cout << "OFX: "<<(void*)this<<"->"<<kOfxActionDialog<<"("<<instanceData<<")"<<std::endl;
+          OfxPlugin *ofxp = _plugin->getPluginHandle()->getOfxPlugin();
+          const char* id = ofxp->pluginIdentifier;
+          std::cout << "OFX: "<<id<<"("<<(void*)ofxp<<")->"<<kOfxActionDialog<<"("<<instanceData<<")"<<std::endl;
 #       endif
         OfxStatus st = mainEntry(kOfxActionDialog,
                                  this->getHandle(),
                                  &inArgs,
                                  0);
 #       ifdef OFX_DEBUG_ACTIONS
-          std::cout << "OFX: "<<(void*)this<<"->"<<kOfxActionDialog<<"("<<instanceData<<")->"<<StatStr(st);
+          std::cout << "OFX: "<<id<<"("<<(void*)ofxp<<")->"<<kOfxActionDialog<<"("<<instanceData<<")->"<<StatStr(st);
           std::cout << std::endl;
 #       endif
 

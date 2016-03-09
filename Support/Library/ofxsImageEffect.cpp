@@ -3112,7 +3112,7 @@ namespace OFX {
           OFX::ImageEffectDescriptor* desc = it2->second;
           delete desc;
         }
-        toBeDeleted.clear();
+        gEffectDescriptors.erase(it);
       }
       { 
         OFX::OfxPlugInfoMap::iterator it = OFX::plugInfoMap.find(id);
@@ -3122,6 +3122,7 @@ namespace OFX {
           (*it2) = 0;
         }
         delete plug;
+        OFX::plugInfoMap.erase(it);
       }
     }
 

@@ -1097,6 +1097,9 @@ namespace OFX {
     FieldEnum fieldToRender;
 #ifdef OFX_SUPPORTS_OPENGLRENDER
     bool      openGLEnabled;
+#ifdef OFX_EXTENSIONS_NATRON
+    void*     openGLContextData;
+#endif
 #endif
 #ifdef OFX_EXTENSIONS_VEGAS
     int         viewsToRender;      /// default is 1, for stereoscopic 3d: 2
@@ -1134,6 +1137,9 @@ namespace OFX {
     OfxPointD renderScale;
 #ifdef OFX_SUPPORTS_OPENGLRENDER
     bool      openGLEnabled;
+#ifdef OFX_EXTENSIONS_NATRON
+    void*     openGLContextData;
+#endif
 #endif
     bool      sequentialRenderStatus;
     bool      interactiveRenderStatus;
@@ -1149,6 +1155,9 @@ namespace OFX {
     OfxPointD renderScale;
 #ifdef OFX_SUPPORTS_OPENGLRENDER
     bool      openGLEnabled;
+#ifdef OFX_EXTENSIONS_NATRON
+    void*     openGLContextData;
+#endif
 #endif
     bool      sequentialRenderStatus;
     bool      interactiveRenderStatus;
@@ -1676,11 +1685,11 @@ namespace OFX {
     virtual bool getTimeDomain(OfxRangeD &range);
 
 #ifdef OFX_SUPPORTS_OPENGLRENDER
-    /** @brief OpenGL context attached */
-    virtual void contextAttached(void);
+    /** @brief OpenGL context attached (returns context-specific data if createContextData, or NULL if the plugin does not support multiple contexts) */
+    virtual void* contextAttached(bool createContextData);
 
     /** @brief OpenGL context detached */
-    virtual void contextDetached(void);
+    virtual void contextDetached(void* contextData);
 #endif
 
     /// Start doing progress.

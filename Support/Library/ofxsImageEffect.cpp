@@ -2369,14 +2369,15 @@ namespace OFX {
   }
 
 #ifdef OFX_SUPPORTS_OPENGLRENDER
-  /** @brief OpenGL context attached */
-  void ImageEffect::contextAttached(void)
+  /** @brief OpenGL context attached (returns context-specific data or NULL if the plugin does not support multiple contexts) */
+  void* ImageEffect::contextAttached(bool)
   {
     // fa niente
+    return NULL;
   }
 
   /** @brief OpenGL context detached */
-  void ImageEffect::contextDetached(void)
+  void ImageEffect::contextDetached(void*)
   {
     // fa niente
   }
@@ -3223,6 +3224,9 @@ namespace OFX {
       // Don't throw an exception if the following inArgs are not present.
       // OpenGL rendering appeared in OFX 1.3
       args.openGLEnabled = inArgs.propGetInt(kOfxImageEffectPropOpenGLEnabled, false) != 0;
+#ifdef OFX_EXTENSIONS_NATRON
+      args.openGLContextData = args.openGLEnabled ? inArgs.propGetPointer(kNatronOfxImageEffectPropOpenGLContextData, false) : NULL;
+#endif
 #endif
 
       // Don't throw an exception if the following inArgs are not present:
@@ -3316,6 +3320,9 @@ namespace OFX {
       // Don't throw an exception if the following inArgs are not present.
       // OpenGL rendering appeared in OFX 1.3
       args.openGLEnabled = inArgs.propGetInt(kOfxImageEffectPropOpenGLEnabled, false) != 0;
+#ifdef OFX_EXTENSIONS_NATRON
+      args.openGLContextData = args.openGLEnabled ? inArgs.propGetPointer(kNatronOfxImageEffectPropOpenGLContextData, false) : NULL;
+#endif
 #endif
       args.isInteractive = inArgs.propGetInt(kOfxPropIsInteractive) != 0;
       // Don't throw an exception if the following inArgs are not present:
@@ -3350,6 +3357,9 @@ namespace OFX {
       // Don't throw an exception if the following inArgs are not present.
       // OpenGL rendering appeared in OFX 1.3
       args.openGLEnabled = inArgs.propGetInt(kOfxImageEffectPropOpenGLEnabled, false) != 0;
+#ifdef OFX_EXTENSIONS_NATRON
+      args.openGLContextData = args.openGLEnabled ? inArgs.propGetPointer(kNatronOfxImageEffectPropOpenGLContextData, false) : NULL;
+#endif
 #endif
       args.isInteractive = inArgs.propGetInt(kOfxPropIsInteractive) != 0;
       // Don't throw an exception if the following inArgs are not present:
@@ -3647,6 +3657,48 @@ namespace OFX {
 
       return v;
     }
+
+#ifdef OFX_SUPPORTS_OPENGLRENDER
+    /** @brief Library side context attached function */
+    static
+    void
+      contextAttachedAction(OfxImageEffectHandle handle, OFX::PropertySet &outArgs)
+    {
+      // fetch our effect pointer 
+      ImageEffect *effectInstance = retrieveImageEffectPointer(handle);
+
+      bool createContextData = false;
+#ifdef OFX_EXTENSIONS_NATRON
+      createContextData = outArgs.propGetDimension(kNatronOfxImageEffectPropOpenGLContextData, false) > 0; // don't throw if the host does not support it
+#endif
+
+      // and call the plugin client code
+      void* v = effectInstance->contextAttached(createContextData);
+
+#ifdef OFX_EXTENSIONS_NATRON
+      if(v) {
+        outArgs.propSetPointer(kNatronOfxImageEffectPropOpenGLContextData, v, false); // don't throw if the host does not support it
+      }
+#endif
+    }
+
+    /** @brief Library side context attached function */
+    static
+    void
+      contextDetachedAction(OfxImageEffectHandle handle, OFX::PropertySet inArgs)
+    {
+      ImageEffect *effectInstance = retrieveImageEffectPointer(handle);
+
+#ifdef OFX_EXTENSIONS_NATRON
+      void* contextData = inArgs.propGetPointer(kNatronOfxImageEffectPropOpenGLContextData, false);
+#else
+      void* contextData = NULL;
+#endif
+
+      // and call the plugin client code
+      effectInstance->contextDetached(contextData);
+    }
+#endif
 
     /** @brief Library side get regions of interest function */
     static
@@ -4080,14 +4132,14 @@ namespace OFX {
         else if(action == kOfxImageEffectActionGetTimeDomain) {
           checkMainHandles(actionRaw, handleRaw, inArgsRaw, outArgsRaw, false, true, false);
 
-          // call the instance changed action
+          // call the get time domain action
           if(getTimeDomainAction(handle, outArgs))
             stat = kOfxStatOK;
         }
         else if(action == kOfxActionBeginInstanceChanged) {
           checkMainHandles(actionRaw, handleRaw, inArgsRaw, outArgsRaw, false, false, true);
 
-          // call the instance changed action
+          // call the begin instance changed action
           beginInstanceChangedAction(handle, inArgs);
         }
         else if(action == kOfxActionInstanceChanged) {
@@ -4099,7 +4151,7 @@ namespace OFX {
         else if(action == kOfxActionEndInstanceChanged) {
           checkMainHandles(actionRaw, handleRaw, inArgsRaw, outArgsRaw, false, false, true);
 
-          // call the instance changed action
+          // call the end instance changed action
           endInstanceChangedAction(handle, inArgs);
         }
         else if(action == kOfxActionBeginInstanceEdit) {
@@ -4124,20 +4176,14 @@ namespace OFX {
         else if(action == kOfxActionOpenGLContextAttached) {
           checkMainHandles(actionRaw, handleRaw, inArgsRaw, outArgsRaw, false, true, true);
 
-          // fetch our pointer out of the props on the handle
-          ImageEffect *instance = retrieveImageEffectPointer(handle);
-
-          // call the context attached function
-          instance->contextAttached();
+          // call the context attached action
+          contextAttachedAction(handle, outArgs);
         }
         else if(action == kOfxActionOpenGLContextDetached) {
           checkMainHandles(actionRaw, handleRaw, inArgsRaw, outArgsRaw, false, true, true);
 
-          // fetch our pointer out of the props on the handle
-          ImageEffect *instance = retrieveImageEffectPointer(handle);
-
-          // call the context detached function
-          instance->contextDetached();
+          // call the context detached action
+          contextDetachedAction(handle, inArgs);
         }
 #endif
 #ifdef OFX_SUPPORTS_DIALOG

@@ -565,6 +565,7 @@ namespace OFX {
         , _descriptor(&other)
         , _interactive(interactive)
         , _created(false)
+        , _ownsData(true)
         , _clipPrefsDirty(true)
         , _continuousSamples(false)
         , _frameVarying(false)
@@ -617,6 +618,7 @@ namespace OFX {
       , _clips(other._clips)
       , _interactive(other._interactive)
       , _created(false)
+      , _ownsData(false)
       , _clipPrefsDirty(other._clipPrefsDirty)
       , _continuousSamples(other._continuousSamples)
       , _frameVarying(other._frameVarying)
@@ -808,11 +810,13 @@ namespace OFX {
         }
         
         /// clobber my clips
-        std::map<std::string, ClipInstance*>::iterator i;
-        for(i = _clips.begin(); i != _clips.end(); ++i) {
-          if(i->second)
-            delete i->second;
-          i->second = NULL;
+        if (_ownsData) {
+          std::map<std::string, ClipInstance*>::iterator i;
+          for(i = _clips.begin(); i != _clips.end(); ++i) {
+            if(i->second)
+              delete i->second;
+            i->second = NULL;
+          }
         }
       }
 

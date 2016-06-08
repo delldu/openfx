@@ -683,6 +683,11 @@ namespace OFX {
       {
       }
       
+      // callback which should update hint
+      void Instance::setHint()
+      {
+      }
+      
       /// callback which should set range
       void Instance::setRange()
       {
@@ -739,6 +744,9 @@ namespace OFX {
       {
         if (name == kOfxPropLabel) {
           setLabel();
+        }
+        if (name == kOfxParamPropHint) {
+          setHint();
         }
         if (name == kOfxParamPropEnabled) {
           setEnabled();

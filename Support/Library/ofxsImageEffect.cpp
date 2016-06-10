@@ -642,7 +642,7 @@ namespace OFX {
   /** @brief set the secretness of the param, defaults to false */
   void ClipDescriptor::setIsSecret(bool v)
   {
-    _clipProps.propSetInt(kOfxParamPropSecret, v);
+    _clipProps.propSetInt(kOfxParamPropSecret, v, false);
   }
 
   /** @brief set the clip hint */
@@ -1510,7 +1510,7 @@ namespace OFX {
   /** @brief set the secretness of the param, defaults to false */
   void Clip::setIsSecret(bool v)
   {
-    _clipProps.propSetInt(kOfxParamPropSecret, v);
+    _clipProps.propSetInt(kOfxParamPropSecret, v, false);
   }
 
   /** @brief set the clip hint */

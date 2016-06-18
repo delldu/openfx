@@ -1121,7 +1121,7 @@ namespace OFX {
       {
         static const Property::PropSpec outStuff[] = {
 #ifdef OFX_EXTENSIONS_NATRON
-          { kNatronOfxImageEffectPropOpenGLContextData , Property::ePointer, 1, false, "0" },
+          { kNatronOfxImageEffectPropOpenGLContextData , Property::ePointer, 1, false, NULL },
 #endif
           Property::propSpecEnd
         };
@@ -1157,7 +1157,7 @@ namespace OFX {
       {
         static const Property::PropSpec inStuff[] = {
 #ifdef OFX_EXTENSIONS_NATRON
-          { kNatronOfxImageEffectPropOpenGLContextData , Property::ePointer, 1, false, "0" },
+          { kNatronOfxImageEffectPropOpenGLContextData , Property::ePointer, 1, false, NULL },
 #endif
           Property::propSpecEnd
         };
@@ -1219,7 +1219,7 @@ namespace OFX {
 #       ifdef OFX_SUPPORTS_OPENGLRENDER
           { kOfxImageEffectPropOpenGLEnabled, Property::eInt, 1, true, "0" }, // OFX 1.3
 #        ifdef OFX_EXTENSIONS_NATRON
-          { kNatronOfxImageEffectPropOpenGLContextData , Property::ePointer, 1, false, "0" },
+          { kNatronOfxImageEffectPropOpenGLContextData , Property::ePointer, 1, false, NULL },
 #        endif
 #       endif
           { kOfxImageEffectPropRenderQualityDraft, Property::eInt, 1, true, "0" }, // OFX 1.4

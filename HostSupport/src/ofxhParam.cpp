@@ -720,7 +720,7 @@ namespace OFX {
       {
       }
 
-#ifdef OFX_EXTENSION_NATRON
+#ifdef OFX_EXTENSIONS_NATRON
       /// callback which should set secret state in the viewport as appropriate
       void Instance::setInViewportSecret()
       {

@@ -907,7 +907,7 @@ namespace OFX {
         
         void setIdentity();
         
-        void setInteractDescriptor( ParamInteractDescriptor* desc );
+        void setInteractDescriptor( ParamInteractDescriptor* desc, bool requiresViewportColourPicker);
         
     };
 

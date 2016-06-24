@@ -907,11 +907,7 @@ namespace OFX {
         
         void setIdentity();
         
-        void setInteractDescriptor( ParamInteractDescriptor* desc
-#                                ifdef OFX_EXTENSIONS_NATRON
-                                   , bool useColourPicker
-#                                endif
-                                   );
+        void setInteractDescriptor(ParamInteractDescriptor* desc);
         
     };
 

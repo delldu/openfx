@@ -376,8 +376,8 @@ namespace OFX {
         /** @brief set whether the param can animate, defaults to true in most cases */
         void setAnimates(bool v);
 
-        /** @brief set whether the param is persistant, defaults to true */
-        void setIsPersistant(bool v);
+        /** @brief set whether the param is persistent, defaults to true */
+        void setIsPersistent(bool v);
 
         /** @brief Set's whether the value of the param is significant (ie: affects the rendered image), defaults to true */
         void setEvaluateOnChange(bool v);
@@ -1238,7 +1238,7 @@ namespace OFX {
         bool getIsAutoKeying(void) const;
     
         /** @brief is the param animating */
-        bool getIsPersistant(void) const;
+        bool getIsPersistent(void) const;
     
         /** @brief Get's whether the value of the param is significant (ie: affects the rendered image) */
         bool getEvaluateOnChange(void) const;

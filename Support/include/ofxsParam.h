@@ -918,7 +918,9 @@ namespace OFX {
         void setIdentity();
         
         void setInteractDescriptor(ParamInteractDescriptor* desc);
-        
+
+        void setIsPeriodic(bool periodic);
+
     };
 
     ////////////////////////////////////////////////////////////////////////////////

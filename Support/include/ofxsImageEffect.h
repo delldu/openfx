@@ -1502,7 +1502,7 @@ namespace OFX {
     */
     void setOutputPremultiplication(PreMultiplicationEnum v);
 
-    /** @brief Set whether the effect can be continously sampled.
+    /** @brief Set whether the effect can be continuously sampled.
 
     Defaults to false. 
     */

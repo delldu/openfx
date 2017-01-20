@@ -745,6 +745,14 @@ namespace OFX {
     _clipProps.propSetInt(kOfxImageClipPropIsMask, int(v));
   }
 
+#ifdef OFX_EXTENSIONS_NATRON
+  /** @brief say whether this clip may contain images with a distortion function attached */
+  void ClipDescriptor::setCanDistort(bool v)
+  {
+    _clipProps.propSetInt(kOfxImageEffectPropCanDistort, int(v), false);
+  }
+#endif
+
 #ifdef OFX_EXTENSIONS_NUKE
   /** @brief say whether this clip may contain images with a transform attached */
   void ClipDescriptor::setCanTransform(bool v)
@@ -1311,6 +1319,15 @@ namespace OFX {
   }
 
 #ifdef OFX_EXTENSIONS_NATRON
+  /** @brief indicate that a plugin or host can handle distortion function effects */
+  void ImageEffectDescriptor::setCanDistort(bool v)
+  {
+    // the header says this property is on the effect instance, but on Nuke it only exists on the effect descriptor
+    if (gHostDescription.canDistort) {
+      _effectProps.propSetInt(kOfxImageEffectPropCanDistort, int(v), false);
+    }
+  }
+
   /** @brief indicate if the host may add a channel selector */
   void ImageEffectDescriptor::setChannelSelector(PixelComponentEnum v)
   {
@@ -1438,6 +1455,10 @@ namespace OFX {
 
     _renderScale.x = _renderScale.y = 1.;
     _imageProps.propGetDoubleN(kOfxImageEffectPropRenderScale, &_renderScale.x, 2, false);
+#ifdef OFX_EXTENSIONS_NATRON
+    _distortionFunction = (OfxDistortionFunctionV1)_imageProps.propGetPointer(kOfxPropDistortionFunction, false);
+    _distortionFunctionData = _imageProps.propGetPointer(kOfxPropDistortionFunctionData, false);
+#endif
 #ifdef OFX_EXTENSIONS_NUKE
     std::fill(_transform, _transform + 9, 0.);
     if (_imageProps.propGetDimension(kFnOfxPropMatrix2D, false) == 0) {
@@ -2193,6 +2214,20 @@ namespace OFX {
     return _effectProps.propGetInt(kOfxImageEffectPropSupportsTiles) != 0;
   }
 
+#ifdef OFX_EXTENSIONS_NATRON
+  void
+  ImageEffect::setCanDistort(bool v)
+  {
+    _effectProps.propSetInt(kOfxImageEffectPropCanDistort, int(v), false);
+  }
+
+  bool
+  ImageEffect::getCanDistort() const
+  {
+    return _effectProps.propGetInt(kOfxImageEffectPropCanDistort, false) != 0;
+  }
+#endif
+
 #ifdef OFX_EXTENSIONS_NUKE
   void
   ImageEffect::setCanTransform(bool v)
@@ -2513,6 +2548,19 @@ namespace OFX {
   bool ImageEffect::invokeHelp()
   {
     // by default, do nothing
+    return false;
+  }
+#endif
+
+#ifdef OFX_EXTENSIONS_NATRON
+  /** @brief get the distortion function */
+  bool ImageEffect::getDistortion(const DistortionArguments &/*args*/, Clip * &/*transformClip*/, double /*transformMatrix*/[9],
+                                  OfxDistortionFunctionV1* /*distortionFunction*/,
+                                  void** /*distortionFunctionData*/,
+                                  int* /*distortionFunctionDataSizeHintInBytes*/,
+                                  OfxDistortionFreeDataFunctionV1* /*freeDataFunction*/)
+  {
+    // by default, do the default
     return false;
   }
 #endif
@@ -3178,6 +3226,7 @@ namespace OFX {
         gHostDescription.supportsDynamicChoices     = hostProps.propGetInt(kNatronOfxParamHostPropSupportsDynamicChoices, false) != 0;
         gHostDescription.supportsCascadingChoices   = hostProps.propGetInt(kNatronOfxParamPropChoiceCascading, false) != 0;
         gHostDescription.supportsChannelSelector    = hostProps.propGetString(kNatronOfxImageEffectPropChannelSelector, false) == kOfxImageComponentRGBA;
+        gHostDescription.canDistort                 = hostProps.propGetInt(kOfxImageEffectPropCanDistort, false) != 0;
 
         int nOverlayHandles = hostProps.propGetDimension(kNatronOfxPropNativeOverlays, false);
         for (int i = 0; i < nOverlayHandles; ++i) {

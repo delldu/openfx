@@ -171,9 +171,9 @@ Natron modifications:
 Notes:
 ------
  
- - Layers are what is passed to the render action and clipGetImage function whereas components are what is used for getClipComponents and getClipPreferences
- 
- - In the getClipComponents action, the plug-in passes OpenFX components.
+ - Layers are what is passed to the render actionn getClipComponents action and clipGetImage function whereas components are what is used for getClipPreferences
+
+ - The kFnOfxImageEffectPropComponentsPresent property on clip instances must return a list of planes available on that clip (not components).
  
  */
 

@@ -583,109 +583,35 @@ namespace OFX {
 #endif
 
 #if defined(OFX_EXTENSIONS_NATRON)
-  /** @brief extract a custom Natron plane defined in the multi-plane extension from the kOfxImageEffectPropComponents property value, @see getPixelComponentsProperty() */
-  bool extractCustomPlane(const std::string& comp, std::string* layerName, std::string* layerLabel, std::string* channelsLabel, std::vector<std::string>* channels)
+  /** @brief extract layer name (first element) and channel names (other elements) from the kOfxImageEffectPropComponents property value, @see getPixelComponentsProperty() */
+  std::vector<std::string> mapPixelComponentCustomToLayerChannels(const std::string& comp)
   {
+    std::vector<std::string> retval;
 
-    // Find the plane unique identifier
-    const std::size_t foundPlaneLen = std::strlen(kNatronOfxImageComponentsPlaneName);
-    std::size_t foundPlane = comp.find(kNatronOfxImageComponentsPlaneName);
+    const std::size_t foundPlaneLen = std::strlen(kNatronOfxImageComponentsPlane);
+    std::size_t foundPlane = comp.find(kNatronOfxImageComponentsPlane);
     if (foundPlane == std::string::npos) {
-      return false;
+      return retval;
     }
 
-    const std::size_t planeNameStartIdx = foundPlane + foundPlaneLen;
-
-    // Find the optionnal plane label
-    // If planeLabelStartIdx = 0, there's no plane label.
-    std::size_t planeLabelStartIdx = 0;
-
-
-    const std::size_t foundPlaneLabelLen = std::strlen(kNatronOfxImageComponentsPlaneLabel);
-    std::size_t foundPlaneLabel = comp.find(kNatronOfxImageComponentsPlaneLabel, planeNameStartIdx);
-    if (foundPlaneLabel != std::string::npos) {
-        planeLabelStartIdx = foundPlaneLabel + foundPlaneLabelLen;
+    std::size_t foundChannel = comp.find(kNatronOfxImageComponentsPlaneChannel, foundPlane + foundPlaneLen);
+    if (foundChannel == std::string::npos) {
+      return retval;
     }
 
-
-
-    // Find the optionnal channels label
-    // If channelsLabelStartIdx = 0, there's no channels label.
-    std::size_t channelsLabelStartIdx = 0;
-
-
-    const std::size_t foundChannelsLabelLen = std::strlen(kNatronOfxImageComponentsPlaneChannelsLabel);
-
-    // If there was a plane label before, pick from there otherwise pick from the name
-    std::size_t findChannelsLabelStart = planeLabelStartIdx > 0 ? planeLabelStartIdx : planeNameStartIdx;
-    std::size_t foundChannelsLabel = comp.find(kNatronOfxImageComponentsPlaneChannelsLabel, findChannelsLabelStart);
-    if (foundChannelsLabel != std::string::npos) {
-        channelsLabelStartIdx = foundChannelsLabel + foundChannelsLabelLen;
-    }
-
-
-
-    // Find the first channel
-    // If there was a channels label before, find from there, otherwise if there was a plane label before
-    // find from there, otherwise find from the name.
-    std::size_t findChannelStart = 0;
-    if (channelsLabelStartIdx > 0) {
-        findChannelStart = channelsLabelStartIdx;
-    } else if (planeLabelStartIdx > 0) {
-        findChannelStart = planeLabelStartIdx;
-    } else {
-        findChannelStart = planeNameStartIdx;
-    }
+    retval.push_back(comp.substr(foundPlane + foundPlaneLen, foundChannel - (foundPlane + foundPlaneLen)));
 
     const std::size_t foundChannelLen = std::strlen(kNatronOfxImageComponentsPlaneChannel);
-    std::size_t foundChannel = comp.find(kNatronOfxImageComponentsPlaneChannel, findChannelStart);
-    if (foundChannel == std::string::npos) {
-      // There needs to be at least one channel.
-      return false;
-    }
-
-    // Extract channels label
-    if (channelsLabelStartIdx > 0) {
-        *channelsLabel = comp.substr(channelsLabelStartIdx, foundChannel - channelsLabelStartIdx);
-    }
-
-    // Extract plane label
-    if (planeLabelStartIdx > 0) {
-        std::size_t endIndex = (foundChannelsLabel != std::string::npos) ? foundChannelsLabel : foundChannel;
-        *layerLabel = comp.substr(planeLabelStartIdx, endIndex - planeLabelStartIdx);
-    }
-
-    // Extract plane name
-    {
-        std::size_t endIndex;
-        if (foundPlaneLabel != std::string::npos) {
-            // There's a plane label
-            endIndex = foundPlaneLabel;
-        } else if (foundChannelsLabel != std::string::npos) {
-            // There's no plane label but a channels label
-            endIndex = foundChannelsLabel;
-        } else {
-            // No plane label and no channels label
-            endIndex = foundChannel;
-        }
-        *layerName = comp.substr(planeNameStartIdx, endIndex - planeNameStartIdx);
-    }
-
     while (foundChannel != std::string::npos) {
-        if (channels->size() >= 4) {
-            // A plane must have between 1 and 4 channels.
-            return false;
-        }
-      findChannelStart = foundChannel + foundChannelLen;
-      std::size_t nextChannel = comp.find(kNatronOfxImageComponentsPlaneChannel, findChannelStart);
-      std::string chan = comp.substr(findChannelStart, nextChannel - findChannelStart);
-      channels->push_back(chan);
+      std::size_t nextChannel = comp.find(kNatronOfxImageComponentsPlaneChannel, foundChannel + foundChannelLen);
+      std::string chan = comp.substr(foundChannel + foundChannelLen, nextChannel - (foundChannel + foundChannelLen));
+      retval.push_back(chan);
       foundChannel = nextChannel;
     }
 
-    return true;
-  } // extractCustomPlane
-#endif // OFX_EXTENSIONS_NATRON
+    return retval;
+  }
+#endif
 
 
   ////////////////////////////////////////////////////////////////////////////////
@@ -1455,17 +1381,14 @@ namespace OFX {
         _pixelComponentCount = 2;
         break;
 #endif
-        case ePixelComponentCustom: {
+      case ePixelComponentCustom:
 #ifdef OFX_EXTENSIONS_NATRON
-
-        std::string planeName, planeLabel, channelsLabel;
-        std::vector<std::string> channels;
-        extractCustomPlane(str, &planeName, &planeLabel, &channelsLabel, &channels);
-        _pixelComponentCount = channels.size();
+        // first element in the vector is the layer name (if any)
+        _pixelComponentCount = std::max((int)mapPixelComponentCustomToLayerChannels(str).size() - 1, 0);
 #else
         _pixelComponentCount = 0;
 #endif
-        }   break;
+        break;
       default:
         _pixelComponentCount = 0;
         break;
@@ -1784,16 +1707,13 @@ namespace OFX {
       case ePixelComponentXY:
         return 2;
 #endif
-        case ePixelComponentCustom: {
+      case ePixelComponentCustom:
 #ifdef OFX_EXTENSIONS_NATRON
-        std::string planeName, planeLabel, channelsLabel;
-        std::vector<std::string> channels;
-        extractCustomPlane(str, &planeName, &planeLabel, &channelsLabel, &channels);
-        return channels.size();
+        // first element in the vector is the layer name (if any)
+        return std::max((int)mapPixelComponentCustomToLayerChannels(str).size() - 1, 0);
 #else
         return 0;
 #endif
-        }
       default:
         return 0;
     }

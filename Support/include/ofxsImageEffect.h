@@ -302,8 +302,8 @@ namespace OFX {
   const char* mapPixelComponentEnumToStr(PixelComponentEnum pixelComponent) throw(std::invalid_argument);
 
 #if defined(OFX_EXTENSIONS_NATRON)
-  /** @brief extract a custom Natron plane defined in the multi-plane extension from the kOfxImageEffectPropComponents property value, @see getPixelComponentsProperty() */
- bool extractCustomPlane(const std::string& comp, std::string* layerName, std::string* layerLabel, std::string* channelsLabel, std::vector<std::string>* channels);
+  /** @brief extract layer name (first element) and channel names (other elements) from the kOfxImageEffectPropComponents property value, @see getPixelComponentsProperty() */
+  std::vector<std::string> mapPixelComponentCustomToLayerChannels(const std::string& comp);
 #endif
 
   class PluginFactory

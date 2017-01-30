@@ -335,6 +335,17 @@ namespace OFX {
         throw Property::Exception(kOfxStatErrMissingHostFeature);
       }
 
+      const std::string &ClipInstance::getPixelDepth() const
+      {
+        return _pixelDepth;
+      }
+
+
+      void ClipInstance::setPixelDepth(const std::string &s)
+      {
+        _pixelDepth =  s;
+      }
+
       const std::string &ClipInstance::getComponents() const
       {
         return _components;

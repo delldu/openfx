@@ -211,17 +211,11 @@ namespace OFX {
         ///  kOfxBitDepthShort
         ///  kOfxBitDepthHalf
         ///  kOfxBitDepthFloat
-        const std::string &getPixelDepth() const
-        {
-          return _pixelDepth;
-        }
+        virtual const std::string &getPixelDepth() const;
 
         /// set the current pixel depth
         /// called by clip preferences action 
-        void setPixelDepth(const std::string &s)
-        {
-          _pixelDepth =  s;
-        }
+        void setPixelDepth(const std::string &s);
 
         /// Components that can be fetched from this clip -
         ///

@@ -160,7 +160,7 @@ createInstance( OfxImageEffectHandle effect)
 
   // make my private instance data
   MyInstanceData *myData = new MyInstanceData;
-  char *context = 0;
+  const char *context = NULL;
 
   // is this instance a general effect ?
   gPropHost->propGetString(effectProps, kOfxImageEffectPropContext, 0,  &context);
@@ -334,7 +334,7 @@ static OfxStatus render( OfxImageEffectHandle  instance,
   int gl_enabled = 0;
   int source_texture_index = -1, source_texture_target = -1;
   int output_texture_index = -1, output_texture_target = -1;
-  char *tmps;
+  const char *tmps = NULL;
 
   DPRINT(("render: openGLSuite %s\n", gOpenGLSuite ? "found" : "not found"));
   if (gOpenGLSuite) {
@@ -505,7 +505,7 @@ static OfxStatus
 describeInContext( OfxImageEffectHandle  effect,  OfxPropertySetHandle inArgs)
 {
   // get the context from the inArgs handle
-  char *context;
+  const char *context = NULL;
   gPropHost->propGetString(inArgs, kOfxImageEffectPropContext, 0, &context);
   //bool isGeneralContext = strcmp(context, kOfxImageEffectContextGeneral) == 0;
 
@@ -587,7 +587,7 @@ describe(OfxImageEffectHandle  effect)
   gPropHost->propSetString(effectProps, kOfxImageEffectPropOpenGLRenderSupported, 0, "true");
 
   {
-    char *s = NULL;
+    const char *s = NULL;
     stat = gPropHost->propGetString(gHost->host, kOfxImageEffectPropOpenGLRenderSupported, 0, &s);
     DPRINT(("Host has OpenGL render support: %s (stat=%d)\n", s, stat));
     gHostSupportsOpenGL = stat == 0 && !strcmp(s, "true");

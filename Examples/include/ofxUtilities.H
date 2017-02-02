@@ -43,7 +43,7 @@ ofxuFetchHostSuites(void)
 inline bool
 ofxuIsUnPremultiplied(OfxPropertySetHandle clipOrImageProps)
 {
-  char *premult = NULL;
+  const char *premult = NULL;
   gPropHost->propGetString(clipOrImageProps, kOfxImageEffectPropPreMultiplication, 0, &premult);
   return strcmp(premult, kOfxImageUnPreMultiplied) == 0;
 }
@@ -134,7 +134,7 @@ ofxuGetImageRowBytes(OfxPropertySetHandle imageHandle)
 
 // turn a bit depth string descriptor into a number of bits
 inline int
-ofxuMapPixelDepth(char *bitString)
+ofxuMapPixelDepth(const char *bitString)
 {
   if(strcmp(bitString, kOfxBitDepthByte) == 0) {
     return 8;
@@ -151,7 +151,7 @@ ofxuMapPixelDepth(char *bitString)
 inline int
 ofxuGetImagePixelDepth(OfxPropertySetHandle imageHandle, bool isUnMapped = false)
 {
-  char *bitString = NULL;
+  const char *bitString = NULL;
   if(isUnMapped)
     gPropHost->propGetString(imageHandle, kOfxImageClipPropUnmappedPixelDepth, 0, &bitString); // get unmapped component types of a clip
   else
@@ -162,7 +162,7 @@ ofxuGetImagePixelDepth(OfxPropertySetHandle imageHandle, bool isUnMapped = false
 inline bool
 ofxuGetImagePixelsAreRGBA(OfxPropertySetHandle imageHandle, bool unmapped = false)
 {
-  char *v = NULL;
+  const char *v = NULL;
   if(unmapped)
     gPropHost->propGetString(imageHandle, kOfxImageClipPropUnmappedComponents, 0, &v); // get unmapped pixel depths
   else

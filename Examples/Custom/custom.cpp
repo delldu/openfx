@@ -76,7 +76,7 @@ OfxInteractSuiteV1    *gInteractHost = 0;
 
 // decode a custom param from a string
 static OfxStatus
-parseCustomParam(char *str, double &x, double &y)
+parseCustomParam(const char *str, double &x, double &y)
 {
   if(str && *str) {
     int nRead = sscanf(str, "%lg %lg", &x, &y);
@@ -147,7 +147,7 @@ customParamInterpFunction(OfxImageEffectHandle /*instance*/,
   double x0, y0, x1, y1;
   OfxStatus err;
 
-  char *fromValue, *toValue;
+  const char *fromValue = NULL, *toValue = NULL;
 
   // parse the custom param at the from value
   gPropHost->propGetString(inArgs, kOfxParamPropCustomValue, 0, &fromValue);

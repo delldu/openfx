@@ -154,7 +154,7 @@ setPerComponentScaleEnabledness( OfxImageEffectHandle effect)
     OfxPropertySetHandle props; gEffectHost->clipGetPropertySet(myData->sourceClip, &props);
 
     // get the input clip format
-    char *pixelType;
+    const char *pixelType = NULL;
     gPropHost->propGetString(props, kOfxImageEffectPropComponents, 0, &pixelType);
 
     // only enable the scales if the input is an RGBA input
@@ -196,7 +196,7 @@ createInstance( OfxImageEffectHandle effect)
 
   // make my private instance data
   MyInstanceData *myData = new MyInstanceData;
-  char *context = 0;
+  const char *context = NULL;
 
   // is this instance a general effect ?
   gPropHost->propGetString(effectProps, kOfxImageEffectPropContext, 0,  &context);
@@ -386,14 +386,14 @@ instanceChanged( OfxImageEffectHandle  effect,
 		 OfxPropertySetHandle /*outArgs*/)
 {
   // see why it changed
-  char *changeReason;
+  const char *changeReason = NULL;
   gPropHost->propGetString(inArgs, kOfxPropChangeReason, 0, &changeReason);
 
   // we are only interested in user edits
   if(strcmp(changeReason, kOfxChangeUserEdited) != 0) return kOfxStatReplyDefault;
 
   // fetch the type of the object that changed
-  char *typeChanged;
+  const char *typeChanged = NULL;
   gPropHost->propGetString(inArgs, kOfxPropType, 0, &typeChanged);
 
   // was it a clip or a param?
@@ -401,7 +401,7 @@ instanceChanged( OfxImageEffectHandle  effect,
   bool isParam = strcmp(typeChanged, kOfxTypeParameter) == 0;
 
   // get the name of the thing that changed
-  char *objChanged;
+  const char *objChanged = NULL;
   gPropHost->propGetString(inArgs, kOfxPropName, 0, &objChanged);
 
   // Did the source clip change or the 'scaleComponents' change? In which case enable/disable individual component scale parameters
@@ -840,7 +840,7 @@ static OfxStatus
 describeInContext( OfxImageEffectHandle  effect,  OfxPropertySetHandle inArgs)
 {
   // get the context from the inArgs handle
-  char *context;
+  const char *context = NULL;
   gPropHost->propGetString(inArgs, kOfxImageEffectPropContext, 0, &context);
   bool isGeneralContext = strcmp(context, kOfxImageEffectContextGeneral) == 0;
 

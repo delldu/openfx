@@ -123,7 +123,7 @@ createInstance(OfxImageEffectHandle effect)
 
   // make my private instance data
   MyInstanceData *myData = new MyInstanceData;
-  char *context = 0;
+  const char *context = NULL;
 
   // is this instance a general effect ?
   gPropHost->propGetString(effectProps, kOfxImageEffectPropContext, 0,  &context);
@@ -642,7 +642,7 @@ static OfxStatus render(OfxImageEffectHandle effect,
 
     // If we are rendering a single field, then have a field scale of 0.5
     double fieldScale = 1.0;
-    char *field;
+    const char *field = NULL;
     gPropHost->propGetString(outputImg, kOfxImagePropField, 0, &field);
     if(strcmp(field, kOfxImageFieldLower) == 0 || strcmp(field, kOfxImageFieldUpper) == 0)
       fieldScale = 0.5;
@@ -761,7 +761,7 @@ getClipPreferences(OfxImageEffectHandle effect, OfxPropertySetHandle /*inArgs*/,
     gEffectHost->clipGetPropertySet(myData->sourceClip, &clipProps);
 
     //  premultiplication is the same as the source
-    char *premult;
+    const char *premult = NULL;
     gPropHost->propGetString(clipProps, kOfxImageEffectPropPreMultiplication, 0, &premult);
 
     gPropHost->propSetString(outArgs, kOfxImageEffectPropPreMultiplication, 0, premult);
@@ -775,7 +775,7 @@ static OfxStatus
 describeInContext(OfxImageEffectHandle effect, OfxPropertySetHandle inArgs)
 {
   // get the context from the inArgs handle
-  char *context;
+  const char *context = NULL;
   gPropHost->propGetString(inArgs, kOfxImageEffectPropContext, 0, &context);
   bool isGeneratorContext = strcmp(context, kOfxImageEffectContextGenerator) == 0;
 

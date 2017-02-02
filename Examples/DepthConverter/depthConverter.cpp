@@ -434,7 +434,7 @@ static OfxStatus
 describeInContext(OfxImageEffectHandle effect, OfxPropertySetHandle inArgs)
 {
   // get the context from the inArgs handle
-  char *context;
+  const char *context = NULL;
   gPropHost->propGetString(inArgs, kOfxImageEffectPropContext, 0, &context);
   //bool isGeneratorContext = strcmp(context, kOfxImageEffectContextGenerator) == 0;
 
@@ -534,7 +534,7 @@ describe(OfxImageEffectHandle  effect)
   // figure which bit depths are supported
   int i;
   for(i = 0; i < nHostDepths; i++) {
-    char *depthStr;
+    const char *depthStr = NULL;
     gPropHost->propGetString(gHost->host, kOfxImageEffectPropSupportedPixelDepths, i, &depthStr);
     int nBits = ofxuMapPixelDepth(depthStr);
     switch(nBits) {

@@ -663,7 +663,7 @@ namespace OFX {
   bool BaseDoubleParamDescriptor::supportsDefaultCoordinateSystem()
   {
     //OfxStatus stat = Private::gPropSuite->propSetString(_paramProps.propSetHandle(), kOfxParamPropDefaultCoordinateSystem, 0, kOfxParamCoordinatesCanonical);
-    char *value;
+    const char *value = NULL;
     OfxStatus stat = Private::gPropSuite->propGetString(_paramProps.propSetHandle(), kOfxParamPropDefaultCoordinateSystem, 0, &value);
     return (stat == kOfxStatOK);
   }

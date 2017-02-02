@@ -418,7 +418,7 @@ PropertySet::propGet(const char *property, int &value, int idx) const
 OfxStatus 
 PropertySet::propGet(const char *property, std::string  &value, int idx) const
 {
-  char *str;
+  const char *str = NULL;
   OfxStatus stat = gPropSuite->propGetString(_propHandle, property, idx, &str);
   OFX::logError(stat != kOfxStatOK, "Failed on fetching string property %s[%d], host returned status %s;", property, idx, mapStatus(stat));
   if(kOfxStatOK == stat) {

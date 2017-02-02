@@ -17,6 +17,7 @@
 				1E551F4B1799509A00A4135C /* PBXTargetDependency */,
 				1E551F4D1799509A00A4135C /* PBXTargetDependency */,
 				1E551F4F1799509A00A4135C /* PBXTargetDependency */,
+				1E8195041E439839003571AA /* PBXTargetDependency */,
 				1E551F511799509A00A4135C /* PBXTargetDependency */,
 				1E551F531799509A00A4135C /* PBXTargetDependency */,
 				1E551F551799509A00A4135C /* PBXTargetDependency */,
@@ -41,6 +42,12 @@
 		1E551F601799515400A4135C /* ofxLog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1E551F5E1799515400A4135C /* ofxLog.cpp */; };
 		1E74522D17CF632200AFFAC2 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E551F5A179950EC00A4135C /* OpenGL.framework */; };
 		1E74523417CF634D00AFFAC2 /* depthConverter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1E74523317CF634D00AFFAC2 /* depthConverter.cpp */; };
+		1E8195021E439770003571AA /* oclplugin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1E8195011E43975A003571AA /* oclplugin.cpp */; };
+		1E8195061E43987E003571AA /* OpenCL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E8195051E43987E003571AA /* OpenCL.framework */; };
+		1E8195111E43991D003571AA /* cuda.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1E8194FB1E43972C003571AA /* cuda.cpp */; };
+		1E8195121E43991D003571AA /* kernel.cu in Sources */ = {isa = PBXBuildFile; fileRef = 1E8194FA1E43972C003571AA /* kernel.cu */; };
+		1E8195161E4399E2003571AA /* libcuda.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E8195151E4399E2003571AA /* libcuda.dylib */; };
+		1E8195181E4399E9003571AA /* libcudart.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E8195171E4399E9003571AA /* libcudart.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -99,6 +106,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 1E551F3517994FF900A4135C;
 			remoteInfo = testProperties.ofx;
+		};
+		1E8195031E439839003571AA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1E551EB917994D4000A4135C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1E8194EB1E4396E3003571AA;
+			remoteInfo = oclplugin.ofx;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -181,6 +195,23 @@
 		1E551F5F1799515400A4135C /* ofxLog.H */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ofxLog.H; sourceTree = "<group>"; };
 		1E74523217CF632200AFFAC2 /* depthConverter.ofx.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = depthConverter.ofx.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
 		1E74523317CF634D00AFFAC2 /* depthConverter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = depthConverter.cpp; sourceTree = "<group>"; };
+		1E8194F41E4396E3003571AA /* oclplugin.ofx.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = oclplugin.ofx.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
+		1E8194F61E43972C003571AA /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
+		1E8194F71E43972C003571AA /* MakefileOSX */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = MakefileOSX; sourceTree = "<group>"; };
+		1E8194F81E43972C003571AA /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1E8194F91E43972C003571AA /* Readme.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Readme.txt; sourceTree = "<group>"; };
+		1E8194FA1E43972C003571AA /* kernel.cu */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = kernel.cu; sourceTree = "<group>"; };
+		1E8194FB1E43972C003571AA /* cuda.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cuda.cpp; sourceTree = "<group>"; };
+		1E8194FD1E43975A003571AA /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
+		1E8194FE1E43975A003571AA /* MakefileOSX */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = MakefileOSX; sourceTree = "<group>"; };
+		1E8194FF1E43975A003571AA /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1E8195001E43975A003571AA /* Readme.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Readme.txt; sourceTree = "<group>"; };
+		1E8195011E43975A003571AA /* oclplugin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = oclplugin.cpp; sourceTree = "<group>"; };
+		1E8195051E43987E003571AA /* OpenCL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenCL.framework; path = System/Library/Frameworks/OpenCL.framework; sourceTree = SDKROOT; };
+		1E8195101E4398FB003571AA /* cuda.ofx.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = cuda.ofx.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
+		1E8195131E4399CB003571AA /* libcudart.8.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcudart.8.0.dylib; path = "../../../../../Developer/NVIDIA/CUDA-8.0/lib/libcudart.8.0.dylib"; sourceTree = "<group>"; };
+		1E8195151E4399E2003571AA /* libcuda.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcuda.dylib; path = ../../../../../usr/local/cuda/lib/libcuda.dylib; sourceTree = "<group>"; };
+		1E8195171E4399E9003571AA /* libcudart.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcudart.dylib; path = ../../../../../usr/local/cuda/lib/libcudart.dylib; sourceTree = "<group>"; };
 		1EC2A5AC179D42A8008FC1CF /* ofxUtilities.H */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = ofxUtilities.H; path = include/ofxUtilities.H; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -242,6 +273,23 @@
 			buildActionMask = 2147483647;
 			files = (
 				1E74522D17CF632200AFFAC2 /* OpenGL.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1E8194EE1E4396E3003571AA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1E8195061E43987E003571AA /* OpenCL.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1E81950A1E4398FB003571AA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1E8195161E4399E2003571AA /* libcuda.dylib in Frameworks */,
+				1E8195181E4399E9003571AA /* libcudart.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -405,6 +453,8 @@
 				1E551F2617994FE400A4135C /* rectangle.ofx.bundle */,
 				1E551F3617994FF900A4135C /* testProperties.ofx.bundle */,
 				1E74523217CF632200AFFAC2 /* depthConverter.ofx.bundle */,
+				1E8194F41E4396E3003571AA /* oclplugin.ofx.bundle */,
+				1E8195101E4398FB003571AA /* cuda.ofx.bundle */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -412,11 +462,13 @@
 		1E551ED217994DEF00A4135C /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				1E8194FC1E439744003571AA /* OpenCL */,
 				1E0832DE19A1EA1300A819A5 /* Makefile */,
 				1E0832DF19A1EA1300A819A5 /* Makefile.master */,
 				1E0832E019A1EA1300A819A5 /* MakefileOSX */,
 				1E0832E119A1EA1300A819A5 /* README.txt */,
 				1E0832B019A1E83E00A819A5 /* Basic */,
+				1E8194F51E43970C003571AA /* Cuda */,
 				1E0832B119A1E85100A819A5 /* Custom */,
 				1E0832B219A1E85800A819A5 /* DepthConverter */,
 				1E0832B319A1E87300A819A5 /* Invert */,
@@ -433,9 +485,38 @@
 		1E551EDA17994E8100A4135C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1E8195171E4399E9003571AA /* libcudart.dylib */,
+				1E8195151E4399E2003571AA /* libcuda.dylib */,
+				1E8195131E4399CB003571AA /* libcudart.8.0.dylib */,
+				1E8195051E43987E003571AA /* OpenCL.framework */,
 				1E551F5A179950EC00A4135C /* OpenGL.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		1E8194F51E43970C003571AA /* Cuda */ = {
+			isa = PBXGroup;
+			children = (
+				1E8194FB1E43972C003571AA /* cuda.cpp */,
+				1E8194FA1E43972C003571AA /* kernel.cu */,
+				1E8194F61E43972C003571AA /* Makefile */,
+				1E8194F71E43972C003571AA /* MakefileOSX */,
+				1E8194F81E43972C003571AA /* Info.plist */,
+				1E8194F91E43972C003571AA /* Readme.txt */,
+			);
+			path = Cuda;
+			sourceTree = "<group>";
+		};
+		1E8194FC1E439744003571AA /* OpenCL */ = {
+			isa = PBXGroup;
+			children = (
+				1E8195011E43975A003571AA /* oclplugin.cpp */,
+				1E8194FD1E43975A003571AA /* Makefile */,
+				1E8194FE1E43975A003571AA /* MakefileOSX */,
+				1E8194FF1E43975A003571AA /* Info.plist */,
+				1E8195001E43975A003571AA /* Readme.txt */,
+			);
+			path = OpenCL;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -577,6 +658,40 @@
 			productReference = 1E74523217CF632200AFFAC2 /* depthConverter.ofx.bundle */;
 			productType = "com.apple.product-type.bundle";
 		};
+		1E8194EB1E4396E3003571AA /* oclplugin.ofx */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1E8194F11E4396E3003571AA /* Build configuration list for PBXNativeTarget "oclplugin.ofx" */;
+			buildPhases = (
+				1E8194EC1E4396E3003571AA /* Sources */,
+				1E8194EE1E4396E3003571AA /* Frameworks */,
+				1E8194F01E4396E3003571AA /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = oclplugin.ofx;
+			productName = opengl.ofx;
+			productReference = 1E8194F41E4396E3003571AA /* oclplugin.ofx.bundle */;
+			productType = "com.apple.product-type.bundle";
+		};
+		1E8195071E4398FB003571AA /* cuda.ofx */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1E81950D1E4398FB003571AA /* Build configuration list for PBXNativeTarget "cuda.ofx" */;
+			buildPhases = (
+				1E8195081E4398FB003571AA /* Sources */,
+				1E81950A1E4398FB003571AA /* Frameworks */,
+				1E81950C1E4398FB003571AA /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = cuda.ofx;
+			productName = custom.ofx;
+			productReference = 1E8195101E4398FB003571AA /* cuda.ofx.bundle */;
+			productType = "com.apple.product-type.bundle";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -600,9 +715,11 @@
 			targets = (
 				1E551F461799509100A4135C /* all */,
 				1E551EC017994D4000A4135C /* basic.ofx */,
+				1E8195071E4398FB003571AA /* cuda.ofx */,
 				1E551ED817994E8100A4135C /* custom.ofx */,
 				1E74522917CF632200AFFAC2 /* depthConverter.ofx */,
 				1E551EEC17994EB700A4135C /* invert.ofx */,
+				1E8194EB1E4396E3003571AA /* oclplugin.ofx */,
 				1E551EFF17994F0600A4135C /* opengl.ofx */,
 				1E551F1117994F7D00A4135C /* overlay.ofx */,
 				1E551F2517994FE400A4135C /* rectangle.ofx */,
@@ -662,6 +779,20 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		1E74522E17CF632200AFFAC2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1E8194F01E4396E3003571AA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1E81950C1E4398FB003571AA /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -736,6 +867,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		1E8194EC1E4396E3003571AA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1E8195021E439770003571AA /* oclplugin.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1E8195081E4398FB003571AA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1E8195111E43991D003571AA /* cuda.cpp in Sources */,
+				1E8195121E43991D003571AA /* kernel.cu in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -778,6 +926,11 @@
 			isa = PBXTargetDependency;
 			target = 1E551F3517994FF900A4135C /* testProperties.ofx */;
 			targetProxy = 1E551F561799509A00A4135C /* PBXContainerItemProxy */;
+		};
+		1E8195041E439839003571AA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1E8194EB1E4396E3003571AA /* oclplugin.ofx */;
+			targetProxy = 1E8195031E439839003571AA /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1008,6 +1161,78 @@
 			};
 			name = Release;
 		};
+		1E8194F21E4396E3003571AA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				EXPORTED_SYMBOLS_FILE = "$(OFX_PATH)/Examples/include/osxSymbols";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					OFX_EXTENSIONS_RESOLVE,
+				);
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/OFX/Plugins/$(PROJECT_NAME)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = bundle;
+			};
+			name = Debug;
+		};
+		1E8194F31E4396E3003571AA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				EXPORTED_SYMBOLS_FILE = "$(OFX_PATH)/Examples/include/osxSymbols";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					OFX_EXTENSIONS_RESOLVE,
+				);
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/OFX/Plugins/$(PROJECT_NAME)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = bundle;
+			};
+			name = Release;
+		};
+		1E81950E1E4398FB003571AA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				EXPORTED_SYMBOLS_FILE = "$(OFX_PATH)/Examples/include/osxSymbols";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					OFX_EXTENSIONS_RESOLVE,
+					"$(inherited)",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/usr/local/cuda/include,
+				);
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/OFX/Plugins/$(PROJECT_NAME)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/usr/local/cuda/lib,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = bundle;
+			};
+			name = Debug;
+		};
+		1E81950F1E4398FB003571AA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				EXPORTED_SYMBOLS_FILE = "$(OFX_PATH)/Examples/include/osxSymbols";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					OFX_EXTENSIONS_RESOLVE,
+					"$(inherited)",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/usr/local/cuda/include,
+				);
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/OFX/Plugins/$(PROJECT_NAME)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/usr/local/cuda/lib,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = bundle;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1097,6 +1322,24 @@
 			buildConfigurations = (
 				1E74523017CF632200AFFAC2 /* Debug */,
 				1E74523117CF632200AFFAC2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1E8194F11E4396E3003571AA /* Build configuration list for PBXNativeTarget "oclplugin.ofx" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1E8194F21E4396E3003571AA /* Debug */,
+				1E8194F31E4396E3003571AA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1E81950D1E4398FB003571AA /* Build configuration list for PBXNativeTarget "cuda.ofx" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1E81950E1E4398FB003571AA /* Debug */,
+				1E81950F1E4398FB003571AA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

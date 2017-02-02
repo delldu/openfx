@@ -386,16 +386,6 @@ namespace OFX {
       template class PropertyTemplate<PointerValue>;
       template class PropertyTemplate<StringValue>;
 
-      inline int castAwayConst(int i) { return i; }
-      inline double castAwayConst(double d) { return d; }
-      inline void *castAwayConst(void *v) { return v; }
-      inline char *castAwayConst(const char *s) { return const_cast<char*>(s); }
-
-      inline int *castToConst(int *i) { return i; }
-      inline double *castToConst(double *d) { return d; }
-      inline const char **castToConst(char **s) { return const_cast<const char**>(s); }
-      inline void **castToConst(void **v) { return v; }
-
 
       void Set::setGetHook(const std::string &s, GetHook *ghook) const
       {
@@ -892,7 +882,7 @@ namespace OFX {
       template<class T> static OfxStatus propGet(OfxPropertySetHandle properties,
                                                const char *property,
                                                int index,
-                                               typename T::APITypeConstless *value) {
+                                               typename T::APIType *value) {
 #       ifdef OFX_DEBUG_PROPERTIES
         std::cout << "OFX: propGet - " << properties << ' ' << property << "[" << index << "] = ...";
 #       endif
@@ -911,7 +901,7 @@ namespace OFX {
 #           endif
             return kOfxStatErrUnknown;
           }
-          *value = castAwayConst(castToAPIType(prop->getValue(index)));
+          *value = castToAPIType(prop->getValue(index));
 
 #         ifdef OFX_DEBUG_PROPERTIES
           std::cout << *value << ' ' << StatStr(kOfxStatOK) << std::endl;
@@ -934,7 +924,7 @@ namespace OFX {
       template<class T> static OfxStatus propGetN(OfxPropertySetHandle properties,
                                             const char *property,
                                             int count,
-                                            typename T::APITypeConstless *values) {
+                                            typename T::APIType *values) {
 #       ifdef OFX_DEBUG_PROPERTIES
         std::cout << "OFX: propGetN - " << properties << ' ' << property << "[0.." << count-1 << "] = ...";
 #       endif
@@ -953,7 +943,7 @@ namespace OFX {
 #           endif
             return kOfxStatErrUnknown;
           }
-          prop->getValueN(castToConst(values), count);
+          prop->getValueN(values, count);
 #         ifdef OFX_DEBUG_PROPERTIES
           for (int i = 0; i < count; ++i) {
             if (i != 0) {

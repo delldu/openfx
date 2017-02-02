@@ -269,7 +269,7 @@ typedef struct OfxPropertySuiteV1 {
         - ::kOfxStatErrUnknown
         - ::kOfxStatErrBadIndex
   */
-  OfxStatus (*propGetStringN) (OfxPropertySetHandle properties, const char *property, int count, char **value);
+  OfxStatus (*propGetStringN) (OfxPropertySetHandle properties, const char *property, int count, const char **value);
 
   /** @brief Get multiple values of a double property
 

@@ -354,7 +354,7 @@ namespace OFX {
     if (dimension <= 0 || !values) {
       return;
     }
-    std::vector<char*> rawValue(dimension, (char*)0);
+    std::vector<const char*> rawValue(dimension, (char*)0);
     OfxStatus stat = gPropSuite->propGetStringN(_propHandle, property, dimension, &rawValue.front());
     OFX::Log::error(stat != kOfxStatOK, "Failed on getting string property %s, host returned status %s;",
                       property, mapStatusToString(stat));

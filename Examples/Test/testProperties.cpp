@@ -435,7 +435,7 @@ PropertySet::propGet(const char *property, std::string  &value, int idx) const
 OfxStatus 
 PropertySet::propGetN(const char *property, std::string *values, int N) const
 {
-  char **strs = new char * [N];
+  const char **strs = new const char * [N];
   
   OfxStatus stat = gPropSuite->propGetStringN(_propHandle, property, N, strs);
   

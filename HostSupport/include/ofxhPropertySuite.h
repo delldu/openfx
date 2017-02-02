@@ -101,7 +101,6 @@ namespace OFX {
       /// type holder, for integers, used to template up int properties
       struct IntValue { 
         typedef int APIType; ///< C type of the property that is passed across the raw API
-        typedef int APITypeConstless;  ///< C type of the property that is passed across the raw API, without any const it
         typedef int Type; ///< Type we actually hold and deal with the propery in everything by the raw API
         typedef int ReturnType; ///< type to return from a function call
         static const TypeEnum typeCode = eInt;
@@ -111,7 +110,6 @@ namespace OFX {
       /// type holder, for doubles, used to template up double properties
       struct DoubleValue { 
         typedef double APIType;
-        typedef double APITypeConstless;
         typedef double Type;
         typedef double ReturnType; ///< type to return from a function call
         static const TypeEnum typeCode = eDouble;
@@ -121,7 +119,6 @@ namespace OFX {
       /// type holder, for pointers, used to template up pointer properties
       struct PointerValue { 
         typedef void *APIType;
-        typedef void *APITypeConstless;
         typedef void *Type;
         typedef void *ReturnType; ///< type to return from a function call
         static const TypeEnum typeCode = ePointer;
@@ -131,7 +128,6 @@ namespace OFX {
       /// type holder, for strings, used to template up string properties
       struct StringValue { 
         typedef const char *APIType;
-        typedef char *APITypeConstless;
         typedef std::string Type;
         typedef const std::string &ReturnType; ///< type to return from a function call
         static const TypeEnum typeCode = eString;

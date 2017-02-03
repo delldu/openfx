@@ -43,6 +43,7 @@ England
 
 #include "ofxsImageEffect.h"
 #include "ofxsMultiThread.h"
+#include "ofxsLog.h"
 
 /** @file This file contains a useful base class that can be used to process images 
 
@@ -60,18 +61,42 @@ namespace OFX {
         OFX::ImageEffect &_effect;      /**< @brief effect to render with */
         OFX::Image       *_dstImg;        /**< @brief image to process into */
         OfxRectI          _renderWindow;  /**< @brief render window to use */
+#ifdef OFX_EXTENSIONS_RESOLVE
+        bool             _isEnabledOpenCLRender; /**< @brief is OpenCL Render Enabled */
+        bool             _isEnabledCudaRender;   /**< @brief is Cuda Render Enabled */
+        void*            _pOpenCLCmdQ;           /**< @brief OpenCL Command Queue Handle */
+#endif
 
     public :
         /** @brief ctor */
         ImageProcessor(OFX::ImageEffect &effect)
           : _effect(effect)
           , _dstImg(0)
+#ifdef OFX_EXTENSIONS_RESOLVE
+          , _isEnabledOpenCLRender(false)
+          , _isEnabledCudaRender(false)
+          , _pOpenCLCmdQ(NULL)
+#endif
         {
             _renderWindow.x1 = _renderWindow.y1 = _renderWindow.x2 = _renderWindow.y2 = 0;
         }  
         
         /** @brief set the destination image */
         void setDstImg(OFX::Image *v) {_dstImg = v; }
+
+#ifdef OFX_EXTENSIONS_RESOLVE
+        /** @brief set OpenCL, CUDA render arguments */
+        void setGPURenderArgs(const OFX::RenderArguments& args)
+        {
+            _isEnabledOpenCLRender = args.isEnabledOpenCLRender;
+            _isEnabledCudaRender = args.isEnabledCudaRender;
+
+            if (_isEnabledOpenCLRender)
+            {
+                _pOpenCLCmdQ = args.pOpenCLCmdQ;
+            }
+        }
+#endif
 
         /** @brief reset the render window */
         void setRenderWindow(OfxRectI rect) {_renderWindow = rect;}
@@ -90,6 +115,22 @@ namespace OFX {
         
         /** @brief called before any MP is done */
         virtual void preProcess(void) {}
+
+#ifdef OFX_EXTENSIONS_RESOLVE
+        /** @brief this is called by process to actually process images using OpenCL when isEnabledOpenCLRender is true, override in derived classes */
+        virtual void processImagesOpenCL(void)
+        {
+            OFX::Log::print("processImagesOpenCL not implemented");
+            OFX::throwSuiteStatusException(kOfxStatErrUnsupported);
+        };
+
+        /** @brief this is called by process to actually process images using CUDA when isEnabledCudaRender is true, override in derived classes */
+        virtual void processImagesCUDA(void)
+        {
+            OFX::Log::print("processImagesCUDA not implemented");
+            OFX::throwSuiteStatusException(kOfxStatErrUnsupported);
+        };
+#endif
 
         /** @brief this is called by multiThreadFunction to actually process images, override in derived classes */
         virtual void multiThreadProcessImages(OfxRectI window) = 0;
@@ -118,14 +159,27 @@ namespace OFX {
             // call the pre MP pass
             preProcess();
 
-            // make sure there are at least 4096 pixels per CPU and at least 1 line par CPU
-            unsigned int nCPUs = (std::min(_renderWindow.x2 - _renderWindow.x1, 4096) *
-                                  (_renderWindow.y2 - _renderWindow.y1)) / 4096;
-            // make sure the number of CPUs is valid (and use at least 1 CPU)
-            nCPUs = std::max(1u, std::min(nCPUs, OFX::MultiThread::getNumCPUs()));
+#ifdef OFX_EXTENSIONS_RESOLVE
+            if (_isEnabledOpenCLRender)
+            {
+                processImagesOpenCL();
+            }
+            else if (_isEnabledCudaRender)
+            {
+                processImagesCUDA();
+            }
+            else // is CPU
+#endif
+            {
+                // make sure there are at least 4096 pixels per CPU and at least 1 line par CPU
+                unsigned int nCPUs = (std::min(_renderWindow.x2 - _renderWindow.x1, 4096) *
+                                      (_renderWindow.y2 - _renderWindow.y1)) / 4096;
+                // make sure the number of CPUs is valid (and use at least 1 CPU)
+                nCPUs = std::max(1u, std::min(nCPUs, OFX::MultiThread::getNumCPUs()));
 
-            // call the base multi threading code, should put a pre & post thread calls in too
-            multiThread(nCPUs);
+                // call the base multi threading code, should put a pre & post thread calls in too
+                multiThread(nCPUs);
+            }
 
             // call the post MP pass
             postProcess();

@@ -1186,6 +1186,20 @@ namespace OFX {
   }
 #endif
 
+#ifdef OFX_EXTENSIONS_RESOLVE
+  /** @brief Does the plugin support OpenCL Render */
+  void ImageEffectDescriptor::setSupportsOpenCLRender(bool v)
+  {
+      _effectProps.propSetString(kOfxImageEffectPropOpenCLRenderSupported, (v ? "true" : "false"), false);
+  }
+
+  /** @brief Does the plugin support CUDA Render */
+  void ImageEffectDescriptor::setSupportsCudaRender(bool v)
+  {
+      _effectProps.propSetString(kOfxImageEffectPropCudaRenderSupported, (v ? "true" : "false"), false);
+  }
+#endif
+
 #ifdef OFX_SUPPORTS_OPENGLRENDER
   /** @brief Does the plugin support OpenGL accelerated rendering (but is also capable of CPU rendering) ? */
   void ImageEffectDescriptor::setSupportsOpenGLRender(bool v) {
@@ -1830,7 +1844,7 @@ namespace OFX {
     if (par != 0.) {
       return par;
     }
-    return 1.;
+    return 1.;  // This error could happen in Eyeon Fusion.
   }
 
   /** @brief get the frame rate, in frames per second on this clip, after any clip preferences have been applied */
@@ -1876,6 +1890,14 @@ namespace OFX {
     throwSuiteStatusException(stat);
     return bounds;
   }
+
+#ifdef OFX_EXTENSIONS_RESOLVE
+  /** @brief is the clip for thumbnail */
+  bool Clip::isForThumbnail(void) const
+  {
+      return (_clipProps.propGetInt(kOfxImageClipPropThumbnail, false) != 0);
+  }
+#endif
 
   /** @brief fetch an image */
   Image *Clip::fetchImage(double t)
@@ -3178,11 +3200,18 @@ namespace OFX {
         gHostDescription.supportsStringAnimation    = hostProps.propGetInt(kOfxParamHostPropSupportsStringAnimation) != 0;
         gHostDescription.supportsCustomInteract     = hostProps.propGetInt(kOfxParamHostPropSupportsCustomInteract) != 0;
         gHostDescription.supportsChoiceAnimation    = hostProps.propGetInt(kOfxParamHostPropSupportsChoiceAnimation) != 0;
+#ifdef OFX_EXTENSIONS_RESOLVE
+        gHostDescription.supportsStrChoiceAnimation = hostProps.propGetInt(kOfxParamHostPropSupportsStrChoiceAnimation, false) != 0;
+#endif
         gHostDescription.supportsBooleanAnimation   = hostProps.propGetInt(kOfxParamHostPropSupportsBooleanAnimation) != 0;
         gHostDescription.supportsCustomAnimation    = hostProps.propGetInt(kOfxParamHostPropSupportsCustomAnimation) != 0;
         gHostDescription.osHandle                   = hostProps.propGetPointer(kOfxPropHostOSHandle, false);
         gHostDescription.supportsParametricParameter = gParametricParameterSuite != 0;
         gHostDescription.supportsParametricAnimation = hostProps.propGetInt(kOfxParamHostPropSupportsParametricAnimation, false) != 0;
+#ifdef OFX_EXTENSIONS_RESOLVE
+        gHostDescription.supportsOpenCLRender        = hostProps.propGetString(kOfxImageEffectPropOpenCLRenderSupported, 0, false) == "true";
+        gHostDescription.supportsCudaRender          = hostProps.propGetString(kOfxImageEffectPropCudaRenderSupported, 0, false) == "true";
+#endif
         gHostDescription.supportsRenderQualityDraft = hostProps.propGetInt(kOfxImageEffectPropRenderQualityDraft, false) != 0; // appeared in OFX 1.4
         {
             std::string originStr = hostProps.propGetString(kOfxImageEffectHostPropNativeOrigin, false); // appeared in OFX 1.4
@@ -3470,6 +3499,12 @@ namespace OFX {
       args.renderWindow.x1 = args.renderWindow.y1 = args.renderWindow.x2 = args.renderWindow.y2 = 0.;
       inArgs.propGetIntN(kOfxImageEffectPropRenderWindow, &args.renderWindow.x1, 4);
 
+#ifdef OFX_EXTENSIONS_RESOLVE
+      args.isEnabledOpenCLRender = inArgs.propGetInt(kOfxImageEffectPropOpenCLEnabled, false) != 0;
+      args.isEnabledCudaRender   = inArgs.propGetInt(kOfxImageEffectPropCudaEnabled, false) != 0;
+      args.pOpenCLCmdQ           = inArgs.propGetPointer(kOfxImageEffectPropOpenCLCommandQueue, false);
+#endif
+
 #ifdef OFX_SUPPORTS_OPENGLRENDER
       // Don't throw an exception if the following inArgs are not present.
       // OpenGL rendering appeared in OFX 1.3
@@ -3565,6 +3600,12 @@ namespace OFX {
 
       args.renderScale.x = args.renderScale.y = 1.;
       inArgs.propGetDoubleN(kOfxImageEffectPropRenderScale, &args.renderScale.x, 2);
+
+#ifdef OFX_EXTENSIONS_RESOLVE
+      args.isEnabledOpenCLRender = inArgs.propGetInt(kOfxImageEffectPropOpenCLEnabled, false) != 0;
+      args.isEnabledCudaRender   = inArgs.propGetInt(kOfxImageEffectPropCudaEnabled, false) != 0;
+      args.pOpenCLCmdQ           = inArgs.propGetPointer(kOfxImageEffectPropOpenCLCommandQueue, false);
+#endif
 
 #ifdef OFX_SUPPORTS_OPENGLRENDER
       // Don't throw an exception if the following inArgs are not present.
@@ -3827,15 +3868,14 @@ namespace OFX {
               std::vector<OfxRangeD>::iterator j;
               int n = 0;
 
-              try {
+              // The host may not have the property if the clip is not connected (Resolve).
+              // Just proceed to the next clip.
+              if (outArgs_.propExists(propName.c_str())) {
               // and set 'em
               for(j = clipRange.begin(); j < clipRange.end(); ++j) {
                 outArgs_.propSetDouble(propName.c_str(), j->min, n++);
                 outArgs_.propSetDouble(propName.c_str(), j->max, n++);
               }
-              } catch (Exception::PropertyUnknownToHost) {
-                // The host may not have the property if the clip is not connected (Resolve).
-                // Just proceed to the next clip.
               }
             }
           }

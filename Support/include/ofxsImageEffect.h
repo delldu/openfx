@@ -455,6 +455,9 @@ namespace OFX {
     bool supportsStringAnimation;
     bool supportsCustomInteract;
     bool supportsChoiceAnimation;
+#ifdef OFX_EXTENSIONS_RESOLVE
+    bool supportsStrChoiceAnimation;
+#endif
     bool supportsBooleanAnimation;
     bool supportsCustomAnimation;
     void* osHandle;
@@ -462,6 +465,10 @@ namespace OFX {
     bool supportsParametricAnimation;
     bool supportsRenderQualityDraft;
     NativeOriginEnum nativeOrigin;
+#ifdef OFX_EXTENSIONS_RESOLVE
+    bool supportsOpenCLRender;
+    bool supportsCudaRender;
+#endif
 #ifdef OFX_SUPPORTS_OPENGLRENDER
     bool supportsOpenGLRender;
 #endif
@@ -706,6 +713,14 @@ namespace OFX {
 
     /** @brief If the slave  param changes the clip preferences need to be re-evaluated */
     void addClipPreferencesSlaveParam(ParamDescriptor &p);
+
+#ifdef OFX_EXTENSIONS_RESOLVE
+    /** @brief Does the plugin support OpenCL Render, defaults to false */
+    void setSupportsOpenCLRender(bool v);
+
+    /** @brief Does the plugin support CUDA Render, defaults to false */
+    void setSupportsCudaRender(bool v);
+#endif
 
 #ifdef OFX_SUPPORTS_OPENGLRENDER
     /** @brief Does the plugin support OpenGL accelerated rendering (but is also capable of CPU rendering) ? */
@@ -1112,6 +1127,11 @@ namespace OFX {
     /** @brief get the RoD for this clip in the cannonical coordinate system */
     OfxRectD getRegionOfDefinition(double t);
 
+#ifdef OFX_EXTENSIONS_RESOLVE
+    /** @brief is the clip for thumbnail */
+    bool isForThumbnail(void) const;
+#endif
+
 #ifdef OFX_EXTENSIONS_NUKE
     
     /** @brief get the RoD for this clip in the cannonical coordinate system for the given view */
@@ -1231,6 +1251,11 @@ namespace OFX {
     OfxPointD renderScale;
     OfxRectI  renderWindow;
     FieldEnum fieldToRender;
+#ifdef OFX_EXTENSIONS_RESOLVE
+    bool      isEnabledOpenCLRender;
+    bool      isEnabledCudaRender;
+    void*     pOpenCLCmdQ;
+#endif
 #ifdef OFX_SUPPORTS_OPENGLRENDER
     bool      openGLEnabled;
 #ifdef OFX_EXTENSIONS_NATRON
@@ -1271,6 +1296,11 @@ namespace OFX {
     double    frameStep;
     bool      isInteractive;
     OfxPointD renderScale;
+#ifdef OFX_EXTENSIONS_RESOLVE
+    bool      isEnabledOpenCLRender;
+    bool      isEnabledCudaRender;
+    void*     pOpenCLCmdQ;
+#endif
 #ifdef OFX_SUPPORTS_OPENGLRENDER
     bool      openGLEnabled;
 #ifdef OFX_EXTENSIONS_NATRON
@@ -1289,6 +1319,11 @@ namespace OFX {
   struct EndSequenceRenderArguments {
     bool      isInteractive;
     OfxPointD renderScale;
+#ifdef OFX_EXTENSIONS_RESOLVE
+    bool      isEnabledOpenCLRender;
+    bool      isEnabledCudaRender;
+    void*     pOpenCLCmdQ;
+#endif
 #ifdef OFX_SUPPORTS_OPENGLRENDER
     bool      openGLEnabled;
 #ifdef OFX_EXTENSIONS_NATRON

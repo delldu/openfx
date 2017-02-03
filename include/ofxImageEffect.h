@@ -1153,6 +1153,16 @@ Any clip that is not optional will \em always be connected during a render actio
  */
 #define kOfxImageClipPropConnected "OfxImageClipPropConnected"
 
+#ifdef OFX_EXTENSIONS_RESOLVE
+/** @brief Says whether the clip is for thumbnail.
+
+   - Type - int X 1
+   - Property Set - clip instance (read only)
+   - Valid Values - This must be one of 0 or 1
+ */
+#define kOfxImageClipPropThumbnail "kOfxImageClipPropThumbnail"
+#endif
+
 /** @brief Indicates whether an effect will generate different images from frame to frame.
 
    - Type - int X 1

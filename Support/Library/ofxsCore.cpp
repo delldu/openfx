@@ -43,6 +43,7 @@ England
 #endif
 
 #include "ofxsMemory.h"
+#include "ofxsLog.h"
 
 namespace OFX {
   /** @brief Throws an @ref OFX::Exception depending on the status flag passed in */
@@ -62,12 +63,14 @@ namespace OFX {
     default :
 #    ifdef DEBUG
       std::cout << "Throwing suite exception! " << mapStatusToString(stat) << std::endl;
+      OFX::Log::print("\nThrew suite exception %s:", mapStatusToString(stat));
 #     if defined(__APPLE__) || defined(linux)
       void* callstack[128];
       int i, frames = backtrace(callstack, 128);
       char** strs = backtrace_symbols(callstack, frames);
       for (i = 0; i < frames; ++i) {
           std::cout << strs[i] << std::endl;
+          OFX::Log::print(strs[i]);
       }
       free(strs);
 #     endif

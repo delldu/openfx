@@ -157,6 +157,9 @@ namespace OFX {
     case eRGBAParam : return kOfxParamTypeRGBA ;
     case eBooleanParam : return kOfxParamTypeBoolean ;
     case eChoiceParam : return kOfxParamTypeChoice ;
+#ifdef OFX_EXTENSIONS_RESOLVE
+    case eStrChoiceParam : return kOfxParamTypeStrChoice;
+#endif
     case eCustomParam : return kOfxParamTypeCustom ;
     case eGroupParam : return kOfxParamTypeGroup ;
     case ePageParam : return kOfxParamTypePage ;
@@ -198,6 +201,10 @@ namespace OFX {
       return eBooleanParam ;
     else if(isEqual(kOfxParamTypeChoice,v))
       return eChoiceParam ;
+#ifdef OFX_EXTENSIONS_RESOLVE
+    else if (isEqual(kOfxParamTypeStrChoice, v))
+      return eStrChoiceParam;
+#endif
     else if(isEqual(kOfxParamTypeCustom ,v))
       return eCustomParam ;
     else if(isEqual(kOfxParamTypeGroup,v))
@@ -1158,6 +1165,50 @@ namespace OFX {
     _paramProps.propSetInt(kNatronOfxParamPropChoiceHostCanAddOptions, (int)can, 0, false);
   }
 #endif
+
+#ifdef OFX_EXTENSIONS_RESOLVE
+  ////////////////////////////////////////////////////////////////////////////////
+  // string choice param descriptor
+
+  /** @brief hidden constructor */
+  StrChoiceParamDescriptor::StrChoiceParamDescriptor(const std::string& p_Name, OfxPropertySetHandle p_Props)
+      : ValueParamDescriptor(p_Name, eStrChoiceParam, p_Props)
+  {
+  }
+
+  /** @brief set the default value */
+  void StrChoiceParamDescriptor::setDefault(const std::string& p_DefaultValue)
+  {
+      _paramProps.propSetString(kOfxParamPropDefault, p_DefaultValue);
+  }
+
+  /** @brief append an option */
+  void StrChoiceParamDescriptor::appendOption(const std::string& p_Enum, const std::string& p_Option)
+  {
+      const int numOptions = _paramProps.propGetDimension(kOfxParamPropChoiceOption);
+      assert(numOptions == _paramProps.propGetDimension(kOfxParamPropChoiceEnum));
+
+      _paramProps.propSetString(kOfxParamPropChoiceEnum, p_Enum, numOptions);
+      _paramProps.propSetString(kOfxParamPropChoiceOption, p_Option, numOptions);
+  }
+
+  /** @brief how many options do we have */
+  int StrChoiceParamDescriptor::getNOptions()
+  {
+      const int numOptions = _paramProps.propGetDimension(kOfxParamPropChoiceOption);
+      assert(numOptions == _paramProps.propGetDimension(kOfxParamPropChoiceEnum));
+
+      return numOptions;
+  }
+
+  /** @brief clear all the options so as to add some new ones in */
+  void StrChoiceParamDescriptor::resetOptions(void)
+  {
+      _paramProps.propReset(kOfxParamPropChoiceEnum);
+      _paramProps.propReset(kOfxParamPropChoiceOption);
+  }
+#endif
+
   ////////////////////////////////////////////////////////////////////////////////
   // string param descriptor
 
@@ -1563,6 +1614,16 @@ namespace OFX {
     defineParamDescriptor(name, eChoiceParam, param);
     return param;
   }
+
+#ifdef OFX_EXTENSIONS_RESOLVE
+  /** @brief Define a String Choice param */
+  StrChoiceParamDescriptor* ParamSetDescriptor::defineStrChoiceParam(const std::string& p_Name)
+  {
+      StrChoiceParamDescriptor* param = NULL;
+      defineParamDescriptor(p_Name, eStrChoiceParam, param);
+      return param;
+  }
+#endif
 
   /** @brief Define a group param */
   GroupParamDescriptor *ParamSetDescriptor::defineGroupParam(const std::string &name)
@@ -3433,6 +3494,84 @@ namespace OFX {
     }
 #endif
 
+#ifdef OFX_EXTENSIONS_RESOLVE
+  ////////////////////////////////////////////////////////////////////////////////
+  // Wraps up a string choice param */
+
+  /** @brief hidden constructor */
+  StrChoiceParam::StrChoiceParam(const ParamSet* p_ParamSet, const std::string& p_Name, OfxParamHandle p_Handle)
+      : StringParam(p_ParamSet, p_Name, p_Handle)
+  {
+      _paramType = eStrChoiceParam;
+  }
+
+  /** @brief how many options do we have */
+  int StrChoiceParam::getNOptions()
+  {
+      const int numOptions = _paramProps.propGetDimension(kOfxParamPropChoiceOption);
+      assert(numOptions == _paramProps.propGetDimension(kOfxParamPropChoiceEnum));
+
+      return numOptions;
+  }
+
+  /** @brief add another option */
+  void StrChoiceParam::appendOption(const std::string& p_Enum, const std::string& p_Option)
+  {
+      const int numOptions = _paramProps.propGetDimension(kOfxParamPropChoiceOption);
+      assert(numOptions == _paramProps.propGetDimension(kOfxParamPropChoiceEnum));
+
+      _paramProps.propSetString(kOfxParamPropChoiceEnum, p_Enum, numOptions);
+      _paramProps.propSetString(kOfxParamPropChoiceOption, p_Option, numOptions);
+  }
+
+  /** @brief set the string of a specific option */
+  void StrChoiceParam::setOption(const std::string& p_Index, const std::string& p_Option)
+  {
+      const int numOptions = _paramProps.propGetDimension(kOfxParamPropChoiceOption);
+      assert(numOptions == _paramProps.propGetDimension(kOfxParamPropChoiceEnum));
+
+      for (int i = 0; i < numOptions; ++i)
+      {
+          const std::string& enumStr = _paramProps.propGetString(kOfxParamPropChoiceEnum, i);
+          if (enumStr == p_Index)
+          {
+              _paramProps.propSetString(kOfxParamPropChoiceOption, p_Option, i);
+
+              return;
+          }
+      }
+
+      throwSuiteStatusException(kOfxStatErrBadIndex);
+  }
+
+  /** @brief get the option value */
+  void StrChoiceParam::getOption(const std::string& p_Index, std::string& p_Option)
+  {
+      const int numOptions = _paramProps.propGetDimension(kOfxParamPropChoiceOption);
+      assert(numOptions == _paramProps.propGetDimension(kOfxParamPropChoiceEnum));
+
+      for (int i = 0; i < numOptions; ++i)
+      {
+          const std::string& enumStr = _paramProps.propGetString(kOfxParamPropChoiceEnum, i);
+          if (enumStr == p_Index)
+          {
+              p_Option = _paramProps.propGetString(kOfxParamPropChoiceOption, i);
+
+              return;
+          }
+      }
+
+      throwSuiteStatusException(kOfxStatErrBadIndex);
+  }
+
+  /** @brief set to the default value */
+  void StrChoiceParam::resetOptions()
+  {
+      _paramProps.propReset(kOfxParamPropChoiceEnum);
+      _paramProps.propReset(kOfxParamPropChoiceOption);
+  }
+#endif
+
   ////////////////////////////////////////////////////////////////////////////////
   // Wraps up a custom param */
 
@@ -3976,6 +4115,14 @@ namespace OFX {
         fetchParam(name, t, ptr);
         return ptr;
       }
+#ifdef OFX_EXTENSIONS_RESOLVE
+    case eStrChoiceParam :
+      {
+        StrChoiceParam* ptr = 0;
+        fetchParam(name, t, ptr);
+        return ptr;
+      }
+#endif
     case eCustomParam : 
       {
         CustomParam* ptr = 0;
@@ -4123,6 +4270,16 @@ namespace OFX {
     fetchParam(name, eChoiceParam, param);
     return param;
   }
+
+#ifdef OFX_EXTENSIONS_RESOLVE
+  /** @brief Fetch a Choice param */
+  StrChoiceParam* ParamSet::fetchStrChoiceParam(const std::string& p_Name) const
+  {
+      StrChoiceParam* param = NULL;
+      fetchParam(p_Name, eStrChoiceParam, param);
+      return param;
+  }
+#endif
 
   /** @brief Fetch a group param */
   GroupParam *ParamSet::fetchGroupParam(const std::string &name) const

@@ -317,6 +317,9 @@ namespace OFX {
       PropertyDescription(kOfxParamHostPropSupportsStringAnimation,      OFX::eInt, 1, eDescFinished),
       PropertyDescription(kOfxParamHostPropSupportsCustomInteract,       OFX::eInt, 1, eDescFinished),
       PropertyDescription(kOfxParamHostPropSupportsChoiceAnimation,      OFX::eInt, 1, eDescFinished),
+#ifdef OFX_EXTENSIONS_RESOLVE
+      PropertyDescription(kOfxParamHostPropSupportsStrChoiceAnimation,   OFX::eInt, 1, eDescFinished),
+#endif
       PropertyDescription(kOfxParamHostPropSupportsBooleanAnimation,     OFX::eInt, 1, eDescFinished),
       PropertyDescription(kOfxParamHostPropSupportsCustomAnimation,      OFX::eInt, 1, eDescFinished),
       PropertyDescription(kOfxParamHostPropMaxParameters,                OFX::eInt, 1, eDescFinished),
@@ -832,6 +835,17 @@ namespace OFX {
       PropertyDescription(kOfxParamPropChoiceOption,         OFX::eString, -1, eDescFinished),
     };
 
+#ifdef OFX_EXTENSIONS_RESOLVE
+    /** @brief properties for a string choice param */
+    static PropertyDescription gStrChoiceParamProps[ ] =
+    {
+      PropertyDescription(kOfxParamPropDefault,              OFX::eString,  1, eDescFinished),
+      PropertyDescription(kOfxParamPropAnimates,             OFX::eInt,     1, eDescDefault, 0, eDescFinished),
+      PropertyDescription(kOfxParamPropChoiceEnum,           OFX::eString, -1, eDescFinished),
+      PropertyDescription(kOfxParamPropChoiceOption,         OFX::eString, -1, eDescFinished),
+    };
+#endif
+
     /** @brief properties for a 1D integer param */
     static PropertyDescription gInt1DParamProps[ ] =
     {
@@ -1046,6 +1060,16 @@ namespace OFX {
       mPropDescriptionArg(gValueHolderParamProps),
       mPropDescriptionArg(gChoiceParamProps),
       NULLPTR);
+
+#ifdef OFX_EXTENSIONS_RESOLVE
+    /** @brief Property set for string choice params */
+    static PropertySetDescription gStrChoiceParamPropSet("String Choice parameter",
+      mPropDescriptionArg(gBasicParamProps),
+      mPropDescriptionArg(gInteractOverideParamProps),
+      mPropDescriptionArg(gValueHolderParamProps),
+      mPropDescriptionArg(gStrChoiceParamProps),
+      NULLPTR);
+#endif
 
     /** @brief Property set for push button params */
     static PropertySetDescription gPushButtonParamPropSet("PushButton parameter",
@@ -1270,6 +1294,11 @@ namespace OFX {
       case eChoiceParam :
         gChoiceParamPropSet.validate(paramProps, checkDefaults);
         break;
+#ifdef OFX_EXTENSIONS_RESOLVE
+      case eStrChoiceParam :
+        gStrChoiceParamPropSet.validate(paramProps, checkDefaults);
+        break;
+#endif
       case eCustomParam :
         gCustomParamPropSet.validate(paramProps, checkDefaults);
         break;
@@ -1329,6 +1358,14 @@ namespace OFX {
           eDescDefault, int(getImageEffectHostDescription()->supportsChoiceAnimation),
           eDescFinished);
         gChoiceParamPropSet.addProperty(desc, true);
+
+#ifdef OFX_EXTENSIONS_RESOLVE
+        // do string choice params animate
+        desc = new PropertyDescription(kOfxParamPropAnimates, OFX::eInt, 1,
+          eDescDefault, int(getImageEffectHostDescription()->supportsStrChoiceAnimation),
+          eDescFinished);
+        gStrChoiceParamPropSet.addProperty(desc, true);
+#endif
 
         // do choice params animate      
         desc = new PropertyDescription(kOfxParamPropAnimates, OFX::eInt, 1,

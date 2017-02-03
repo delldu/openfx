@@ -212,7 +212,7 @@ namespace {
       gPropertySuite->propGetDouble(propSet_, kOfxImagePropPixelAspectRatio, 0, &pixelAspectRatio_);
 
       // how many components per pixel?
-      char *cstr;
+      const char *cstr;
       gPropertySuite->propGetString(propSet_, kOfxImageEffectPropComponents, 0, &cstr);
 
       if(strcmp(cstr, kOfxImageComponentRGBA) == 0) {
@@ -444,7 +444,7 @@ namespace {
                           OfxPropertySetHandle inArgs)
   {
     // get the context we are being described for
-    char *context;
+    const char *context;
     gPropertySuite->propGetString(inArgs, kOfxImageEffectPropContext, 0, &context);
 
     // what components do we support
@@ -609,7 +609,7 @@ namespace {
     gPropertySuite->propSetPointer(effectProps, kOfxPropInstanceData, 0, (void *) myData);
 
     // is this instance made for the general context?
-    char *context = 0;
+    const char *context = 0;
     gPropertySuite->propGetString(effectProps, kOfxImageEffectPropContext, 0,  &context);
     myData->isGeneralContext = context && (strcmp(context, kOfxImageEffectContextGeneral) == 0);
 

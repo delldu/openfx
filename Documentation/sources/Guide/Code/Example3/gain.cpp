@@ -524,7 +524,7 @@ namespace {
       }
 
       // figure out the data types
-      char *cstr;
+      const char *cstr;
       gPropertySuite->propGetString(outputImg, kOfxImageEffectPropComponents, 0, &cstr);
       std::string components = cstr;
 

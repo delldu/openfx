@@ -175,7 +175,7 @@ namespace {
     gDescribeInContextCalled = true;
 
     // get the context from the inArgs handle
-    char *context;
+    const char *context;
     gPropertySuite->propGetString(inArgs, kOfxImageEffectPropContext, 0, &context);
 
     ERROR_IF(strcmp(context, kOfxImageEffectContextFilter) != 0, "DescribeInContextAction called on unsupported contex %s", context);

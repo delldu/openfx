@@ -119,6 +119,17 @@
 		1E3E3D96179963B4005F2132 /* propTester.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1E3E3D95179963B4005F2132 /* propTester.cpp */; };
 		1E3E3D99179963E0005F2132 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E551F5A179950EC00A4135C /* OpenGL.framework */; };
 		1E3E3DAA1799646E005F2132 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E3E3DA91799646E005F2132 /* CoreFoundation.framework */; };
+		1EF6291D1E45FAD90079DC1E /* ofxsCore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1E3E3CB517995D5C005F2132 /* ofxsCore.cpp */; };
+		1EF6291E1E45FAD90079DC1E /* ofxsImageEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1E3E3CB617995D5C005F2132 /* ofxsImageEffect.cpp */; };
+		1EF6291F1E45FAD90079DC1E /* ofxsInteract.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1E3E3CB717995D5C005F2132 /* ofxsInteract.cpp */; };
+		1EF629201E45FAD90079DC1E /* ofxsLog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1E3E3CB817995D5C005F2132 /* ofxsLog.cpp */; };
+		1EF629211E45FAD90079DC1E /* ofxsMultiThread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1E3E3CB917995D5C005F2132 /* ofxsMultiThread.cpp */; };
+		1EF629221E45FAD90079DC1E /* ofxsParams.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1E3E3CBA17995D5C005F2132 /* ofxsParams.cpp */; };
+		1EF629231E45FAD90079DC1E /* ofxsProperty.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1E3E3CBB17995D5C005F2132 /* ofxsProperty.cpp */; };
+		1EF629241E45FAD90079DC1E /* ofxsPropertyValidation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1E3E3CBC17995D5C005F2132 /* ofxsPropertyValidation.cpp */; };
+		1EF6292F1E45FAFC0079DC1E /* OpenCL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1EF6292E1E45FAFC0079DC1E /* OpenCL.framework */; };
+		1EF629301E45FB1E0079DC1E /* MultiplyGPU.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1EF629181E45EE790079DC1E /* MultiplyGPU.cpp */; };
+		1EF629311E45FB230079DC1E /* MultiplyOpenCL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1EF629191E45EE790079DC1E /* MultiplyOpenCL.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -327,6 +338,14 @@
 		1EA6849218C51E42006EE43D /* fnOfxExtensions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fnOfxExtensions.h; sourceTree = "<group>"; };
 		1ECA10E818C7492E00D6E38C /* ofxDialog.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ofxDialog.h; path = ../../include/ofxDialog.h; sourceTree = "<group>"; };
 		1ECA10E918C7492E00D6E38C /* ofxSonyVegas.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ofxSonyVegas.h; path = ../../include/ofxSonyVegas.h; sourceTree = "<group>"; };
+		1EF629151E45ED0C0079DC1E /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
+		1EF629171E45EE790079DC1E /* MultiplyCUDA.cu */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = MultiplyCUDA.cu; sourceTree = "<group>"; };
+		1EF629181E45EE790079DC1E /* MultiplyGPU.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MultiplyGPU.cpp; sourceTree = "<group>"; };
+		1EF629191E45EE790079DC1E /* MultiplyOpenCL.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MultiplyOpenCL.cpp; sourceTree = "<group>"; };
+		1EF6292C1E45FAD90079DC1E /* MultiplyGPU.ofx.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MultiplyGPU.ofx.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
+		1EF6292E1E45FAFC0079DC1E /* OpenCL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenCL.framework; path = System/Library/Frameworks/OpenCL.framework; sourceTree = SDKROOT; };
+		1EF629331E45FDAA0079DC1E /* MultiplyGPU.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MultiplyGPU.h; sourceTree = "<group>"; };
+		1EF629341E46121F0079DC1E /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -402,6 +421,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				1E3E3DAA1799646E005F2132 /* CoreFoundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1EF629261E45FAD90079DC1E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1EF6292F1E45FAFC0079DC1E /* OpenCL.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -593,6 +620,7 @@
 				1E08328F19A1E3A200A819A5 /* Generator */,
 				1E08329519A1E3E400A819A5 /* Invert */,
 				1E08329619A1E3EA00A819A5 /* MultiBundle */,
+				1EF629111E45EC4A0079DC1E /* MultiplyGPU */,
 				1E0832A719A1E4B200A819A5 /* Retimer */,
 				1E08329719A1E3F700A819A5 /* Tester */,
 				1E08329819A1E3FF00A819A5 /* Transition */,
@@ -673,6 +701,7 @@
 				1E3E3D7B179962A4005F2132 /* transition.ofx.bundle */,
 				1E3E3D9317996363005F2132 /* PropTester.ofx.bundle */,
 				1E3E3D9E1799644B005F2132 /* pluginLoader */,
+				1EF6292C1E45FAD90079DC1E /* MultiplyGPU.ofx.bundle */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -691,6 +720,7 @@
 		1E551EDA17994E8100A4135C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1EF6292E1E45FAFC0079DC1E /* OpenCL.framework */,
 				1E551F5A179950EC00A4135C /* OpenGL.framework */,
 			);
 			name = Frameworks;
@@ -705,6 +735,19 @@
 			);
 			name = nuke;
 			path = ../../include/nuke;
+			sourceTree = "<group>";
+		};
+		1EF629111E45EC4A0079DC1E /* MultiplyGPU */ = {
+			isa = PBXGroup;
+			children = (
+				1EF629341E46121F0079DC1E /* Info.plist */,
+				1EF629181E45EE790079DC1E /* MultiplyGPU.cpp */,
+				1EF629331E45FDAA0079DC1E /* MultiplyGPU.h */,
+				1EF629171E45EE790079DC1E /* MultiplyCUDA.cu */,
+				1EF629191E45EE790079DC1E /* MultiplyOpenCL.cpp */,
+				1EF629151E45ED0C0079DC1E /* Makefile */,
+			);
+			path = MultiplyGPU;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -880,6 +923,23 @@
 			productReference = 1E3E3D9E1799644B005F2132 /* pluginLoader */;
 			productType = "com.apple.product-type.tool";
 		};
+		1EF6291B1E45FAD90079DC1E /* MultiplyGPU.ofx */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1EF629291E45FAD90079DC1E /* Build configuration list for PBXNativeTarget "MultiplyGPU.ofx" */;
+			buildPhases = (
+				1EF6291C1E45FAD90079DC1E /* Sources */,
+				1EF629261E45FAD90079DC1E /* Frameworks */,
+				1EF629281E45FAD90079DC1E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MultiplyGPU.ofx;
+			productName = basic.ofx;
+			productReference = 1EF6292C1E45FAD90079DC1E /* MultiplyGPU.ofx.bundle */;
+			productType = "com.apple.product-type.bundle";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -912,6 +972,7 @@
 				1E3E3D6A179962A4005F2132 /* transition.ofx */,
 				1E3E3D8317996363005F2132 /* PropTester.ofx */,
 				1E3E3D9D1799644B005F2132 /* pluginLoader */,
+				1EF6291B1E45FAD90079DC1E /* MultiplyGPU.ofx */,
 			);
 		};
 /* End PBXProject section */
@@ -974,6 +1035,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		1E3E3D8F17996363005F2132 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1EF629281E45FAD90079DC1E /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1134,6 +1202,23 @@
 			buildActionMask = 2147483647;
 			files = (
 				1E08327B19A1E2C100A819A5 /* pluginLoader.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1EF6291C1E45FAD90079DC1E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1EF6291D1E45FAD90079DC1E /* ofxsCore.cpp in Sources */,
+				1EF6291E1E45FAD90079DC1E /* ofxsImageEffect.cpp in Sources */,
+				1EF6291F1E45FAD90079DC1E /* ofxsInteract.cpp in Sources */,
+				1EF629201E45FAD90079DC1E /* ofxsLog.cpp in Sources */,
+				1EF629211E45FAD90079DC1E /* ofxsMultiThread.cpp in Sources */,
+				1EF629221E45FAD90079DC1E /* ofxsParams.cpp in Sources */,
+				1EF629231E45FAD90079DC1E /* ofxsProperty.cpp in Sources */,
+				1EF629241E45FAD90079DC1E /* ofxsPropertyValidation.cpp in Sources */,
+				1EF629301E45FB1E0079DC1E /* MultiplyGPU.cpp in Sources */,
+				1EF629311E45FB230079DC1E /* MultiplyOpenCL.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1573,6 +1658,44 @@
 			};
 			name = Release;
 		};
+		1EF6292A1E45FAD90079DC1E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				EXPORTED_SYMBOLS_FILE = "$(OFX_PATH)/Support/include/osxSymbols";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					HAVE_OPENCL,
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(OFX_PATH)/include",
+					include,
+				);
+				INFOPLIST_FILE = Plugins/MultiplyGPU/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/OFX/Plugins/$(PROJECT_NAME)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = bundle;
+			};
+			name = Debug;
+		};
+		1EF6292B1E45FAD90079DC1E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				EXPORTED_SYMBOLS_FILE = "$(OFX_PATH)/Support/include/osxSymbols";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					HAVE_OPENCL,
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(OFX_PATH)/include",
+					include,
+				);
+				INFOPLIST_FILE = Plugins/MultiplyGPU/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/OFX/Plugins/$(PROJECT_NAME)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = bundle;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1680,6 +1803,15 @@
 			buildConfigurations = (
 				1E551F481799509100A4135C /* Debug */,
 				1E551F491799509100A4135C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1EF629291E45FAD90079DC1E /* Build configuration list for PBXNativeTarget "MultiplyGPU.ofx" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1EF6292A1E45FAD90079DC1E /* Debug */,
+				1EF6292B1E45FAD90079DC1E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

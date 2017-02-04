@@ -71,6 +71,9 @@ V=0
 AM_V_CXX = $(am__v_CXX_$(V))
 am__v_CXX_0 = @echo "  CXX     " $@;
 am__v_CXX_1 = 
+AM_V_NVCC = $(am__v_NVCC_$(V))
+am__v_NVCC_0 = @echo "  NVCC    " $@;
+am__v_NVCC_1 =
 AM_V_CXXLD = $(am__v_CXXLD_$(V))
 am__v_CXXLD_0 = @echo "  CXXLD   " $@;
 am__v_CXXLD_1 = 
@@ -78,6 +81,10 @@ am__v_CXXLD_1 =
 $(OBJECTPATH)/%.o : %.cpp
 	@mkdir -p $(OBJECTPATH)
 	$(AM_V_CXX)$(CXX) -c $(CXXFLAGS) $< -o $@
+
+$(OBJECTPATH)/%.o : %.cu
+	@mkdir -p $(OBJECTPATH)
+	$(AM_V_NVCC)$(NVCC) -c $(CUFLAGS) $< -o $@
 
 SUPPORTOBJECTS ?= \
 ofxsMultiThread.o \

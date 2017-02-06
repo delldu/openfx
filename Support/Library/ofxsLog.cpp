@@ -86,7 +86,7 @@ namespace OFX {
       if(!gLogFP) {
         char buffer[2048];
         char *answer = getcwd(buffer, sizeof(buffer));
-        std::cout << "INFO: OFX Log is \"" << answer << '/' << gLogFileName << '\"' << std::endl;
+        std::cout << "INFO: OFX Log is \"" << gLogFileName << "\", working directory is \"" << answer << '\"' << std::endl;
         gLogFP = fopen(gLogFileName.c_str(), "w");
         return gLogFP != 0;
       }

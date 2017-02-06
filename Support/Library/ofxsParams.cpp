@@ -3349,13 +3349,13 @@ namespace OFX {
   }
 
 #ifdef OFX_EXTENSIONS_NATRON
-  void ChoiceParam::setOptionEnum(int item, const std::string &name)
+  void ChoiceParam::setEnum(int item, const std::string &name)
   {
     _paramProps.propSetString(kOfxParamPropChoiceEnum, name, item, false);
   }
 
   /** @brief get the option enum */
-  void ChoiceParam::getOptionEnum(int ix, std::string &name)
+  void ChoiceParam::getEnum(int ix, std::string &name)
   {
     name = _paramProps.propGetString(kOfxParamPropChoiceEnum, ix, false);
   }

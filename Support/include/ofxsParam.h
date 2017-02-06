@@ -1932,10 +1932,10 @@ namespace OFX {
 #ifdef OFX_EXTENSIONS_NATRON
 
         /** @brief set an option enum */
-        void setOptionEnum(int item, const std::string &name);
+        void setEnum(int item, const std::string &name);
 
         /** @brief get the option enum */
-        void getOptionEnum(int ix, std::string &name);
+        void getEnum(int ix, std::string &name);
 #endif
       
         /** @brief get all options at once. Optionally, the label of the options can be retrieved at the same time*/

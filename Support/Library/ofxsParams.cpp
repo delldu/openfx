@@ -1059,7 +1059,7 @@ namespace OFX {
   }
 
   /** @brief set the default value */
-  void ChoiceParamDescriptor::appendOption(const std::string &optionLabel, const std::string& optionHint, const std::string& optionName)
+  void ChoiceParamDescriptor::appendOption(const std::string &optionLabel, const std::string& optionHint, const std::string& optionEnum)
   {
     int nCurrentValues = _paramProps.propGetDimension(kOfxParamPropChoiceOption);
     if(!optionHint.empty()) {
@@ -1086,8 +1086,8 @@ namespace OFX {
       }
     }
 #ifdef OFX_EXTENSIONS_NATRON
-    if (_paramProps.propExists(kOfxParamPropChoiceOptionName)) {
-      _paramProps.propSetString(kOfxParamPropChoiceOptionName, optionName.empty() ? optionLabel : optionName, nCurrentValues);
+    if (_paramProps.propExists(kOfxParamPropChoiceEnum)) {
+      _paramProps.propSetString(kOfxParamPropChoiceEnum, optionEnum.empty() ? optionLabel : optionEnum, nCurrentValues);
     }
 #endif
     _paramProps.propSetString(kOfxParamPropChoiceOption, optionLabel, nCurrentValues);
@@ -1106,14 +1106,14 @@ namespace OFX {
 
   /** @brief set to the default value */
   void ChoiceParamDescriptor::resetOptions(const std::vector<std::string>& newEntries,
-                                           const std::vector<std::string>& newEntriesHints,
-                                           const std::vector<std::string>& newEntriesNames)
+                                           const std::vector<std::string>& newEntriesHint,
+                                           const std::vector<std::string>& newEntriesEnum)
   {
-    assert(newEntries.size() == newEntriesHints.size() || newEntriesHints.empty());
-    assert(newEntries.size() == newEntriesNames.size() || newEntriesNames.empty());
+    assert(newEntries.size() == newEntriesHint.size() || newEntriesHint.empty());
+    assert(newEntries.size() == newEntriesEnum.size() || newEntriesEnum.empty());
 
-    if ((newEntries.size() != newEntriesHints.size() && !newEntriesHints.empty()) ||
-        (newEntries.size() != newEntriesNames.size() && !newEntriesNames.empty())) {
+    if ((newEntries.size() != newEntriesHint.size() && !newEntriesHint.empty()) ||
+        (newEntries.size() != newEntriesEnum.size() && !newEntriesEnum.empty())) {
       // Invalid parameters or empty newEntries, reset the property
 #ifdef OFX_EXTENSIONS_TUTTLE
       if (_paramProps.propGetDimension(kOfxParamPropChoiceLabelOption, false) > 0) {
@@ -1121,8 +1121,8 @@ namespace OFX {
       }
 #endif
 #ifdef OFX_EXTENSIONS_NATRON
-      if (_paramProps.propGetDimension(kOfxParamPropChoiceOptionName, false) > 0) {
-        _paramProps.propReset(kOfxParamPropChoiceOptionName);
+      if (_paramProps.propGetDimension(kOfxParamPropChoiceEnum, false) > 0) {
+        _paramProps.propReset(kOfxParamPropChoiceEnum);
       }
 #endif
       _paramProps.propReset(kOfxParamPropChoiceOption);
@@ -1130,19 +1130,19 @@ namespace OFX {
       // Set the new entries
 #ifdef OFX_EXTENSIONS_TUTTLE
       if (_paramProps.propExists(kOfxParamPropChoiceLabelOption)) {
-        if (!newEntriesHints.empty()) {
-          _paramProps.propSetStringN(kOfxParamPropChoiceLabelOption, newEntriesHints, false);
+        if (!newEntriesHint.empty()) {
+          _paramProps.propSetStringN(kOfxParamPropChoiceLabelOption, newEntriesHint, false);
         } else {
           _paramProps.propReset(kOfxParamPropChoiceLabelOption);
         }
       }
 #endif
 #ifdef OFX_EXTENSIONS_NATRON
-      if (_paramProps.propExists(kOfxParamPropChoiceOptionName)) {
-        if (!newEntriesHints.empty()) {
-          _paramProps.propSetStringN(kOfxParamPropChoiceOptionName, newEntriesNames, false);
+      if (_paramProps.propExists(kOfxParamPropChoiceEnum)) {
+        if (!newEntriesHint.empty()) {
+          _paramProps.propSetStringN(kOfxParamPropChoiceEnum, newEntriesEnum, false);
         } else {
-          _paramProps.propReset(kOfxParamPropChoiceOptionName);
+          _paramProps.propReset(kOfxParamPropChoiceEnum);
         }
       }
 #endif
@@ -3349,15 +3349,15 @@ namespace OFX {
   }
 
 #ifdef OFX_EXTENSIONS_NATRON
-  void ChoiceParam::setOptionName(int item, const std::string &name)
+  void ChoiceParam::setOptionEnum(int item, const std::string &name)
   {
-    _paramProps.propSetString(kOfxParamPropChoiceOptionName, name, item, false);
+    _paramProps.propSetString(kOfxParamPropChoiceEnum, name, item, false);
   }
 
-  /** @brief get the option name */
-  void ChoiceParam::getOptionName(int ix, std::string &name)
+  /** @brief get the option enum */
+  void ChoiceParam::getOptionEnum(int ix, std::string &name)
   {
-    name = _paramProps.propGetString(kOfxParamPropChoiceOptionName, ix, false);
+    name = _paramProps.propGetString(kOfxParamPropChoiceEnum, ix, false);
   }
 #endif
 
@@ -3371,13 +3371,13 @@ namespace OFX {
 #endif
 #ifdef OFX_EXTENSIONS_NATRON
     if (optionsNames) {
-      _paramProps.propGetStringN(kOfxParamPropChoiceOptionName, optionsNames, false);
+      _paramProps.propGetStringN(kOfxParamPropChoiceEnum, optionsNames, false);
     }
 #endif
   }
 
   /** @brief add another option */
-  void ChoiceParam::appendOption(const std::string &optionLabel, const std::string& optionHint, const std::string& optionName)
+  void ChoiceParam::appendOption(const std::string &optionLabel, const std::string& optionHint, const std::string& optionEnum)
   {
     int nCurrentValues = _paramProps.propGetDimension(kOfxParamPropChoiceOption);
     if(!optionHint.empty()) {
@@ -3405,8 +3405,8 @@ namespace OFX {
       }
     }
 #ifdef OFX_EXTENSIONS_NATRON
-    if (_paramProps.propExists(kOfxParamPropChoiceOptionName)) {
-      _paramProps.propSetString(kOfxParamPropChoiceOptionName, optionName.empty() ? optionLabel : optionName, nCurrentValues);
+    if (_paramProps.propExists(kOfxParamPropChoiceEnum)) {
+      _paramProps.propSetString(kOfxParamPropChoiceEnum, optionEnum.empty() ? optionLabel : optionEnum, nCurrentValues);
     }
 #endif
     _paramProps.propSetString(kOfxParamPropChoiceOption, optionLabel, nCurrentValues);
@@ -3420,14 +3420,14 @@ namespace OFX {
 
   /** @brief set to the default value */
   void ChoiceParam::resetOptions(const std::vector<std::string>& newEntries,
-                                 const std::vector<std::string>& newEntriesHints,
-                                 const std::vector<std::string>& newEntriesNames)
+                                 const std::vector<std::string>& newEntriesHint,
+                                 const std::vector<std::string>& newEntriesEnum)
   {
-    assert(newEntries.size() == newEntriesHints.size() || newEntriesHints.empty());
-    assert(newEntries.size() == newEntriesNames.size() || newEntriesNames.empty());
+    assert(newEntries.size() == newEntriesHint.size() || newEntriesHint.empty());
+    assert(newEntries.size() == newEntriesEnum.size() || newEntriesEnum.empty());
 
-    if ((newEntries.size() != newEntriesHints.size() && !newEntriesHints.empty()) ||
-        (newEntries.size() != newEntriesNames.size() && !newEntriesNames.empty())) {
+    if ((newEntries.size() != newEntriesHint.size() && !newEntriesHint.empty()) ||
+        (newEntries.size() != newEntriesEnum.size() && !newEntriesEnum.empty())) {
       // Invalid parameters or empty newEntries, reset the property
 #ifdef OFX_EXTENSIONS_TUTTLE
       if (_paramProps.propGetDimension(kOfxParamPropChoiceLabelOption, false) > 0) {
@@ -3435,8 +3435,8 @@ namespace OFX {
       }
 #endif
 #ifdef OFX_EXTENSIONS_NATRON
-      if (_paramProps.propGetDimension(kOfxParamPropChoiceOptionName, false) > 0) {
-        _paramProps.propReset(kOfxParamPropChoiceOptionName);
+      if (_paramProps.propGetDimension(kOfxParamPropChoiceEnum, false) > 0) {
+        _paramProps.propReset(kOfxParamPropChoiceEnum);
       }
 #endif
       _paramProps.propReset(kOfxParamPropChoiceOption);
@@ -3444,19 +3444,19 @@ namespace OFX {
       // Set the new entries
 #ifdef OFX_EXTENSIONS_TUTTLE
       if (_paramProps.propExists(kOfxParamPropChoiceLabelOption)) {
-        if (!newEntriesHints.empty()) {
-          _paramProps.propSetStringN(kOfxParamPropChoiceLabelOption, newEntriesHints, false);
+        if (!newEntriesHint.empty()) {
+          _paramProps.propSetStringN(kOfxParamPropChoiceLabelOption, newEntriesHint, false);
         } else {
           _paramProps.propReset(kOfxParamPropChoiceLabelOption);
         }
       }
 #endif
 #ifdef OFX_EXTENSIONS_NATRON
-      if (_paramProps.propExists(kOfxParamPropChoiceOptionName)) {
-        if (!newEntriesHints.empty()) {
-          _paramProps.propSetStringN(kOfxParamPropChoiceOptionName, newEntriesNames, false);
+      if (_paramProps.propExists(kOfxParamPropChoiceEnum)) {
+        if (!newEntriesHint.empty()) {
+          _paramProps.propSetStringN(kOfxParamPropChoiceEnum, newEntriesEnum, false);
         } else {
-          _paramProps.propReset(kOfxParamPropChoiceOptionName);
+          _paramProps.propReset(kOfxParamPropChoiceEnum);
         }
       }
 #endif
@@ -3483,7 +3483,7 @@ namespace OFX {
     }
 
     /** @brief Indicate whether the host can add a new choice on its own (probably via a GUI specific to this parameter).
-     The plugin may then retrieve the option name whenever a choice value is out of its initial range.
+     The plugin may then retrieve the option enum whenever a choice value is out of its initial range.
 
      This property primarily targets image plane choices, where the host should be able to create a new plane and add it to the menu.
      */

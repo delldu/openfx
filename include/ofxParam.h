@@ -645,14 +645,18 @@ This property contains the set of options that will be presented to a user from 
 */
 #define kOfxParamPropChoiceOption "OfxParamPropChoiceOption"
 
-#ifdef OFX_EXTENSIONS_RESOLVE
+#if defined(OFX_EXTENSIONS_RESOLVE) || defined(OFX_EXTENSIONS_NATRON)
 /** @brief Set a enumeration string in a choice parameter.
 
     - Type - UTF8 C string X N
     - Property Set - plugin parameter descriptor (read/write) and instance (read/write),
     - Default - the property is empty with no options set.
 
-This property contains the set of enumeration strings corresponding to the options that will be presented to a user from a choice parameter. See @ref ParametersChoice for more details. 
+This property contains the set of enumeration strings corresponding to the options that will be presented to a user from a choice parameter. This property can be set on a Choice parameter (Natron only) or on a StrChoice parameter (Resolve only). See @ref ParametersChoice for more details. 
+
+On a Choice parameter (Natron), this property can be used to have a unique identifier for each option, so that the order of the options or the option labels (kOfxParamPropChoiceOption) may be changed without affecting the actual meaning of each option. The plugin should fetch the enum corresponding to the (integer) value of the parameter.
+
+An StrChoice parameter (Resolve) is a string parameter that can only take one value among the strings in the kOfxParamPropChoiceEnum properties. The user is presented with the options in the kOfxParamPropChoiceOption property, and the corresponding enum value is returned.
 */
 #define kOfxParamPropChoiceEnum "OfxParamPropChoiceEnum"
 #endif

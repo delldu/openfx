@@ -118,7 +118,7 @@
       </para>
     </section>
     
-    <section id='kOfxParamTypeChoice'><title>Choice Parameters</title>
+    <section id='ParametersChoice'><title>Choice Parameters</title>
       
       <para>
 	This is typed by <code>kOfxParamTypeChoice</code>.

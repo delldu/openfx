@@ -326,7 +326,7 @@ namespace OFX {
           { kOfxParamPropChoiceLabelOption, Property::eString,  0,    false,    "" },
 #endif
 #ifdef OFX_EXTENSIONS_NATRON
-          { kOfxParamPropChoiceOptionName,              Property::eString, 0, false,    "" },
+          { kOfxParamPropChoiceEnum,                    Property::eString, 0, false,    "" },
           { kNatronOfxParamPropChoiceCascading,         Property::eInt, 1,    false,    "0"},
           { kNatronOfxParamPropChoiceHostCanAddOptions, Property::eInt, 1,    false,    "0"},
 #endif

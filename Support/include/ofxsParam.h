@@ -799,7 +799,7 @@ namespace OFX {
         void setCascading(const bool v);
 
         /** @brief Indicate whether the host can add a new choice on its own (probably via a GUI specific to this parameter).
-         The plugin may then retrieve the option name whenever a choice value is out of its initial range.
+         The plugin may then retrieve the option enum whenever a choice value is out of its initial range.
 
          This property primarily targets image plane choices, where the host should be able to create a new plane and add it to the menu.
          */
@@ -1931,11 +1931,11 @@ namespace OFX {
 
 #ifdef OFX_EXTENSIONS_NATRON
 
-        /** @brief set an option name */
-        void setOptionName(int item, const std::string &name);
+        /** @brief set an option enum */
+        void setOptionEnum(int item, const std::string &name);
 
-        /** @brief get the option name */
-        void getOptionName(int ix, std::string &name);
+        /** @brief get the option enum */
+        void getOptionEnum(int ix, std::string &name);
 #endif
       
         /** @brief get all options at once. Optionally, the label of the options can be retrieved at the same time*/
@@ -1943,8 +1943,8 @@ namespace OFX {
 
         /** @brief clear all the options so as to add some new ones in */
         void resetOptions(const std::vector<std::string>& newEntries = std::vector<std::string>(),
-                          const std::vector<std::string>& newEntriesHints = std::vector<std::string>(),
-                          const std::vector<std::string>& newEntriesNames = std::vector<std::string>());
+                          const std::vector<std::string>& newEntriesHint = std::vector<std::string>(),
+                          const std::vector<std::string>& newEntriesEnum = std::vector<std::string>());
 
 #ifdef OFX_EXTENSIONS_NATRON
         /** @brief whether the menu should be cascading, and each option contains a slash-separated path to the item, defaults to false. */

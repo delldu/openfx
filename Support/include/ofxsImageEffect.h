@@ -1116,6 +1116,9 @@ namespace OFX {
     /// get the underlying property set on this clip
     PropertySet &getPropertySet() {return _clipProps;}
 
+    /** @brief returns the clip name */
+    const std::string &getName(void) const {return _clipName;}
+
 #ifdef OFX_EXTENSIONS_NATRON
     /** @brief set the label property in a clip */
     void setLabel(const std::string &label);
@@ -1321,11 +1324,15 @@ namespace OFX {
     /** @brief so one can be made */
     friend class ImageEffect;
 
+  public :
     /// get the underlying property set on this camera
     const PropertySet &getPropertySet() const {return _cameraProps;}
 
     /// get the underlying property set on this camera
     PropertySet &getPropertySet() {return _cameraProps;}
+
+    /** @brief returns the camera name */
+    const std::string &getName(void) const {return _cameraName;}
 
 #ifdef OFX_EXTENSIONS_NATRON
     /** @brief set the label property in a camera */
@@ -1368,7 +1375,7 @@ namespace OFX {
      \arg baseReturnAddress - base address to store the evaluated result
      \arg returnSize   - the number of doubles at the baseReturnAddress
      */
-    void getParameter(const char* paramName, double time, int view, double* baseReturnAddress, int returnSize);
+    void getParameter(const char* paramName, double time, int view, double* baseReturnAddress, int returnSize) const;
   };
 #endif
 

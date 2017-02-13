@@ -2287,7 +2287,7 @@ namespace OFX {
   }
 
   /** @brief Get an arbitrary camera parameter for a given time and view */
-  void Camera::getParameter(const char* paramName, double time, int view, double* baseReturnAddress, int returnSize)
+  void Camera::getParameter(const char* paramName, double time, int view, double* baseReturnAddress, int returnSize) const
   {
     OfxStatus stat = OFX::Private::gCameraSuite->cameraGetParameter(_cameraHandle, paramName, time, view, baseReturnAddress, returnSize);
     throwSuiteStatusException(stat);

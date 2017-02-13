@@ -286,6 +286,9 @@ namespace OFX {
         /** @brief set the param hint */
         void setHint(const std::string &hint);
 
+        /** @brief set the param label and hint */
+        void setLabelAndHint(const std::string &label, const std::string &hint);
+
         /** @brief set the script name, default is the name it was created with */
         void setScriptName(const std::string &hint);
 

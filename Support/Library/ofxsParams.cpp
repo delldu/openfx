@@ -294,6 +294,14 @@ namespace OFX {
     _paramProps.propSetString(kOfxParamPropHint, v, false);
   }
 
+  /** @brief set the param label and hint */
+  void 
+    ParamDescriptor::setLabelAndHint(const std::string &label, const std::string &hint)
+  {
+    setLabel(label);
+    setHint(hint);
+  }
+
   /** @brief set the script name, default is the name it was defined with */
   void
     ParamDescriptor::setScriptName(const std::string &v)

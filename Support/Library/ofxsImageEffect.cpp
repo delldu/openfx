@@ -652,6 +652,14 @@ namespace OFX {
   {
     _clipProps.propSetString(kOfxParamPropHint, v, false);
   }
+
+  /** @brief set the clip label and hint */
+  void 
+    ClipDescriptor::setLabelAndHint(const std::string &label, const std::string &hint)
+  {
+    setLabel(label);
+    setHint(hint);
+  }
 #endif
 
   /** @brief set how fielded images are extracted from the clip defaults to eFieldExtractDoubled */
@@ -1624,6 +1632,14 @@ namespace OFX {
     Clip::setHint(const std::string &v)
   {
     _clipProps.propSetString(kOfxParamPropHint, v, false);
+  }
+
+  /** @brief set the clip label and hint */
+  void 
+    Clip::setLabelAndHint(const std::string &label, const std::string &hint)
+  {
+    setLabel(label);
+    setHint(hint);
   }
 
   void

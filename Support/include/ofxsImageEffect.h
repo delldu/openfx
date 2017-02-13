@@ -565,6 +565,9 @@ namespace OFX {
     /** @brief set the clip hint */
     void setHint(const std::string &hint);
 
+    /** @brief set the clip label and hint */
+    void setLabelAndHint(const std::string &label, const std::string &hint);
+
     /** @brief say whether this clip may contain images with a distortion function attached */
     void setCanDistort(bool v);
 #endif
@@ -1059,6 +1062,9 @@ namespace OFX {
 
     /** @brief set the clip hint */
     void setHint(const std::string &hint);
+
+    /** @brief set the clip hint */
+    void setLabelAndHint(const std::string &label, const std::string &hint);
 
     /* @brief Get the clip format in pixel coordinates */
     void getFormat(OfxRectI &format) const;

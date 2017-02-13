@@ -91,7 +91,7 @@ namespace OFX {
 
 #ifdef OFX_EXTENSIONS_NUKE
     /** @brief Pointer to the camera parameter suite (nuke ofx extension) */
-    extern NukeOfxCameraSuiteV1* gCameraParameterSuite;
+    extern NukeOfxCameraSuiteV1* gCameraSuite;
 #endif
 #ifdef OFX_EXTENSIONS_VEGAS
     /** @brief Pointer to the optional progress suite */
@@ -272,6 +272,17 @@ namespace OFX {
     /** @brief validates a clip instance */
     void
       validateClipInstanceProperties(PropertySet props);
+
+#ifdef OFX_EXTENSIONS_NUKE
+
+    /** @brief validates a camera descriptor */
+    void
+      validateCameraDescriptorProperties(PropertySet props);
+
+    /** @brief validates a camera instance */
+    void
+      validateCameraInstanceProperties(PropertySet props);
+#endif
 
     /** @brief validates an image or texture instance */
     void

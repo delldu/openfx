@@ -479,6 +479,50 @@ namespace OFX {
     static PropertySetDescription gClipInstancePropSet("Clip Instance", gClipInstanceProps, sizeof(gClipInstanceProps)/sizeof(PropertyDescription),
       NULLPTR);
 
+#ifdef OFX_EXTENSIONS_NUKE
+    /** @brief A list of properties to validate a camera */
+    static PropertyDescription gCameraDescriptorProps[ ] =
+    {
+      // string props with checkable defaults
+      PropertyDescription(kOfxPropType,                           OFX::eString, 1, eDescDefault, "NukeCamera", eDescFinished),
+
+      // string props with no checkable defaults
+      PropertyDescription(kOfxPropName,                           OFX::eString, 1, eDescFinished),
+      PropertyDescription(kOfxPropLabel,                          OFX::eString, 1,  eDescFinished),
+      PropertyDescription(kOfxPropShortLabel,                     OFX::eString, 1,  eDescFinished),
+      PropertyDescription(kOfxPropLongLabel,                      OFX::eString, 1, eDescFinished),
+
+      // int props with checkable defaults
+      PropertyDescription(kOfxImageClipPropOptional,              OFX::eInt, 1, eDescDefault, 0, eDescFinished),
+    };
+
+    /** @brief the property set for a clip descriptor */
+    static PropertySetDescription gCameraDescriptorPropSet("Camera Descriptor",
+                                                         gCameraDescriptorProps, sizeof(gCameraDescriptorProps)/sizeof(PropertyDescription),
+                                                         NULLPTR);
+
+    /** @brief A list of properties to validate a camera instance */
+    static PropertyDescription gCameraInstanceProps[ ] =
+    {
+      // string props with checkable defaults
+      PropertyDescription(kOfxPropType,                           OFX::eString, 1, eDescDefault, "NukeCamera", eDescFinished),
+
+      // string props with no checkable defaults
+      PropertyDescription(kOfxPropName,                           OFX::eString, 1, eDescFinished),
+      PropertyDescription(kOfxPropLabel,                          OFX::eString, 1,  eDescFinished),
+      PropertyDescription(kOfxPropShortLabel,                     OFX::eString, 1,  eDescFinished),
+      PropertyDescription(kOfxPropLongLabel,                      OFX::eString, 1, eDescFinished),
+
+      // int props with checkable defaults
+      PropertyDescription(kOfxImageClipPropOptional,              OFX::eInt, 1, eDescDefault, 0, eDescFinished),
+      PropertyDescription(kOfxImageClipPropConnected,             OFX::eInt, 1, eDescFinished),
+    };
+
+    /** @brief the property set for a clip instance */
+    static PropertySetDescription gCameraInstancePropSet("Camera Instance", gCameraInstanceProps, sizeof(gCameraInstanceProps)/sizeof(PropertyDescription),
+                                                       NULLPTR);
+#endif
+
     /** @brief List of properties to validate an image or texture instance */
     static PropertyDescription gImageBaseInstanceProps[ ] =
     {
@@ -947,19 +991,6 @@ namespace OFX {
       PropertyDescription(kOfxParamPropParametricRange,              OFX::eDouble,  2, eDescDefault, 0.0, 1.0, eDescFinished),
     };
 
-#ifdef OFX_EXTENSIONS_NUKE
-    /** @brief properties for a camera param */
-    static PropertyDescription gCameraParamProps[ ] =
-    {
-      PropertyDescription(kOfxPropType,                           OFX::eString, 1, eDescDefault, "NukeCamera", eDescFinished),
-      PropertyDescription(kOfxPropName,                           OFX::eString, 1, eDescFinished),
-      PropertyDescription(kOfxPropLabel,                          OFX::eString, 1,  eDescFinished),
-      PropertyDescription(kOfxPropShortLabel,                     OFX::eString, 1,  eDescFinished),
-      PropertyDescription(kOfxPropLongLabel,                      OFX::eString, 1, eDescFinished),
-      PropertyDescription(kOfxImageClipPropOptional,              OFX::eInt, 1, eDescDefault, 0, eDescFinished),
-    };
-#endif
-
     /** @brief Property set for 1D ints */
     static PropertySetDescription gInt1DParamPropSet("1D Integer parameter",
       mPropDescriptionArg(gBasicParamProps),
@@ -1095,12 +1126,6 @@ namespace OFX {
       mPropDescriptionArg(gValueHolderParamProps),
       mPropDescriptionArg(gParametricParamProps),
       NULLPTR);
-
-#ifdef OFX_EXTENSIONS_NUKE
-    static PropertySetDescription gCameraParamPropSet("Camera Parameter",
-      mPropDescriptionArg(gCameraParamProps),
-      NULLPTR);
-#endif
 #endif
     /** @brief Validates the host structure and property handle */
     void
@@ -1158,6 +1183,30 @@ namespace OFX {
       gClipInstancePropSet.validate(props);
 #endif
     }
+
+#ifdef OFX_EXTENSIONS_NUKE
+    /** @brief validates a camera descriptor */
+    void
+      validateCameraDescriptorProperties(PropertySet props)
+    {
+#ifdef kOfxsDisableValidation
+      (void)props;
+#else
+      gCameraDescriptorPropSet.validate(props);
+#endif
+    }
+
+    /** @brief validates a camera instance */
+    void
+      validateCameraInstanceProperties(PropertySet props)
+    {
+#ifdef kOfxsDisableValidation
+      (void)props;
+#else
+      gCameraInstancePropSet.validate(props);
+#endif
+    }
+#endif
 
     /** @brief validates an image or texture instance */
     void
@@ -1314,11 +1363,6 @@ namespace OFX {
       case eParametricParam:
         gParametricParamPropSet.validate(paramProps, checkDefaults);
         break;
-#ifdef OFX_EXTENSIONS_NUKE
-      case eCameraParam:
-        gCameraParamPropSet.validate(paramProps, checkDefaults);
-        break;
-#endif
       case eDummyParam:
       //default:
             break;

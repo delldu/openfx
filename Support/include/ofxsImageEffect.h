@@ -473,7 +473,7 @@ namespace OFX {
     bool supportsOpenGLRender;
 #endif
 #ifdef OFX_EXTENSIONS_NUKE
-    bool supportsCameraParameter;
+    bool supportsCamera;
     bool canTransform;
     bool isMultiPlanar;
 #endif
@@ -551,6 +551,8 @@ namespace OFX {
 
     PropertySet &getPropertySet() {return _clipProps;}
 
+    /** @brief returns the clip name */
+    const std::string &getName(void) const {return _clipName;}
 
     /** @brief set the label properties */
     void setLabel(const std::string &label);
@@ -600,6 +602,57 @@ namespace OFX {
 #endif
   };
 
+#ifdef OFX_EXTENSIONS_NUKE
+  ////////////////////////////////////////////////////////////////////////////////
+  /** @brief Wraps up a camera */
+  class CameraDescriptor {
+  protected :
+    mDeclareProtectedAssignAndCC(CameraDescriptor);
+    CameraDescriptor(void) {assert(false);}
+
+  protected :
+    /** @brief name of the camera */
+    std::string _cameraName;
+
+    /** @brief properties for this camera */
+    PropertySet _cameraProps;
+
+  protected :
+    /** @brief hidden constructor */
+    CameraDescriptor(const std::string &name, OfxPropertySetHandle props);
+
+    friend class ImageEffectDescriptor;
+
+  public :
+    const PropertySet &getPropertySet() const {return _cameraProps;}
+
+    PropertySet &getPropertySet() {return _cameraProps;}
+
+    /** @brief returns the camera name */
+    const std::string &getName(void) const {return _cameraName;}
+
+    /** @brief set the label properties */
+    void setLabel(const std::string &label);
+
+    /** @brief set the label properties */
+    void setLabels(const std::string &label, const std::string &shortLabel, const std::string &longLabel);
+
+#ifdef OFX_EXTENSIONS_NATRON
+    /** @brief set the secretness of the camera, defaults to false */
+    void setIsSecret(bool v);
+
+    /** @brief set the camera hint */
+    void setHint(const std::string &hint);
+
+    /** @brief set the camera label and hint */
+    void setLabelAndHint(const std::string &label, const std::string &hint);
+#endif
+
+    /** @brief say whether if the camera is optional, defaults to false */
+    void setOptional(bool v);
+  };
+#endif
+
   ////////////////////////////////////////////////////////////////////////////////
   /** @brief Wraps up an effect descriptor, used in the describe actions */
   class ImageEffectDescriptor : public ParamSetDescriptor
@@ -612,11 +665,16 @@ namespace OFX {
     /** @brief The effect handle */
     OfxImageEffectHandle _effectHandle;
 
-    /** @brief properties for this clip */
+    /** @brief properties for this effect */
     PropertySet _effectProps;
 
-    /** @brief Set of all previously defined parameters, defined on demand */
+    /** @brief Set of all previously defined clips, defined on demand */
     std::map<std::string, ClipDescriptor *> _definedClips;
+
+#ifdef OFX_EXTENSIONS_NUKE
+    /** @brief Set of all previously defined clips, defined on demand */
+    std::map<std::string, CameraDescriptor *> _definedCameras;
+#endif
 
     /** @brief Set of strings for clip preferences action (stored in here so the array persists and can be used in a property name)*/
     std::map<std::string, std::string> _clipComponentsPropNames;
@@ -802,6 +860,14 @@ namespace OFX {
     The returned clip \em must not be deleted by the client code. This is all managed by the ImageEffectDescriptor itself.
     */
     ClipDescriptor *defineClip(const std::string &name);
+
+#ifdef OFX_EXTENSIONS_NUKE
+    /** @brief Create a camera, only callable from describe in context
+
+    The returned camera \em must not be deleted by the client code. This is all managed by the ImageEffectDescriptor itself.
+    */
+    CameraDescriptor *defineCamera(const std::string &name);
+#endif
 
     /** @brief Access to the string maps needed for runtime properties. Because the char array must persist after the call,
     we need these to be stored in the descriptor, which is only deleted on unload.*/
@@ -1230,6 +1296,82 @@ namespace OFX {
 #endif
   };
 
+#ifdef OFX_EXTENSIONS_NUKE
+  ////////////////////////////////////////////////////////////////////////////////
+  /** @brief Wraps up a camera instance */
+  class Camera {
+  protected :
+    mDeclareProtectedAssignAndCC(Camera);
+
+    /** @brief name of the camera */
+    std::string _cameraName;
+
+    /** @brief properties for this camera */
+    PropertySet _cameraProps;
+
+    /** @brief handle for this camera */
+    NukeOfxCameraHandle _cameraHandle;
+
+    /** @brief effect instance that owns this camera */
+    ImageEffect *_effect;
+
+    /** @brief hidden constructor */
+    Camera(ImageEffect *effect, const std::string &name, NukeOfxCameraHandle handle, OfxPropertySetHandle props);
+
+    /** @brief so one can be made */
+    friend class ImageEffect;
+
+    /// get the underlying property set on this camera
+    const PropertySet &getPropertySet() const {return _cameraProps;}
+
+    /// get the underlying property set on this camera
+    PropertySet &getPropertySet() {return _cameraProps;}
+
+#ifdef OFX_EXTENSIONS_NATRON
+    /** @brief set the label property in a camera */
+    void setLabel(const std::string &label);
+
+    /** @brief set the label properties in a camera */
+    void setLabels(const std::string &label, const std::string &shortLabel, const std::string &longLabel);
+
+    /** @brief set the secretness of the camera, defaults to false */
+    void setIsSecret(bool v);
+
+    /** @brief set the camera hint */
+    void setHint(const std::string &hint);
+
+    /** @brief set the camera hint */
+    void setLabelAndHint(const std::string &label, const std::string &hint);
+#endif
+
+    /// get the OFX camera handle
+    NukeOfxCameraHandle getHandle() {return _cameraHandle;}
+
+    /** @brief get the name */
+    const std::string &name(void) const {return _cameraName;}
+
+    /** @brief fetch the label */
+    void getLabel(std::string &label) const;
+
+    /** @brief fetch the labels */
+    void getLabels(std::string &label, std::string &shortLabel, std::string &longLabel) const;
+
+    /** @brief is the camera connected */
+    bool isConnected(void) const;
+
+    /** @brief Get an arbitrary camera parameter for a given time and view
+
+     \arg camera       - the handle of the camera, as obtained from cameraGetHandle
+     \arg time         - the time to evaluate the parameter for
+     \arg view         - the view to evaluate the parameter for
+     \arg paramName    - parameter name to look up (matches name of knob in Nuke, see defines at top of \ref ofxCamera.h)
+     \arg baseReturnAddress - base address to store the evaluated result
+     \arg returnSize   - the number of doubles at the baseReturnAddress
+     */
+    void getParameter(const char* paramName, double time, int view, double* baseReturnAddress, int returnSize);
+  };
+#endif
+
   ////////////////////////////////////////////////////////////////////////////////
   /** @brief Class that skins image memory allocation */
   class ImageMemory {
@@ -1640,8 +1782,13 @@ namespace OFX {
     /** @brief the context of the effect */
     ContextEnum _context;
 
-    /** @brief Set of all previously defined parameters, defined on demand */
+    /** @brief Set of all previously fetched clips, defined on demand */
     std::map<std::string, Clip *> _fetchedClips;
+
+#ifdef OFX_EXTENSIONS_NUKE
+    /** @brief Set of all previously fetched cameras, defined on demand */
+    std::map<std::string, Camera *> _fetchedCameras;
+#endif
 
     /** @brief the overlay interacts that are open on this image effect */
     std::list<OverlayInteract *> _overlayInteracts;
@@ -1748,11 +1895,11 @@ namespace OFX {
     Clip *fetchClip(const std::string &name);
 
 #ifdef OFX_EXTENSIONS_NUKE
-    /** @brief Fetch the named camera param from this instance
+    /** @brief Fetch the named camera from this instance
 
     The returned camera param \em must not be deleted by the client code. This is all managed by the ImageEffect itself.
     */
-    CameraParam* fetchCameraParam(const std::string& name) const;
+    Camera* fetchCamera(const std::string& name);
 #endif
 
     /** @brief does the host want us to abort rendering? */

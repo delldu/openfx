@@ -3929,28 +3929,6 @@ namespace OFX {
     throwSuiteStatusException(stat);
   }
 
-#ifdef OFX_EXTENSIONS_NUKE
-  ////////////////////////////////////////////////////////////////////////////////
-  // Wraps up a camera param
-
-  /** @brief hidden constructor */
-  CameraParam::CameraParam(/*OfxImageEffectHandle imageEffectHandle, */const ParamSet* paramSet, const std::string &name, NukeOfxCameraHandle handle)
-      : Param(paramSet, name, eCameraParam, (OfxParamHandle)handle)
-      //, _imageEffectHandle(imageEffectHandle)
-  {
-    // fetch all parameters
-    // NukeOfxCameraHandle *camera;
-    // OfxPropertySetHandle *propertySet;
-    // OfxStatus stat = OFX::Private::gCameraParameterSuite->cameraGetHandle(_paramHandle, name.c_str(), camera, propertySet);
-    // throwSuiteStatusException(stat);
-  }
-
-  Param* CameraParam::getParameter(const std::string &/*name*/)
-  {
-    return this;
-  }
-#endif
-
   ////////////////////////////////////////////////////////////////////////////////
   //  for a set of parameters
   /** @brief hidden ctor */
@@ -4008,18 +3986,6 @@ namespace OFX {
       throw OFX::Exception::TypeRequest(msg.c_str());
     }
   }
-
-#ifdef OFX_EXTENSIONS_NUKE
-  /** @brief calls the raw OFX routine to fetch a camera param */
-  void ParamSet::fetchRawCameraParam(OfxImageEffectHandle pluginHandle, const std::string& name, NukeOfxCameraHandle& handle) const
-  {
-    OfxPropertySetHandle propHandle;
-
-    OfxStatus stat = OFX::Private::gCameraParameterSuite->cameraGetHandle(pluginHandle, name.c_str(), &handle, &propHandle);
-
-    throwSuiteStatusException( stat );
-  }
-#endif
 
   ParamTypeEnum ParamSet::getParamType(const std::string& name) const
   {
@@ -4161,16 +4127,6 @@ namespace OFX {
         fetchParam(name, t, ptr);
         return ptr;
       }
-#ifdef OFX_EXTENSIONS_NUKE
-    case eCameraParam:
-      {
-        // You can't fetch a camera parameter from here...
-        throwSuiteStatusException(kOfxStatErrFatal);
-        //CameraParam* ptr = 0;
-        //fetchParam(name, t, ptr);
-        //return ptr;
-      }
-#endif
     default:
       assert(false);
     }

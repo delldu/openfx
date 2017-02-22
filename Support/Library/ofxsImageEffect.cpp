@@ -1343,13 +1343,10 @@ namespace OFX {
   /** @brief If the slave param changes the clip preferences need to be re-evaluated */
   void ImageEffectDescriptor::addClipPreferencesSlaveParam(ParamDescriptor &p)
   {
+    // ClipPreferencesSlaveParam cannot be animated
+    p.getPropertySet().propSetInt(kOfxParamPropAnimates, false);
     int n = _effectProps.propGetDimension(kOfxImageEffectPropClipPreferencesSlaveParam);
     validateXMLString(p.getName(), false);
-# ifdef DEBUG
-    if (p.getPropertySet().propGetInt(kOfxParamPropAnimates)) {
-      std::cout << "Warning: parameter " << p.getName() << " is a clip preferences slave param but is animated\n";
-    }
-# endif
     _effectProps.propSetString(kOfxImageEffectPropClipPreferencesSlaveParam, p.getName(), n);
   }
 

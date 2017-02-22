@@ -1,8 +1,8 @@
   <chapter id="ImageEffectClipPreferences"><title>Image Effect Clip Preferences</title>
     <para>
       The <link linkend="kOfxImageEffectActionGetClipPreferences"><code>kOfxImageEffectActionGetClipPreferences</code></link> 
-      action is passed to an effect to allow a plugin to specify how it wishes to deal with it's input clips and to set
-      properties in it's output clip. This is especially important when there are multiple inputs of which my have differing properties, eg; pixel depth.
+      action is passed to an effect to allow a plugin to specify how it wishes to deal with its input clips and to set
+      properties in its output clip. This is especially important when there are multiple inputs of which may have differing properties, eg; pixel depth.
     </para>
     <para>
       More specifically, there are six properties that can be set during the clip preferences action, some on the input clip, some on the output clip, some on both. These are...

@@ -1340,7 +1340,7 @@ namespace OFX {
   }
 #endif
 
-  /** @brief If the slave param changes the clip preferences need to be re-evaluated */
+  /** @brief If the slave param changes, the clip preferences need to be re-evaluated. Also disables param animation. */
   void ImageEffectDescriptor::addClipPreferencesSlaveParam(ParamDescriptor &p)
   {
     // ClipPreferencesSlaveParam cannot be animated

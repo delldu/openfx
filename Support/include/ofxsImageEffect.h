@@ -1978,7 +1978,20 @@ namespace OFX {
 
     /** @brief get the clip preferences */
     virtual void getClipPreferences(ClipPreferencesSetter &clipPreferences);
-      
+
+  protected:
+
+    /** @brief To be used in the implementatino of getClipPreferences to retrieve the default values of the properties on the output clip.
+     On some hosts, properties results may be cached. getClipPreferences is the action used to compute properties on the source clip and the output clip,
+     however if in the implementation of getClipPreferences the code attempts to read one of those properties on the output clip this resolves in undefined
+     behavior in the spec. 
+     To ensure that a plug-in may get the default properties before getClipPreferences is called, you may use the functions below
+     */
+    PixelComponentEnum getDefaultOutputClipComponents();
+    BitDepthEnum getDefaultBitdepth();
+
+  public:
+
     /** @brief the effect is about to be actively edited by a user, called when the first user interface is opened on an instance */
     virtual void beginEdit(void);
 

@@ -2703,6 +2703,199 @@ namespace OFX {
     // fa niente
   }
 
+  static bool isChromaticComponent(const std::string &str)
+  {
+    if(str == kOfxImageComponentRGBA)
+      return true;
+    if(str == kOfxImageComponentRGB)
+      return true;
+    if(str == kOfxImageComponentAlpha)
+      return true;
+    return false;
+  }
+
+  static const std::string &findMostChromaticComponents(const std::string &a, const std::string &b)
+  {
+    if(a == kOfxImageComponentNone)
+      return b;
+    if(a == kOfxImageComponentRGBA)
+      return a;
+    if(b == kOfxImageComponentRGBA)
+      return b;
+    if(a == kOfxImageComponentRGB)
+      return a;
+    if(b == kOfxImageComponentRGB)
+      return b;
+    return a;
+  }
+
+  static bool isSupportedComp(const PropertySet& props, const std::string& p)
+  {
+    int nDims = props.propGetDimension(kOfxImageEffectPropSupportedComponents);
+    for (int i = 0; i < nDims; ++i) {
+      if (props.propGetString(kOfxImageEffectPropSupportedComponents, i) == p) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  static const std::string& findSupportedComp(const PropertySet& props, const std::string &s)
+  {
+    static const std::string none(kOfxImageComponentNone);
+    static const std::string rgba(kOfxImageComponentRGBA);
+    static const std::string rgb(kOfxImageComponentRGB);
+    static const std::string alpha(kOfxImageComponentAlpha);
+#ifdef OFX_EXTENSIONS_NATRON
+    static const std::string xy(kNatronOfxImageComponentXY);
+#endif
+    /// is it there
+    if(isSupportedComp(props, s))
+      return s;
+
+#ifdef OFX_EXTENSIONS_NATRON
+    if (s == xy) {
+      if (isSupportedComp(props, rgb)) {
+        return rgb;
+      } else if (isSupportedComp(props, rgba)) {
+        return rgba;
+      } else if (isSupportedComp(props, alpha)) {
+        return alpha;
+      }
+    }
+#endif
+
+    /// were we fed some custom non chromatic component by getUnmappedComponents? Return it.
+    /// we should never be here mind, so a bit weird
+    if(!isChromaticComponent(s))
+      return s;
+
+    /// Means we have RGBA or Alpha being passed in and the clip
+    /// only supports the other one, so return that
+    if(s == rgba) {
+      if(isSupportedComp(props, rgb))
+        return rgb;
+      if(isSupportedComp(props, alpha))
+        return alpha;
+    } else if(s == alpha) {
+      if(isSupportedComp(props, rgba))
+        return rgba;
+      if(isSupportedComp(props, rgb))
+        return rgb;
+    }
+
+    /// wierd, must be some custom bit , if only one, choose that, otherwise no idea
+    /// how to map, you need to derive to do so.
+    return none;
+  }
+
+  static std::string FindDeepestBitDepth(const std::string &s1, const std::string &s2)
+  {
+    if(s1 == kOfxBitDepthNone) {
+      return s2;
+    }
+    else if(s1 == kOfxBitDepthByte) {
+      if(s2 == kOfxBitDepthShort || s2 == kOfxBitDepthFloat)
+        return s2;
+      return s1;
+    }
+    else if(s1 == kOfxBitDepthShort) {
+      if(s2 == kOfxBitDepthFloat)
+        return s2;
+      return s1;
+    }
+    else if(s1 == kOfxBitDepthHalf) {
+      if(s2 == kOfxBitDepthFloat)
+        return s2;
+      return s1;
+    }
+    else if(s1 == kOfxBitDepthFloat) {
+      return s1;
+    }
+    else {
+      return s2; // oooh this might be bad dad.
+    }
+  }
+
+  PixelComponentEnum ImageEffect::getDefaultOutputClipComponents()
+  {
+    bool hasSetComps = false;
+    std::string mostComponents  = kOfxImageComponentNone;
+
+    Clip* outputClip = 0;
+    for (std::map<std::string, Clip *>::const_iterator it = _fetchedClips.begin(); it != _fetchedClips.end(); ++it) {
+      Clip *clip = it->second;
+
+      std::string rawComp  = it->second->getUnmappedPixelComponentsProperty();
+      rawComp = findSupportedComp(clip->getPropertySet(), rawComp); // turn that into a comp the plugin expects on that clip
+
+      if(clip->getName() == kOfxImageEffectOutputClipName) {
+        outputClip = clip;
+      } else {
+        bool connected = clip->isConnected();
+
+
+        if(isChromaticComponent(rawComp)) {
+          if(connected) {
+            //Update deepest bitdepth and most components only if the infos are relevant, i.e: only if the clip is connected
+            hasSetComps = true;
+            mostComponents  = findMostChromaticComponents(mostComponents, rawComp);
+          }
+        }
+      }
+    }
+    if (!outputClip) {
+      return mapStrToPixelComponentEnum(mostComponents);
+    }
+    if (!hasSetComps) {
+      mostComponents = kOfxImageComponentRGBA;
+    }
+
+    // "Optional input clips can always have their component types remapped"
+    // http://openfx.sourceforge.net/Documentation/1.3/ofxProgrammingReference.html#id482755
+    std::string comp = findSupportedComp(outputClip->getPropertySet(), mostComponents);
+    return mapStrToPixelComponentEnum(comp);
+  } // getDefaultOutputClipComponents
+
+  BitDepthEnum ImageEffect::getDefaultBitdepth()
+  {
+    bool hasSetDepth = false;
+    std::string deepestBitDepth = kOfxBitDepthNone;
+
+    Clip* outputClip = 0;
+    for (std::map<std::string, Clip *>::const_iterator it = _fetchedClips.begin(); it != _fetchedClips.end(); ++it) {
+      Clip *clip = it->second;
+      if(clip->getName() == kOfxImageEffectOutputClipName) {
+        outputClip = clip;
+      } else {
+        bool connected = clip->isConnected();
+        if(connected) {
+          //Update deepest bitdepth and most components only if the infos are relevant, i.e: only if the clip is connected
+          hasSetDepth = true;
+          std::string rawDepth = clip->getPropertySet().propGetString(kOfxImageClipPropUnmappedPixelDepth, 0);
+          deepestBitDepth = FindDeepestBitDepth(deepestBitDepth, rawDepth);
+        }
+
+      }
+    }
+    if (!outputClip) {
+      return mapStrToBitDepthEnum(deepestBitDepth);
+    }
+    if (!hasSetDepth) {
+      deepestBitDepth = kOfxBitDepthFloat;
+    }
+
+    std::string rawComp  = outputClip->getUnmappedPixelComponentsProperty();
+    std::string depth;
+    if(isChromaticComponent(rawComp)) {
+      depth = deepestBitDepth;
+    } else {
+      std::string rawDepth = outputClip->getPropertySet().propGetString(kOfxImageClipPropUnmappedPixelDepth, 0);
+      depth = rawDepth;
+    }
+    return mapStrToBitDepthEnum(depth);
+  }
+
   /** @brief the effect is about to be actively edited by a user, called when the first user interface is opened on an instance */
   void ImageEffect::beginEdit(void)
   {

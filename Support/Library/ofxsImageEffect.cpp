@@ -40,6 +40,7 @@ England
 #include <algorithm> // for find, min, max
 #include <cstring> // for strlen
 #include <sstream> // stringstream
+#include <set>
 #ifdef DEBUG
 #include <iostream>
 #endif
@@ -2729,18 +2730,31 @@ namespace OFX {
     return a;
   }
 
-  static bool isSupportedComp(const PropertySet& props, const std::string& p)
+  static void getSupportedComp(const PropertySet& props, std::set<std::string>* supportedComps)
   {
     int nDims = props.propGetDimension(kOfxImageEffectPropSupportedComponents);
     for (int i = 0; i < nDims; ++i) {
-      if (props.propGetString(kOfxImageEffectPropSupportedComponents, i) == p) {
-        return true;
-      }
+      supportedComps->insert(props.propGetString(kOfxImageEffectPropSupportedComponents, i));
     }
-    return false;
   }
 
-  static const std::string& findSupportedComp(const PropertySet& props, const std::string &s)
+  static bool isSupportedComp(const std::set<std::string>& supportedComps, const std::string& p) {
+    return supportedComps.find(p) != supportedComps.end();
+  }
+
+  static void getSupportedDepth(const PropertySet& props, std::set<std::string>* supportedDepth)
+  {
+    int nDims = props.propGetDimension(kOfxImageEffectPropSupportedPixelDepths);
+    for (int i = 0; i < nDims; ++i) {
+      supportedDepth->insert(props.propGetString(kOfxImageEffectPropSupportedPixelDepths, i));
+    }
+  }
+
+  static bool isSupportedDepth(const std::set<std::string>& supportedDepth, const std::string& p) {
+    return supportedDepth.find(p) != supportedDepth.end();
+  }
+
+  static const std::string& findSupportedComp(const  std::set<std::string>& supportedComps, const std::string &s)
   {
     static const std::string none(kOfxImageComponentNone);
     static const std::string rgba(kOfxImageComponentRGBA);
@@ -2750,16 +2764,16 @@ namespace OFX {
     static const std::string xy(kNatronOfxImageComponentXY);
 #endif
     /// is it there
-    if(isSupportedComp(props, s))
+    if(isSupportedComp(supportedComps, s))
       return s;
 
 #ifdef OFX_EXTENSIONS_NATRON
     if (s == xy) {
-      if (isSupportedComp(props, rgb)) {
+      if (isSupportedComp(supportedComps, rgb)) {
         return rgb;
-      } else if (isSupportedComp(props, rgba)) {
+      } else if (isSupportedComp(supportedComps, rgba)) {
         return rgba;
-      } else if (isSupportedComp(props, alpha)) {
+      } else if (isSupportedComp(supportedComps, alpha)) {
         return alpha;
       }
     }
@@ -2773,14 +2787,14 @@ namespace OFX {
     /// Means we have RGBA or Alpha being passed in and the clip
     /// only supports the other one, so return that
     if(s == rgba) {
-      if(isSupportedComp(props, rgb))
+      if(isSupportedComp(supportedComps, rgb))
         return rgb;
-      if(isSupportedComp(props, alpha))
+      if(isSupportedComp(supportedComps, alpha))
         return alpha;
     } else if(s == alpha) {
-      if(isSupportedComp(props, rgba))
+      if(isSupportedComp(supportedComps, rgba))
         return rgba;
-      if(isSupportedComp(props, rgb))
+      if(isSupportedComp(supportedComps, rgb))
         return rgb;
     }
 
@@ -2817,6 +2831,53 @@ namespace OFX {
     }
   }
 
+  static const std::string& findSupportedDepth(const std::set<std::string>& supportedDepth, const std::string &depth)
+  {
+    static const std::string none(kOfxBitDepthNone);
+    static const std::string bytes(kOfxBitDepthByte);
+    static const std::string shorts(kOfxBitDepthShort);
+    static const std::string halfs(kOfxBitDepthHalf);
+    static const std::string floats(kOfxBitDepthFloat);
+
+    if(depth == none)
+      return none;
+
+    if(isSupportedDepth(supportedDepth, depth))
+      return depth;
+
+    if(depth == floats) {
+      if(isSupportedDepth(supportedDepth, shorts))
+        return shorts;
+      if(isSupportedDepth(supportedDepth, bytes))
+        return bytes;
+    }
+
+    if(depth == halfs) {
+      if(isSupportedDepth(supportedDepth, floats))
+        return floats;
+      if(isSupportedDepth(supportedDepth, shorts))
+        return shorts;
+      if(isSupportedDepth(supportedDepth, bytes))
+        return bytes;
+    }
+
+    if(depth == shorts) {
+      if(isSupportedDepth(supportedDepth, floats))
+        return floats;
+      if(isSupportedDepth(supportedDepth, bytes))
+        return bytes;
+    }
+
+    if(depth == bytes) {
+      if(isSupportedDepth(supportedDepth, shorts))
+        return shorts;
+      if(isSupportedDepth(supportedDepth, floats))
+        return floats;
+    }
+
+    return none;
+  }
+
   PixelComponentEnum ImageEffect::getDefaultOutputClipComponents()
   {
     bool hasSetComps = false;
@@ -2826,17 +2887,18 @@ namespace OFX {
     for (std::map<std::string, Clip *>::const_iterator it = _fetchedClips.begin(); it != _fetchedClips.end(); ++it) {
       Clip *clip = it->second;
 
-      std::string rawComp  = it->second->getUnmappedPixelComponentsProperty();
-      rawComp = findSupportedComp(clip->getPropertySet(), rawComp); // turn that into a comp the plugin expects on that clip
-
       if(clip->getName() == kOfxImageEffectOutputClipName) {
         outputClip = clip;
       } else {
         bool connected = clip->isConnected();
 
+        if(connected) {
+          std::string rawComp  = it->second->getUnmappedPixelComponentsProperty();
+          std::set<std::string> supportedComps;
+          getSupportedComp(clip->getPropertySet(), &supportedComps);
+          rawComp = findSupportedComp(supportedComps, rawComp); // turn that into a comp the plugin expects on that clip
 
-        if(isChromaticComponent(rawComp)) {
-          if(connected) {
+          if(isChromaticComponent(rawComp)) {
             //Update deepest bitdepth and most components only if the infos are relevant, i.e: only if the clip is connected
             hasSetComps = true;
             mostComponents  = findMostChromaticComponents(mostComponents, rawComp);
@@ -2853,7 +2915,9 @@ namespace OFX {
 
     // "Optional input clips can always have their component types remapped"
     // http://openfx.sourceforge.net/Documentation/1.3/ofxProgrammingReference.html#id482755
-    std::string comp = findSupportedComp(outputClip->getPropertySet(), mostComponents);
+    std::set<std::string> supportedComps;
+    getSupportedComp(outputClip->getPropertySet(), &supportedComps);
+    std::string comp = findSupportedComp(supportedComps, mostComponents);
     return mapStrToPixelComponentEnum(comp);
   } // getDefaultOutputClipComponents
 
@@ -2873,6 +2937,10 @@ namespace OFX {
           //Update deepest bitdepth and most components only if the infos are relevant, i.e: only if the clip is connected
           hasSetDepth = true;
           std::string rawDepth = clip->getPropertySet().propGetString(kOfxImageClipPropUnmappedPixelDepth, 0);
+
+          std::set<std::string> supportedDepth;
+          getSupportedComp(clip->getPropertySet(), &supportedDepth);
+          rawDepth = findSupportedDepth(supportedDepth, rawDepth);
           deepestBitDepth = FindDeepestBitDepth(deepestBitDepth, rawDepth);
         }
 
@@ -2885,15 +2953,10 @@ namespace OFX {
       deepestBitDepth = kOfxBitDepthFloat;
     }
 
-    std::string rawComp  = outputClip->getUnmappedPixelComponentsProperty();
-    std::string depth;
-    if(isChromaticComponent(rawComp)) {
-      depth = deepestBitDepth;
-    } else {
-      std::string rawDepth = outputClip->getPropertySet().propGetString(kOfxImageClipPropUnmappedPixelDepth, 0);
-      depth = rawDepth;
-    }
-    return mapStrToBitDepthEnum(depth);
+    std::set<std::string> supportedDepth;
+    getSupportedComp(outputClip->getPropertySet(), &supportedDepth);
+    deepestBitDepth = findSupportedDepth(supportedDepth, deepestBitDepth);
+    return mapStrToBitDepthEnum(deepestBitDepth);
   }
 
   /** @brief the effect is about to be actively edited by a user, called when the first user interface is opened on an instance */

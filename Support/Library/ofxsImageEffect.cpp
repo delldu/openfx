@@ -3388,7 +3388,7 @@ namespace OFX {
   
   bool ClipComponentsSetter::setOutProperties()
   {
-      for (std::map<std::string,std::vector<std::string> >::iterator it = _clipComponents.begin(); it!=_clipComponents.end(); ++it) {
+      for (std::map<std::string,std::vector<std::string> >::iterator it = _clipPlanes.begin(); it!=_clipPlanes.end(); ++it) {
           const std::string& propName = extractValueForName(_clipPlanesPropNames, it->first);
           for (std::size_t i = 0; i < it->second.size(); ++i) {
               _outArgs.propSetString(propName.c_str(), it->second[i], (int)i, true);
@@ -3396,49 +3396,11 @@ namespace OFX {
       }
       return _doneSomething;
   }
- 
-  void ClipComponentsSetter::addClipComponents(Clip& clip, PixelComponentEnum comps)
-  {
-      _doneSomething = true;
-      std::string compName;
-      switch(comps)
-      {
-        case ePixelComponentNone :
-            compName = kOfxImageComponentNone;
-            break;
-        case ePixelComponentRGBA :
-            compName = kOfxImageComponentRGBA;
-            break;
-        case ePixelComponentRGB :
-            compName = kOfxImageComponentRGB;
-            break;
-        case ePixelComponentAlpha :
-            compName = kOfxImageComponentAlpha;
-            break;
-#ifdef OFX_EXTENSIONS_NUKE
-        case ePixelComponentMotionVectors :
-            compName = kFnOfxImageComponentMotionVectors;
-            break;
-        case ePixelComponentStereoDisparity :
-            compName = kFnOfxImageComponentStereoDisparity;
-            break;
-#endif
-#ifdef OFX_EXTENSIONS_NATRON
-        case ePixelComponentXY:
-            compName = kNatronOfxImageComponentXY;
-            break;
-#endif
-        case ePixelComponentCustom :
-            break;
-      }
-      _clipComponents[clip.name()].push_back(compName);
-      
-  }
     
-  void ClipComponentsSetter::addClipComponents(Clip& clip, const std::string& comps)
+  void ClipComponentsSetter::addClipPlane(Clip& clip, const std::string& comps)
   {
      _doneSomething = true;
-     _clipComponents[clip.name()].push_back(comps);
+     _clipPlanes[clip.name()].push_back(comps);
   }
     
   void ClipComponentsSetter::setPassThroughClip(const Clip* clip, double time, int view)

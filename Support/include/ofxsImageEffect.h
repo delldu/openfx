@@ -1606,7 +1606,7 @@ namespace OFX {
       bool _doneSomething;
       typedef std::map<std::string, std::string> StringStringMap;
       const StringStringMap& _clipPlanesPropNames;
-      std::map<std::string,std::vector<std::string> > _clipComponents;
+      std::map<std::string,std::vector<std::string> > _clipPlanes;
       
       const std::string& extractValueForName(const StringStringMap& m, const std::string& name);
       
@@ -1617,17 +1617,17 @@ namespace OFX {
       : _outArgs(props)
       , _doneSomething(false)
       , _clipPlanesPropNames(clipPlanesPropNames)
-      , _clipComponents()
+      , _clipPlanes()
       {
           
       }
       
       bool setOutProperties();
-      
-      void addClipComponents(Clip& clip, PixelComponentEnum comps);
-      
-      //Pass the raw-string, used by the ofxNatron.h extension
-      void addClipComponents(Clip& clip, const std::string& comps);
+
+      /**
+       * @brief Pass a plane name defined in SupportExt/ofxsMultiPlane.h
+       **/
+      void addClipPlane(Clip& clip, const std::string& comps);
       
       //Pass NULL into clip for non pass-through
       void setPassThroughClip(const Clip* clip,double time,int view);

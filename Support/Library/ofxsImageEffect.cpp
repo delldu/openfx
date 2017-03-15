@@ -2945,7 +2945,7 @@ namespace OFX {
           std::string rawDepth = clip->getPropertySet().propGetString(kOfxImageClipPropUnmappedPixelDepth, 0);
 
           std::set<std::string> supportedPixelDepths;
-          getSupportedComp(clip->getPropertySet(), &supportedDepth);
+          getSupportedPixelDepths(clip->getPropertySet(), &supportedPixelDepths);
           rawDepth = findBestSupportedPixelDepth(supportedPixelDepths, rawDepth);
           deepestBitDepth = FindDeepestBitDepth(deepestBitDepth, rawDepth);
         }

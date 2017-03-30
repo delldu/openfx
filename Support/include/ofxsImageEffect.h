@@ -1962,9 +1962,14 @@ namespace OFX {
     function should return true and set the \em identityClip pointer to point to the clip that is the identity
     and \em identityTime to be the time at which to access the clip for the identity operation.
     */
-    virtual bool isIdentity(const IsIdentityArguments &args, Clip * &identityClip, double &identityTime);
+    virtual bool isIdentity(const IsIdentityArguments &args, Clip * &identityClip, double &identityTime
+#ifdef OFX_EXTENSIONS_NUKE
+    , int& view
+    , std::string& plane
+#endif
+    );
 
-    /** @brief The get RoD action. 
+    /** @brief The get RoD action.
 
     If the effect wants change the rod from the default value (which is the union of RoD's of all input clips)
     it should set the \em rod argument and return true.

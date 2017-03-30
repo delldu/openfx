@@ -2780,7 +2780,12 @@ namespace OFX {
 
   /** @brief client is identity function, returns the clip and time for the identity function 
   */
-  bool ImageEffect::isIdentity(const IsIdentityArguments &/*args*/, Clip * &/*identityClip*/, double &/*identityTime*/)
+  bool ImageEffect::isIdentity(const IsIdentityArguments &/*args*/, Clip * &/*identityClip*/, double &/*identityTime*/
+#ifdef OFX_EXTENSIONS_NUKE
+                               , int& /*view*/
+                               , std::string& /*plane*/
+#endif
+  )
   {
     return false; // by default, we are not an identity operation
   }
@@ -4288,7 +4293,15 @@ namespace OFX {
       // and call the plugin client isIdentity code
       Clip *identityClip = 0;
       double identityTime = args.time;
-      bool v = effectInstance->isIdentity(args, identityClip, identityTime);
+#ifdef OFX_EXTENSIONS_NUKE
+      int identityView = args.view;
+      std::string identityPlane = args.plane;
+#endif
+      bool v = effectInstance->isIdentity(args, identityClip, identityTime
+#ifdef OFX_EXTENSIONS_NUKE
+                                          , identityView, identityPlane
+#endif
+                                          );
 
       if(v && identityClip) {
         outArgs.propSetString(kOfxPropName, identityClip->name());

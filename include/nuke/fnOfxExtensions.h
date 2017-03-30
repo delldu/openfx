@@ -126,7 +126,7 @@ The plugin must have flagged kFnOfxImageEffectPropMultiPlanar as true, if so tgh
 */
 #define kFnOfxImageEffectPropPassThroughComponents "uk.co.thefoundry.OfxImageEffectPropPassThroughComponents"
 
-/** @brief Property set indicating the components present on something
+/** @brief Property indicating the components present on something
 
    - Type - string X N
    - Property Set - image effect clip instance (read only)
@@ -139,6 +139,54 @@ The plugin must have flagged kFnOfxImageEffectPropMultiPlanar as true, if so tgh
 
 */
 #define kFnOfxImageEffectPropComponentsPresent "uk.co.thefoundry.OfxImageEffectClipPropPlanesPresent"
+
+/** @brief Property indicating whether the planes listed for the output clip in the kFnOfxImageEffectActionGetClipComponents
+ action should preferably be all rendered in a single render call rather than being separatly rendered.
+ For example, an motion estimation effect may have in output both the backward and forward warp available as a result of a render call
+ which would be more efficient to produce than just call the render action twice.
+
+ Property Set - Image Effect descriptor (read/write) and instance (read-only)
+ Valid values - 0 in which case a single plane is passed to the render action or 1 in which case the render action is expected to render 
+ all planes returned from kFnOfxImageEffectActionGetClipComponents
+ Default value - 0
+ */
+#define kOfxImageEffectPropRenderAllPlanes "OfxImageEffectPropRenderAllPlanes"
+
+/** @brief Property indicating the planes to render in the inArgs Property set of the kOfxImageEffectActionRender action
+  If the image effect property kOfxImageEffectPropRenderAllPlanes is set to 1
+  then this list may contain more than 1 plane to render.
+
+  - Type string xN
+  - Valid values: Any of the following strings:
+    * kFnOfxImagePlaneBackwardMotionVector
+    * kFnOfxImagePlaneForwardMotionVector
+    * kFnOfxImagePlaneStereoDisparityLeft
+    * kFnOfxImagePlaneStereoDisparityRight
+    * kFnOfxImagePlaneColour
+    * And any custom plane defined in Natron extensions in ofxNatron.h
+
+ - If empty, this can be assumed that the plane kFnOfxImagePlaneColour should be rendered at least.
+ */
+#define kOfxImageEffectPropRenderPlanes "OfxImageEffectPropRenderPlanes"
+
+
+/** @brief Property indicating the plane to operate on in the inArgs and outArgs Property set of the kOfxImageEffectActionIsIdentity action.
+ In inArg this is the plane on which the effect should be identity 
+ In outArg the plane on the identity effect to which it is identity.
+
+ - Type string x1
+ - Valid values: ny of the following strings:
+ * kFnOfxImagePlaneBackwardMotionVector
+ * kFnOfxImagePlaneForwardMotionVector
+ * kFnOfxImagePlaneStereoDisparityLeft
+ * kFnOfxImagePlaneStereoDisparityRight
+ * kFnOfxImagePlaneColour
+ * And any custom plane defined in Natron extensions in ofxNatron.h
+
+ - If empty, this can be assumed that the plane kFnOfxImagePlaneColour should be rendered at least.
+
+ */
+#define kOfxImageEffectPropIdentityPlane "OfxImageEffectPropIdentityPlane"
 
 /** @brief Action called on multiplanar effect
 

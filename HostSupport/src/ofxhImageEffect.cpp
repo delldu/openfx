@@ -150,6 +150,7 @@ namespace OFX {
         { kNatronOfxImageEffectPropInViewerContextShortcutHasMetaModifier, Property::eInt, 0, true, "" },
         { kNatronOfxPropNativeOverlays, Property::eString, 0, false, ""},
         { kOfxImageEffectPropCanDistort, Property::eInt, 1, true, "0" },
+        { kOfxImageEffectPropRenderAllPlanes, Property::eInt, 1, true, "0"},
 #endif
         Property::propSpecEnd
       };
@@ -1370,7 +1371,7 @@ namespace OFX {
 #       endif
 #       ifdef OFX_EXTENSIONS_NUKE
           { kFnOfxImageEffectPropView, Property::eInt, 1, true, "0" },
-          { kFnOfxImageEffectPropComponentsPresent, Property::eString, 0, true, "" },
+          { kOfxImageEffectPropRenderPlanes, Property::eString, 0, true, "" },
 #       endif
           Property::propSpecEnd
         };
@@ -1398,7 +1399,7 @@ namespace OFX {
         inArgs.setIntProperty(kFnOfxImageEffectPropView,view);
         int k = 0;
         for (std::list<std::string>::const_iterator it = planes.begin(); it != planes.end(); ++it,++k) {
-            inArgs.setStringProperty(kFnOfxImageEffectPropComponentsPresent,*it,k);
+            inArgs.setStringProperty(kOfxImageEffectPropRenderPlanes,*it,k);
         }
 #     endif
 #     if defined(OFX_EXTENSIONS_VEGAS) || defined(OFX_EXTENSIONS_NUKE)
@@ -2410,7 +2411,8 @@ namespace OFX {
                                            const OfxRectI &renderRoI,
                                            OfxPointD   renderScale,
 #ifdef OFX_EXTENSIONS_NUKE
-                                           int view,
+                                           int& view,
+                                           std::string& plane,
 #endif
                                            std::string &clip)
       {
@@ -2425,6 +2427,7 @@ namespace OFX {
           { kOfxImageEffectPropRenderScale, Property::eDouble, 2, true, "0" },
 #ifdef OFX_EXTENSIONS_NUKE
           { kFnOfxImageEffectPropView, Property::eInt, 1, true, "0" },
+          { kOfxImageEffectPropIdentityPlane, Property::eString, 1, true, ""},
 #endif
           Property::propSpecEnd
         };
@@ -2432,6 +2435,10 @@ namespace OFX {
         static const Property::PropSpec outStuff[] = {
           { kOfxPropTime, Property::eDouble, 1, false, "0.0" },
           { kOfxPropName, Property::eString, 1, false, "" },
+#ifdef OFX_EXTENSIONS_NUKE
+          { kFnOfxImageEffectPropView, Property::eInt, 1, true, "0" },
+          { kOfxImageEffectPropIdentityPlane, Property::eString, 1, true, ""},
+#endif
           Property::propSpecEnd
         };
 
@@ -2443,6 +2450,7 @@ namespace OFX {
         inArgs.setDoublePropertyN(kOfxImageEffectPropRenderScale, &renderScale.x, 2);
 #ifdef OFX_EXTENSIONS_NUKE
         inArgs.setIntProperty(kFnOfxImageEffectPropView, view);
+        inArgs.setStringProperty(kOfxImageEffectPropIdentityPlane, plane);
 #endif
           
         Property::Set outArgs(outStuff);
@@ -2469,7 +2477,11 @@ namespace OFX {
 
         if(st==kOfxStatOK){
           time = outArgs.getDoubleProperty(kOfxPropTime);
-          clip = outArgs.getStringProperty(kOfxPropName);        
+          clip = outArgs.getStringProperty(kOfxPropName);
+#ifdef OFX_EXTENSIONS_NUKE
+          view = outArgs.getIntProperty(kFnOfxImageEffectPropView);
+          plane = outArgs.getStringProperty(kOfxImageEffectPropIdentityPlane);
+#endif
         }
         
         return st;

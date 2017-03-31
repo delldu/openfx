@@ -4305,7 +4305,11 @@ namespace OFX {
 
       if(v && identityClip) {
         outArgs.propSetString(kOfxPropName, identityClip->name());
-        outArgs.propSetDouble(kOfxPropTime, identityTime);                
+        outArgs.propSetDouble(kOfxPropTime, identityTime);
+#ifdef OFX_EXTENSIONS_NUKE
+        outArgs.propSetInt(kFnOfxImageEffectPropView, identityView, 0, false);
+        outArgs.propSetString(kOfxImageEffectPropIdentityPlane, identityPlane, 0, false);
+#endif
         return true;
       }
       return false;

@@ -3085,7 +3085,7 @@ namespace OFX {
   {
       const char* viewName;
       OfxStatus stat = OFX::Private::gImageEffectPlaneSuiteV2->getViewName(_effectHandle, viewIndex, &viewName);
-      if(stat == kOfxStatFailed) {
+      if(stat == kOfxStatFailed || !viewName) {
           return std::string();
       }
       throwSuiteStatusException(stat);

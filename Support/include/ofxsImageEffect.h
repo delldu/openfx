@@ -772,7 +772,7 @@ namespace OFX {
     /** @brief How thread safe is the plugin, defaults to eRenderInstanceSafe */
     void setRenderThreadSafety(RenderSafetyEnum v);
 
-    /** @brief If the slave param changes, the clip preferences need to be re-evaluated. Also disables param animation. */
+    /** @brief If the slave  param changes the clip preferences need to be re-evaluated */
     void addClipPreferencesSlaveParam(ParamDescriptor &p);
 
 #ifdef OFX_EXTENSIONS_RESOLVE

@@ -1341,7 +1341,7 @@ namespace OFX {
   }
 #endif
 
-  /** @brief If the slave param changes, the clip preferences need to be re-evaluated. Also disables param animation. */
+  /** @brief If the slave param changes the clip preferences need to be re-evaluated */
   void ImageEffectDescriptor::addClipPreferencesSlaveParam(ParamDescriptor &p)
   {
     int n = _effectProps.propGetDimension(kOfxImageEffectPropClipPreferencesSlaveParam);

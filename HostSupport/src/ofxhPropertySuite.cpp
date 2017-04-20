@@ -543,14 +543,14 @@ namespace OFX {
             _props[i->first] = copyProp;
           }
         
-        if (failed)
-          
+        if (failed) {
           for (std::map<std::string, Property *>::iterator j = _props.begin();
                j != _props.end();
                j++) {
             delete j->second;
           }
-        
+          _props.clear();
+        }
       }
 
       Set::~Set()

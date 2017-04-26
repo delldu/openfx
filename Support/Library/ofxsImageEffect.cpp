@@ -4741,27 +4741,35 @@ namespace OFX {
           args.renderView
         };
 
-        // get the transform in pixel coords using getTransform, then convert it to canonical coords
+        // get the transform in pixel coords using the legacy getTransform function, then convert it to canonical coords
         bool v = effectInstance->getTransform(argsTransform, transformClip, transformMatrix);
 
         if(v && transformClip) {
           outArgs.propSetString(kOfxPropName, transformClip->name());
-#ifdef __GNUC__
-#warning "TODO: getDistortion(): when distortion function is not available, use getTransform() and convert from pixel to canonical"
-#endif
-#if 0
           // transform from pixel to canonical
-          Matrix3x3 canonicalToPixel = ofxsMatCanonicalToPixel(srcpixelAspectRatio, args.renderScale.x,
-                                                               args.renderScale.y, fielded);
-          Matrix3x3 pixelToCanonical = ofxsMatPixelToCanonical(dstpixelAspectRatio,  args.renderScale.x,
-                                                               args.renderScale.y, fielded);
-          transformMatrix = pixelToCanonical * transformMatrix * canonicalToPixel;
+          double par = transformClip->getPixelAspectRatio();
+          const bool fielded = args.fieldToRender == eFieldLower || args.fieldToRender == eFieldUpper;
+          // FS = fielded ? 0.5 : 1.
+          // canonical to pixel:
+          // X' = (X * SX)/PAR -> multiply first column by SX/PAR
+          // Y' = Y * SY * FS -> multiply second column by SY*FS
+          // pixel to canonical:
+          // X' = (X * PAR)/SX -> divide first line by SX/PAR
+          // Y' = Y/(SY * FS) -> divide second line by SY*FS
+          double fx = args.renderScale.x / par;
+          double fy = args.renderScale.y * (fielded ? 0.5 : 1.);
+          //transformMatrix[0] *= 1.;
+          transformMatrix[1] *= fy/fx;
+          transformMatrix[2] *= 1./fx;
+          transformMatrix[3] *= fx/fy;
+          //transformMatrix[4] *= 1.;
+          transformMatrix[5] *= 1./fy;
+          transformMatrix[6] *= fx;
+          transformMatrix[7] *= fy;
+          //transformMatrix[8] *= 1.;
 
           outArgs.propSetDoubleN(kFnOfxPropMatrix2D, transformMatrix, 9);
           return true; // the transfrom and clip name were set and can be used to modify the named image appropriately
-#else
-          return false;
-#endif
         }
       }
       return false; // don't attempt to use the distortion function, but render the image as per normal

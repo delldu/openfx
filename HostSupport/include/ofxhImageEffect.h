@@ -759,6 +759,7 @@ namespace OFX {
         virtual OfxStatus getTransformAction(OfxTime time,
                                              const std::string& field,
                                              OfxPointD renderScale,
+                                             bool draftRender,
                                              int view,
                                              std::string& clip,
                                              double transform[9]);
@@ -769,6 +770,7 @@ namespace OFX {
         virtual OfxStatus getDistortionAction(OfxTime time,
                                               const std::string& field,
                                               OfxPointD renderScale,
+                                              bool draftRender,
                                               int view,
                                               std::string& clip,
                                               double transform[9],

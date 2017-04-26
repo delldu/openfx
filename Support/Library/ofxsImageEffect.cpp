@@ -4647,6 +4647,9 @@ namespace OFX {
       args.renderScale.x = args.renderScale.y = 1.;
       inArgs.propGetDoubleN(kOfxImageEffectPropRenderScale, &args.renderScale.x, 2);
 
+      // kOfxImageEffectPropRenderQualityDraft appeared in OFX 1.4
+      args.renderQualityDraft = inArgs.propGetInt(kOfxImageEffectPropRenderQualityDraft, false) != 0;
+
       args.renderView = inArgs.propGetInt(kFnOfxImageEffectPropView, 0, false);
 
       std::string str = inArgs.propGetString(kOfxImageEffectPropFieldToRender);
@@ -4671,6 +4674,97 @@ namespace OFX {
         return true; // the transfrom and clip name were set and can be used to modify the named image appropriately
       }
       return false; // don't attempt to use the transform matrix, but render the image as per normal
+    }
+#endif
+
+#ifdef OFX_EXTENSIONS_NATRON
+    /** @brief Action called in place of a render to recover a distortion function from an effect. */
+    static
+    bool
+      getDistortion(OfxImageEffectHandle handle, OFX::PropertySet inArgs, OFX::PropertySet &outArgs)
+    {
+      ImageEffect *effectInstance = retrieveImageEffectPointer(handle);
+      DistortionArguments args;
+
+      // get the arguments 
+      args.time = inArgs.propGetDouble(kOfxPropTime);
+
+      args.renderScale.x = args.renderScale.y = 1.;
+      inArgs.propGetDoubleN(kOfxImageEffectPropRenderScale, &args.renderScale.x, 2);
+
+      // kOfxImageEffectPropRenderQualityDraft appeared in OFX 1.4
+      args.renderQualityDraft = inArgs.propGetInt(kOfxImageEffectPropRenderQualityDraft, false) != 0;
+
+      args.renderView = inArgs.propGetInt(kFnOfxImageEffectPropView, 0, false);
+
+      std::string str = inArgs.propGetString(kOfxImageEffectPropFieldToRender);
+      try {
+        args.fieldToRender = eFieldBoth;
+        args.fieldToRender = mapStrToFieldEnum(str);
+      } catch (std::invalid_argument) {
+        // dud field?
+        OFX::Log::error(true, "Unknown field to render '%s'", str.c_str());
+
+        // HACK need to throw something to cause a failure
+      }
+
+      // and call the plugin client getTransform code
+      Clip *transformClip = 0;
+      double transformMatrix[9] = {1, 0, 0, 0, 1, 0, 0, 0, 1};
+      if ( effectInstance->getCanDistort() ) {
+        OfxDistortionFunctionV1 distortionFunc = NULL;
+        void* distortionFunctionData = NULL;
+        int distortionFunctionDataSize = 0;
+        OfxDistortionFreeDataFunctionV1 freeDataFunction = NULL;
+        bool v = effectInstance->getDistortion(args, transformClip, transformMatrix, &distortionFunc, &distortionFunctionData, &distortionFunctionDataSize, &freeDataFunction);
+
+        if(v && transformClip) {
+          outArgs.propSetString(kOfxPropName, transformClip->name());
+          if (distortionFunc == NULL) {
+            outArgs.propSetDoubleN(kFnOfxPropMatrix2D, transformMatrix, 9);
+          } else {
+            outArgs.propSetPointer(kOfxPropDistortionFunction, (void*)distortionFunc);
+            outArgs.propSetPointer(kOfxPropDistortionFunctionData, distortionFunctionData);
+            outArgs.propSetInt(kOfxPropDistortionFunctionDataSize, distortionFunctionDataSize);
+            outArgs.propSetPointer(kOfxPropDistortionFreeDataFunction, (void*)freeDataFunction);
+          }
+          return true; // the transfrom and clip name were set and can be used to modify the named image appropriately
+        }
+      } else {
+        // effect can not distort, maybe it can transform?
+
+        TransformArguments argsTransform = {
+          args.time,
+          args.renderScale,
+          args.fieldToRender,
+          args.renderQualityDraft,
+          args.renderView
+        };
+
+        // get the transform in pixel coords using getTransform, then convert it to canonical coords
+        bool v = effectInstance->getTransform(argsTransform, transformClip, transformMatrix);
+
+        if(v && transformClip) {
+          outArgs.propSetString(kOfxPropName, transformClip->name());
+#ifdef __GNUC__
+#warning "TODO: getDistortion(): when distortion function is not available, use getTransform() and convert from pixel to canonical"
+#endif
+#if 0
+          // transform from pixel to canonical
+          Matrix3x3 canonicalToPixel = ofxsMatCanonicalToPixel(srcpixelAspectRatio, args.renderScale.x,
+                                                               args.renderScale.y, fielded);
+          Matrix3x3 pixelToCanonical = ofxsMatPixelToCanonical(dstpixelAspectRatio,  args.renderScale.x,
+                                                               args.renderScale.y, fielded);
+          transformMatrix = pixelToCanonical * transformMatrix * canonicalToPixel;
+
+          outArgs.propSetDoubleN(kFnOfxPropMatrix2D, transformMatrix, 9);
+          return true; // the transfrom and clip name were set and can be used to modify the named image appropriately
+#else
+          return false;
+#endif
+        }
+      }
+      return false; // don't attempt to use the distortion function, but render the image as per normal
     }
 #endif
 
@@ -5008,6 +5102,16 @@ namespace OFX {
             stat = kOfxStatOK;
         }
 #endif
+#ifdef OFX_EXTENSIONS_NATRON
+        else if(action == kOfxImageEffectActionGetDistortion) {
+          checkMainHandles(actionRaw, handleRaw, inArgsRaw, outArgsRaw, false, false, false);
+
+          // call the get transform function
+          if(getDistortion(handle, inArgs, outArgs))
+            stat = kOfxStatOK;
+        }
+#endif
+
         else if(actionRaw) {
           OFX::Log::error(true, "Unknown action '%s'.", actionRaw);
         }

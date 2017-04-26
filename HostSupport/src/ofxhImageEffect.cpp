@@ -2438,6 +2438,10 @@ namespace OFX {
 #endif
           
         Property::Set outArgs(outStuff);
+#ifdef OFX_EXTENSIONS_NUKE
+        // set the default value on outArgs for backward compatibility
+        outArgs.setIntProperty(kFnOfxImageEffectPropView, view);
+#endif
 
 #       ifdef OFX_DEBUG_ACTIONS
           OfxPlugin *ofxp = _plugin->getPluginHandle()->getOfxPlugin();

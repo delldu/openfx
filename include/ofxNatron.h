@@ -205,7 +205,9 @@ This is a property on parameters of type ::kOfxParamTypeChoice, and tells the ch
 */
 #define kNatronOfxParamPropChoiceCascading "NatronOfxParamPropChoiceCascading"
 
-/** @brief int x1 property on a choice parameter descriptor (read/write) and choice parameter instance (read-only) to indicate whether
+/** @brief
+ DEPRECATED: No longer used as of Natron 3
+ int x1 property on a choice parameter descriptor (read/write) and choice parameter instance (read-only) to indicate whether
  the host can add a new choice on its own (probably via a GUI specific to this parameter).
  The plugin may then retrieve the option enum whenever a choice value is out of its initial range.
 
@@ -219,11 +221,21 @@ This is a property on parameters of type ::kOfxParamTypeChoice, and tells the ch
  */
 #define kNatronOfxParamPropChoiceHostCanAddOptions "NatronOfxParamPropChoiceHostCanAddOptions"
 
-/** @brief The standard parameter for setting output channels of a plugin (used by Shuffle).
- 
- This parameter may have the property kNatronOfxParamPropChoiceHostCanAddOptions set.
+/** @brief 
+ DEPRECATED: No longer used as of Natron 3
+ The standard parameter for setting output channels of a plugin (used by Shuffle)
  */
 #define kNatronOfxParamOutputChannels "outputChannels"
+
+/** @brief String xN property, similar to kFnOfxImageEffectPropComponentsPresent, except that this indicates for an effect
+ a set of extraneous planes that were created by the user though some sort of interface which should be made available
+ in output of this effect.
+
+ Property Set - image effect instance (read only)
+ Valid values - A list of one or multiple planes as described in the multi-plane definition 
+ Default value - None
+ */
+#define kNatronOfxExtraCreatedPlanes "NatronOfxExtraCreatedPlanes"
 
 /** @brief Indicates if the host may add a channel selector, and which components should be selected by default.
 

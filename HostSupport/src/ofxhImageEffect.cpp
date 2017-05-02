@@ -572,6 +572,9 @@ namespace OFX {
 #     ifdef OFX_EXTENSIONS_VEGAS
         { kOfxImageEffectPropVegasContext,      Property::eString,     1, true, "" },
 #     endif
+#     ifdef OFX_EXTENSIONS_NATRON
+        { kNatronOfxExtraCreatedPlanes,         Property::eString,    0, true, ""},
+#     endif
         Property::propSpecEnd
       };
 
@@ -813,6 +816,46 @@ namespace OFX {
         else
           throw Property::Exception(kOfxStatErrUnknown);
       }
+
+      const std::string &Instance::getStringProperty(const std::string &name, int n) const OFX_EXCEPTION_SPEC
+      {
+#ifdef OFX_EXTENSIONS_NUKE
+        if (name==kNatronOfxExtraCreatedPlanes) {
+          const std::vector<std::string>& userPlanes = getUserCreatedPlanes();
+          if (n >= 0 && n < (int)userPlanes.size()) {
+            return userPlanes[n];
+          } else {
+            throw Property::Exception(kOfxStatErrBadIndex);
+          }
+        }
+#endif
+        throw Property::Exception(kOfxStatErrValue);
+      }
+
+      void Instance::getStringPropertyN(const std::string &name, const char** values, int count) const OFX_EXCEPTION_SPEC
+      {
+        if (count <= 0) throw Property::Exception(kOfxStatErrValue);
+#ifdef OFX_EXTENSIONS_NATRON
+        if (name==kNatronOfxExtraCreatedPlanes) {
+          const std::vector<std::string>& componentsPresents = getUserCreatedPlanes();
+          int minCount = (int)componentsPresents.size() < count ? (int)componentsPresents.size() : count;
+          for (int i = 0; i < minCount; ++i) {
+            values[i] = componentsPresents[i].c_str();
+          }
+          return;
+        }
+#endif
+        throw Property::Exception(kOfxStatErrValue);
+      }
+
+#ifdef OFX_EXTENSIONS_NATRON
+      const std::vector<std::string>& Instance::getUserCreatedPlanes() const
+      {
+        static const std::vector<std::string> emptyVec;
+        return emptyVec;
+      }
+
+#endif
 
       Instance::~Instance(){
         // destroy the instance, only if succesfully created

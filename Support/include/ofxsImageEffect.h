@@ -1254,8 +1254,8 @@ namespace OFX {
     */
     Image* fetchImagePlane(double t, const char* plane, const OfxRectD& bounds);
 
-    /** @brief Property set indicating the components present on something*/
-    void getComponentsPresent(std::vector<std::string>* components) const;
+    /** @brief Indicates the planes present on a clip.*/
+    void getPlanesPresent(std::vector<std::string>* components) const;
       
 #endif
       
@@ -1885,6 +1885,9 @@ namespace OFX {
     void setCanDistort(bool v);
 
     bool getCanDistort() const;
+
+    /** @brief Returns a list of planes that were created by the user on the host side*/
+    void getExtraneousPlanesCreated(std::vector<std::string>* planes) const;
 #endif
 
 #ifdef OFX_SUPPORTS_OPENGLRENDER
@@ -2046,7 +2049,7 @@ namespace OFX {
 
 #ifdef OFX_EXTENSIONS_NUKE
     /** @brief get the needed input components and produced output components*/
-    virtual void getClipComponents(const ClipComponentsArguments& args, ClipComponentsSetter& clipComponents);
+    virtual OfxStatus getClipComponents(const ClipComponentsArguments& args, ClipComponentsSetter& clipComponents);
       
     /** @brief get the frame/views needed for input clips*/
     virtual void getFrameViewsNeeded(const FrameViewsNeededArguments& args, FrameViewsNeededSetter& frameViews);

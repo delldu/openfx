@@ -126,16 +126,18 @@ The plugin must have flagged kFnOfxImageEffectPropMultiPlanar as true, if so tgh
 */
 #define kFnOfxImageEffectPropPassThroughComponents "uk.co.thefoundry.OfxImageEffectPropPassThroughComponents"
 
-/** @brief Property indicating the components present on something
+/** @brief Property indicating the planes present on something
 
    - Type - string X N
    - Property Set - image effect clip instance (read only)
-   - Default - all the components specifed as supported on the given clip that exist on the clip
+   - Default - all the planes specifed as supported on the given clip that exist on the clip
    - Valid Values - one or more of the following...
-         - kOfxImageComponentNone
-         - kOfxImageComponentRGBA OR kOfxImageComponentAlpha
-         - kFnOfxImageComponentMotionVectors
-         - kFnOfxImageComponentStereoDisparity
+        - kFnOfxImagePlaneColour
+        - kFnOfxImagePlaneBackwardMotionVector
+        - kFnOfxImagePlaneForwardMotionVector
+        - kFnOfxImagePlaneStereoDisparityLeft
+        - kFnOfxImagePlaneStereoDisparityRight
+
 
 */
 #define kFnOfxImageEffectPropComponentsPresent "uk.co.thefoundry.OfxImageEffectClipPropPlanesPresent"
@@ -190,7 +192,7 @@ The plugin must have flagged kFnOfxImageEffectPropMultiPlanar as true, if so tgh
 
 /** @brief Action called on multiplanar effect
 
-    Called to enquire which components are needed on input and produced on output
+    Called to enquire which planes are needed on input and produced on output
 
     This action has the following properties....
        inargs - 
@@ -199,13 +201,15 @@ The plugin must have flagged kFnOfxImageEffectPropMultiPlanar as true, if so tgh
        outargs
            - for each clip (in and out), a property that is starts with  "uk.co.thefoundry.OfxNeededComp" 
              post peneded by the clip's name (e.g. "uk.co.thefoundry.OfxNeededComp_Output") which represents,
-             if an input, the components needed by the effect, if an output, the components produced by
+             if an input, the plane(s) needed by the effect, if an output, the planes produced by
              the effect.
              These are all char * X N properties, which must be one of ...
-                - kOfxImageComponentRGBA OR kOfxImageComponentAlpha
-                - kFnOfxImageComponentMotionVectors
-                - kFnOfxImageComponentStereoDisparity
-             Subsequent calls to render will say what components to actually fill in on the output, which
+                - kFnOfxImagePlaneColour
+                - kFnOfxImagePlaneBackwardMotionVector
+                - kFnOfxImagePlaneForwardMotionVector
+                - kFnOfxImagePlaneStereoDisparityLeft
+                - kFnOfxImagePlaneStereoDisparityRight
+             Subsequent calls to render will say what planes to actually fill in on the output, which
              will be a subset of the ones reported here.
            - kFnOfxImageEffectPropPassThroughClip - clip to use as a pass through for all non rendered planes
            - kFnOfxImageEffectPropPassThroughTime - time on that clip to pass through,

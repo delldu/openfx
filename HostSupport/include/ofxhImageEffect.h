@@ -553,7 +553,11 @@ namespace OFX {
 
         /// overridden from gethook,  get the virutals for viewport size, pixel scale, background colour
         virtual void getDoublePropertyN(const std::string &name, double *values, int count) const OFX_EXCEPTION_SPEC;
-        
+
+        virtual const std::string &getStringProperty(const std::string &name, int index) const  OFX_EXCEPTION_SPEC;
+
+        virtual void getStringPropertyN(const std::string &name, const char** values, int count) const OFX_EXCEPTION_SPEC;
+
         /// overridden from gethook, don't know what to do
         virtual void reset(const std::string &name) OFX_EXCEPTION_SPEC;
 
@@ -563,8 +567,11 @@ namespace OFX {
         //
         // live parameters
         //
+#ifdef OFX_EXTENSIONS_NATRON
+        virtual const std::vector<std::string>& getUserCreatedPlanes() const;
+#endif
 
-        // The size of the current project in canonical coordinates. 
+        // The size of the current project in canonical coordinates.
         // The size of a project is a sub set of the kOfxImageEffectPropProjectExtent. For example a 
         // project may be a PAL SD project, but only be a letter-box within that. The project size is 
         // the size of this sub window. 

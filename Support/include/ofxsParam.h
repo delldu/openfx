@@ -798,12 +798,6 @@ namespace OFX {
         /** @brief whether the menu should be cascading, and each option contains a slash-separated path to the item, defaults to false. */
         void setCascading(const bool v);
 
-        /** @brief Indicate whether the host can add a new choice on its own (probably via a GUI specific to this parameter).
-         The plugin may then retrieve the option enum whenever a choice value is out of its initial range.
-
-         This property primarily targets image plane choices, where the host should be able to create a new plane and add it to the menu.
-         */
-        void setHostCanAddOptions(bool can);
 #endif
     };
 

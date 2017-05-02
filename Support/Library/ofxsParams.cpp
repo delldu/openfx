@@ -1167,11 +1167,6 @@ namespace OFX {
     _paramProps.propSetInt(kNatronOfxParamPropChoiceCascading, v, false);
   }
 
-  /** @brief may the host add new options? */
-  void ChoiceParamDescriptor::setHostCanAddOptions(bool can)
-  {
-    _paramProps.propSetInt(kNatronOfxParamPropChoiceHostCanAddOptions, (int)can, 0, false);
-  }
 #endif
 
 #ifdef OFX_EXTENSIONS_RESOLVE
@@ -3490,16 +3485,6 @@ namespace OFX {
         return v;
     }
 
-    /** @brief Indicate whether the host can add a new choice on its own (probably via a GUI specific to this parameter).
-     The plugin may then retrieve the option enum whenever a choice value is out of its initial range.
-
-     This property primarily targets image plane choices, where the host should be able to create a new plane and add it to the menu.
-     */
-    bool ChoiceParam::getHostCanAddOptions()
-    {
-        bool v = _paramProps.propGetInt(kNatronOfxParamPropChoiceHostCanAddOptions, false) != 0;
-        return v;
-    }
 #endif
 
 #ifdef OFX_EXTENSIONS_RESOLVE

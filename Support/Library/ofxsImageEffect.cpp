@@ -3050,6 +3050,12 @@ namespace OFX {
           if(isChromaticComponent(rawComp)) {
             //Update deepest bitdepth and most components only if the infos are relevant, i.e: only if the clip is connected
             hasSetComps = true;
+            bool mostIsAlpha = (mostComponents == kOfxImageComponentAlpha);
+            bool rawIsAlpha = (rawComp == kOfxImageComponentAlpha);
+            if (mostIsAlpha != rawIsAlpha) {
+              // one is alpha, the other is anything else than just alpha: the union is RGBA
+              mostComponents = kOfxImageComponentRGBA;
+            }
             mostComponents  = findMostChromaticComponents(mostComponents, rawComp);
           }
         }

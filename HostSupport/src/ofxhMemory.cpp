@@ -67,7 +67,6 @@ namespace OFX {
         delete [] _ptr;
         _ptr = 0;
         _locked = 0;
-        delete this;
       }
 
       void* Instance::getPtr() {

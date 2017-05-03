@@ -51,7 +51,7 @@ namespace OFX {
       bool Instance::alloc(size_t nBytes) {
         if(!_locked){
           if(_ptr)
-            freeMem();
+            freeMem(); // ignore return value
           _ptr = new char[nBytes];
           return true;
         }
@@ -63,10 +63,11 @@ namespace OFX {
         return (OfxImageMemoryHandle)this;
       }
 
-      void Instance::freeMem(){
+      bool Instance::freeMem(){
         delete [] _ptr;
         _ptr = 0;
         _locked = 0;
+        return true;
       }
 
       void* Instance::getPtr() {

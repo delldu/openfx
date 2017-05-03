@@ -44,7 +44,7 @@ namespace OFX {
         virtual ~Instance();        
         virtual bool alloc(size_t nBytes);
         virtual OfxImageMemoryHandle getHandle();
-        virtual void freeMem();
+        virtual bool freeMem(); // returns true if object can be deleted
         virtual void* getPtr();
         virtual void lock();
         virtual void unlock();

@@ -4731,7 +4731,7 @@ namespace OFX {
         if(v && transformClip) {
           outArgs.propSetString(kOfxPropName, transformClip->name());
           if (distortionFunc == NULL) {
-            outArgs.propSetDoubleN(kFnOfxPropMatrix2D, transformMatrix, 9);
+            outArgs.propSetDoubleN(kOfxPropMatrix3x3, transformMatrix, 9);
           } else {
             outArgs.propSetPointer(kOfxPropDistortionFunction, (void*)distortionFunc);
             outArgs.propSetPointer(kOfxPropDistortionFunctionData, distortionFunctionData);
@@ -4778,7 +4778,7 @@ namespace OFX {
           transformMatrix[7] *= fy;
           //transformMatrix[8] *= 1.;
 
-          outArgs.propSetDoubleN(kFnOfxPropMatrix2D, transformMatrix, 9);
+          outArgs.propSetDoubleN(kOfxPropMatrix3x3, transformMatrix, 9);
           return true; // the transfrom and clip name were set and can be used to modify the named image appropriately
         }
       }

@@ -930,8 +930,8 @@ namespace OFX {
     bool _transformIsIdentity;
 #endif
 #ifdef OFX_EXTENSIONS_NATRON
-    OfxDistortionFunctionV1 _distortionFunction;
-    const void* _distortionFunctionData;
+    OfxInverseDistortionFunctionV1 _inverseDistortionFunction;
+    const void* _inverseDistortionFunctionData;
 #endif
 
   public :
@@ -997,9 +997,9 @@ namespace OFX {
 
 #ifdef OFX_EXTENSIONS_NATRON
     /** @brief the 2D distortion function attached to this image. */
-    OfxDistortionFunctionV1 getDistortionFunction(const void** distortionFunctionData) const {
-      *distortionFunctionData = _distortionFunctionData;
-      return _distortionFunction;
+    OfxInverseDistortionFunctionV1 getInverseDistortionFunction(const void** distortionFunctionData) const {
+      *distortionFunctionData = _inverseDistortionFunctionData;
+      return _inverseDistortionFunction;
     }
 #endif
   };
@@ -1547,7 +1547,7 @@ namespace OFX {
 #endif
 
 #ifdef OFX_EXTENSIONS_NATRON
-  /** @brief POD struct to pass arguments into @ref OFX::ImageEffect::getDistortion */
+  /** @brief POD struct to pass arguments into @ref OFX::ImageEffect::getInverseDistortion */
   struct DistortionArguments {
     double    time;
     OfxPointD renderScale;
@@ -2059,11 +2059,11 @@ namespace OFX {
      This will enable the host to better concatenate the distortion in such cases where 3x3 matrices can be multiplied together instead
      of multiplying the transformation matrices for each pixel.
      */
-    virtual bool getDistortion(const DistortionArguments &args, Clip * &transformClip, double transformMatrix[9],
-                               OfxDistortionFunctionV1* distortionFunction,
+    virtual bool getInverseDistortion(const DistortionArguments &args, Clip * &transformClip, double transformMatrix[9],
+                               OfxInverseDistortionFunctionV1* distortionFunction,
                                void** distortionFunctionData,
                                int* distortionFunctionDataSizeHintInBytes,
-                               OfxDistortionFreeDataFunctionV1* freeDataFunction);
+                               OfxInverseDistortionDataFreeFunctionV1* freeDataFunction);
 #endif
 
     /** @brief called when a custom param needs to be interpolated */

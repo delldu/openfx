@@ -767,17 +767,17 @@ namespace OFX {
 
 #ifdef OFX_EXTENSIONS_NATRON
         /// call the get distortion action at the given time
-        virtual OfxStatus getDistortionAction(OfxTime time,
+        virtual OfxStatus getInverseDistortionAction(OfxTime time,
                                               const std::string& field,
                                               OfxPointD renderScale,
                                               bool draftRender,
                                               int view,
                                               std::string& clip,
                                               double transform[9],
-                                              OfxDistortionFunctionV1* distortionFunc,
+                                              OfxInverseDistortionFunctionV1* distortionFunc,
                                               void** distortionFunctionData,
                                               int* distortionFunctionDataSize,
-                                              OfxDistortionFreeDataFunctionV1* freeDataFunction);
+                                              OfxInverseDistortionDataFreeFunctionV1* freeDataFunction);
 #endif
 
         /// Call the region of definition action the plugin at the given time

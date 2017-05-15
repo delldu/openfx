@@ -1583,17 +1583,17 @@ namespace OFX {
 #endif // OFX_EXTENSIONS_NUKE
 
 #ifdef OFX_EXTENSIONS_NATRON
-      OfxStatus Instance::getDistortionAction(OfxTime time,
+      OfxStatus Instance::getInverseDistortionAction(OfxTime time,
                                               const std::string& field,
                                               OfxPointD renderScale,
                                               bool draftRender,
                                               int view,
                                               std::string& clip,
                                               double transform[9],
-                                              OfxDistortionFunctionV1* distortionFunc,
+                                              OfxInverseDistortionFunctionV1* distortionFunc,
                                               void** distortionFunctionData,
                                               int* distortionFunctionDataSize,
-                                              OfxDistortionFreeDataFunctionV1* freeDataFunction)
+                                              OfxInverseDistortionDataFreeFunctionV1* freeDataFunction)
       {
         if (time != time) {
           // time is NaN
@@ -1611,10 +1611,10 @@ namespace OFX {
         static const Property::PropSpec outStuff[] = {
           { kOfxPropName, Property::eString, 1, false, "" },
           { kOfxPropMatrix3x3, Property::eDouble, 9, false, "0.0" },
-          { kOfxPropDistortionFunction, Property::ePointer, 1, false, NULL },
-          { kOfxPropDistortionFunctionData, Property::ePointer, 1, false, NULL },
-          { kOfxPropDistortionFunctionDataSize, Property::eInt, 1, false, "0" },
-          { kOfxPropDistortionFreeDataFunction, Property::ePointer, 1, false, NULL },
+          { kOfxPropInverseDistortionFunction, Property::ePointer, 1, false, NULL },
+          { kOfxPropInverseDistortionFunctionData, Property::ePointer, 1, false, NULL },
+          { kOfxPropInverseDistortionFunctionDataSize, Property::eInt, 1, false, "0" },
+          { kOfxPropInverseDistortionDataFreeFunction, Property::ePointer, 1, false, NULL },
           Property::propSpecEnd
         };
 
@@ -1635,21 +1635,21 @@ namespace OFX {
 #       ifdef OFX_DEBUG_ACTIONS
         OfxPlugin *ofxp = _plugin->getPluginHandle()->getOfxPlugin();
         const char* id = ofxp->pluginIdentifier;
-        std::cout << "OFX: "<<id<<"("<<(void*)ofxp<<")->"<<kOfxImageEffectActionGetDistortion<<"("<<time<<","<<field<<",("<<renderScale.x<<","<<renderScale.y<<"),"<<view<<")"<<std::endl;
+        std::cout << "OFX: "<<id<<"("<<(void*)ofxp<<")->"<<kOfxImageEffectActionGetInverseDistortion<<"("<<time<<","<<field<<",("<<renderScale.x<<","<<renderScale.y<<"),"<<view<<")"<<std::endl;
 #       endif
 
-        OfxStatus st = mainEntry(kOfxImageEffectActionGetDistortion,this->getHandle(), &inArgs, &outArgs);
+        OfxStatus st = mainEntry(kOfxImageEffectActionGetInverseDistortion,this->getHandle(), &inArgs, &outArgs);
 #       ifdef OFX_DEBUG_ACTIONS
-        std::cout << "OFX: "<<id<<"("<<(void*)ofxp<<")->"<<kOfxImageEffectActionGetDistortion<<"("<<time<<","<<field<<",("<<renderScale.x<<","<<renderScale.y<<"),"<<view<<")->"<<StatStr(st)<<std::endl;
+        std::cout << "OFX: "<<id<<"("<<(void*)ofxp<<")->"<<kOfxImageEffectActionGetInverseDistortion<<"("<<time<<","<<field<<",("<<renderScale.x<<","<<renderScale.y<<"),"<<view<<")->"<<StatStr(st)<<std::endl;
 #       endif
 
         if (st == kOfxStatOK) {
           clip = outArgs.getStringProperty(kOfxPropName);
           outArgs.getDoublePropertyN(kOfxPropMatrix3x3, transform, 9);
-          *distortionFunc = (OfxDistortionFunctionV1)outArgs.getPointerProperty(kOfxPropDistortionFunction);
-          *distortionFunctionData = outArgs.getPointerProperty(kOfxPropDistortionFunctionData);
-          *distortionFunctionDataSize = outArgs.getIntProperty(kOfxPropDistortionFunctionDataSize);
-          *freeDataFunction = (OfxDistortionFreeDataFunctionV1)outArgs.getPointerProperty(kOfxPropDistortionFreeDataFunction);
+          *distortionFunc = (OfxInverseDistortionFunctionV1)outArgs.getPointerProperty(kOfxPropInverseDistortionFunction);
+          *distortionFunctionData = outArgs.getPointerProperty(kOfxPropInverseDistortionFunctionData);
+          *distortionFunctionDataSize = outArgs.getIntProperty(kOfxPropInverseDistortionFunctionDataSize);
+          *freeDataFunction = (OfxInverseDistortionDataFreeFunctionV1)outArgs.getPointerProperty(kOfxPropInverseDistortionDataFreeFunction);
         }
 
         return st;

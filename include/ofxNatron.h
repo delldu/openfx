@@ -939,9 +939,9 @@ says:
  - Property Set - host descriptor (read only), plugin instance (read/write), clip descriptor (read/write)
  - Default - 0
  - Valid Values - This must be one of
- - 0 if the host or plugin cannot make use of the kOfxImageEffectActionGetDistortion
- - 1 if the host or plugin can use the kOfxImageEffectActionGetDistortion, or the clip
- can return images with a distortion function attached (@see kOfxPropDistortionFunction)
+ - 0 if the host or plugin cannot make use of the kOfxImageEffectActionGetInverseDistortion
+ - 1 if the host or plugin can use the kOfxImageEffectActionGetInverseDistortion, or the clip
+ can return images with a distortion function attached (@see kOfxPropInverseDistortionFunction)
 
  This is a property on the descriptor.
  */
@@ -1007,20 +1007,20 @@ host may optimize the concatenation of 3x3 matrix into a single matrix. This is 
  
  If however the distortion cannot be a simple 3x3 matrix, then the following properties should be set in the outArgs:
  
- -  kOfxPropDistortionFunction (pointer x1): A pointer to the distortion function itself that the host should call. 
+ -  kOfxPropInverseDistortionFunction (pointer x1): A pointer to the distortion function itself that the host should call. 
  The function has the signature described below (OfxDistortionFunctionV1)
 
- -  kOfxPropDistortionFunctionData (pointer x1) : Pointer to datas owned by the plug-in that should be passed back as customData
+ -  kOfxPropInverseDistortionFunctionData (pointer x1) : Pointer to datas owned by the plug-in that should be passed back as customData
  to the OfxDistortionFunctionV1 function. This can contain parameter values or STMaps or anything custom to the plug-in.
- These datas will be freed by the kOfxPropDistortionFunctionFreeData speficied below once the host does not need them anymore.
+ These datas will be freed by the kOfxPropInverseDistortionFunctionFreeData speficied below once the host does not need them anymore.
  Note that the host may cache these datas away and it is important to hint the host about the size these datas holds in the host cache.
 
- - kOfxPropDistortionFunctionDataSize (int x1): An estimated size in bytes of the memory held by the datas pointed to by kOfxPropDistortionFunctionData.
+ - kOfxPropInverseDistortionFunctionDataSize (int x1): An estimated size in bytes of the memory held by the datas pointed to by kOfxPropInverseDistortionFunctionData.
  The host may cache these datas away and it is important to hint the host about the size these datas holds in the host cache.
  This should not overflow an integer size.
 
- -  kOfxPropDistortionFreeDataFunction (pointer x1): Pointer to a function called by the host when the concatenation is done to free
-the datas pointed to by kOfxPropDistortionFunctionData
+ -  kOfxPropInverseDistortionDataFreeFunction (pointer x1): Pointer to a function called by the host when the concatenation is done to free
+the datas pointed to by kOfxPropInverseDistortionFunctionData
  
 
 
@@ -1030,73 +1030,83 @@ the datas pointed to by kOfxPropDistortionFunctionData
 
  */
 
-#define kOfxImageEffectActionGetDistortion "OfxImageEffectActionGetDistortion"
+#define kOfxImageEffectActionGetInverseDistortion "OfxImageEffectActionGetInverseDistortion"
 
 /*
  @brief Property that holds a pointer to a function of type OfxDistortionFunctionV1
  - Type - Pointer x1
- - Property Set - outArgs of kOfxImageEffectActionGetDistortion and image instance (read only)
+ - Property Set - outArgs of kOfxImageEffectActionGetInverseDistortion and image instance (read only)
  - Default - 0
  
- The plug-in returns a pointer of such as function in the kOfxImageEffectActionGetDistortion action.
+ The plug-in returns a pointer of such as function in the kOfxImageEffectActionGetInverseDistortion action.
  */
-#define kOfxPropDistortionFunction "OfxPropDistortionFunction"
+#define kOfxPropInverseDistortionFunction "OfxPropInverseDistortionFunction"
 
 /*
- @brief Property that holds a pointer to data used in the function pointed to by kOfxPropDistortionFunction.
+ @brief Property that holds a pointer to data used in the function pointed to by kOfxPropInverseDistortionFunction.
  - Type - Pointer x1
- - Property Set - outArgs of kOfxImageEffectActionGetDistortion and image instance (read only)
+ - Property Set - outArgs of kOfxImageEffectActionGetInverseDistortion and image instance (read only)
  - Default - 0
  
- When calling kOfxImageEffectActionGetDistortion, the plug-in returns these data that should be used by the kOfxPropDistortionFunction function
+ When calling kOfxImageEffectActionGetInverseDistortion, the plug-in returns these data that should be used by the kOfxPropInverseDistortionFunction function
  passed in the outArgs of the action.
  
- When the property is on the image instance, these are host data the should be passed to the function pointed to by the kOfxPropDistortionFunction property
+ When the property is on the image instance, these are host data the should be passed to the function pointed to by the kOfxPropInverseDistortionFunction property
  on the same image.
  */
-#define kOfxPropDistortionFunctionData "OfxPropDistortionFunctionData"
+#define kOfxPropInverseDistortionFunctionData "OfxPropInverseDistortionFunctionData"
 
 
 /*
-@brief Property that hints the host about the total size of the datas pointed to by kOfxPropDistortionFunctionData. If these datas contain buffers or images
+@brief Property that hints the host about the total size of the datas pointed to by kOfxPropInverseDistortionFunctionData. If these datas contain buffers or images
  they should be summed up.
  The host may cache these datas away and it is important to hint the host about the size these datas holds in the host cache.
  This should not overflow an integer size.
  
  - Type - Int x1
- - Property Set - outArgs of kOfxImageEffectActionGetDistortion action
+ - Property Set - outArgs of kOfxImageEffectActionGetInverseDistortion action
  - Default - 0
 
  */
-#define kOfxPropDistortionFunctionDataSize "OfxPropDistortionFunctionDataSize"
+#define kOfxPropInverseDistortionFunctionDataSize "OfxPropInverseDistortionFunctionDataSize"
 
 /*
-@brief Property that holds a pointer to a function that can be called to free the data pointed to by kOfxPropDistortionFunctionData that were passed back
- by a plug-in in the kOfxImageEffectActionGetDistortion action
+@brief Property that holds a pointer to a function that can be called to free the data pointed to by kOfxPropInverseDistortionFunctionData that were passed back
+ by a plug-in in the kOfxImageEffectActionGetInverseDistortion action
  
  - Type - Pointer x1
- - Property Set - outArgs of the kOfxImageEffectActionGetDistortion action
+ - Property Set - outArgs of the kOfxImageEffectActionGetInverseDistortion action
  - Default - 0
  */
-#define kOfxPropDistortionFreeDataFunction "OfxPropDistortionFreeDataFunction"
+#define kOfxPropInverseDistortionDataFreeFunction "OfxPropInverseDistortionDataFreeFunction"
 
 /**
- @brief Prototype of the distortion passed to the kOfxPropDistortionFunction property. It takes in input the distorted position and should output the
- undistorted position, both in canonical coordinates. 
- @param customData These are custom datas that were returned by the plug-in in the kOfxImageEffectActionGetDistortion action in kOfxPropDistortionFunctionData
+ @brief Prototype of the distortion passed to the kOfxPropInverseDistortionFunction property. It takes in input the distorted position and should output the
+ undistorted position, both in canonical coordinates. Optionnally the Jacobian may be output.
+ @param customData These are custom datas that were returned by the plug-in in the kOfxImageEffectActionGetInverseDistortion action in kOfxPropInverseDistortionFunctionData
+ @param wantsJacobian True if the caller would like the function to return a Jacobian, if possible. Note that the function may not return a Jacobian
+ even if it was asked for, in which case the caller will have to compute it using for example finite differences.
+ @param gotJaboian True if the jacobian was computed and set in output. If wantsJacobian is set to false, this parameter may be NULL.
+ @param jacobian The 4 partial derivatives of the function: [dFx/dx, dFx/dy, dFy/dx, dFy/dy].
+ If wantsJacobian is set to false, this parameter may be NULL.
  **/
-typedef void (*OfxDistortionFunctionV1)(double distortedX, double distortedY, const void* customData, double* undistortedX, double* undistortedY);
+typedef void (*OfxInverseDistortionFunctionV1)(const void* customData,
+                                               double distortedX, double distortedY,
+                                               bool wantsJacobian,
+                                               double *undistortedX, double *undistortedY,
+                                               bool* gotJabobian,
+                                               double jacobian[4]);
 
 /*
- * @brief Prototype of the function passed to the kOfxPropDistortionFreeDataFunction property. It takes in input the kOfxPropDistortionFunctionData data that
- were returned by the kOfxImageEffectActionGetDistortion action and should free them.
+ * @brief Prototype of the function passed to the kOfxPropInverseDistortionDataFreeFunction property. It takes in input the kOfxPropInverseDistortionFunctionData data that
+ were returned by the kOfxImageEffectActionGetInverseDistortion action and should free them.
  */
-typedef void (*OfxDistortionFreeDataFunctionV1)(void* customData);
+typedef void (*OfxInverseDistortionDataFreeFunctionV1)(void* customData);
 
 /** @brief Property that represents a 2D matrix
 
  - Type - double X 9
- - Property Set - out args of kOfxImageEffectActionGetDistortion, or on an image instance (read only)
+ - Property Set - out args of kOfxImageEffectActionGetInverseDistortion, or on an image instance (read only)
  - Default - the identity matrix
  - Valid Values - any matrix value
 

@@ -1571,23 +1571,48 @@ namespace OFX {
 
     _renderScale.x = _renderScale.y = 1.;
     _imageProps.propGetDoubleN(kOfxImageEffectPropRenderScale, &_renderScale.x, 2, false);
+
+    bool gotDistortion = false;
 #ifdef OFX_EXTENSIONS_NATRON
-    _distortionFunction = (OfxDistortionFunctionV1)_imageProps.propGetPointer(kOfxPropDistortionFunction, false);
-    _distortionFunctionData = _imageProps.propGetPointer(kOfxPropDistortionFunctionData, false);
+
+    // Check for distortion function
+    _inverseDistortionFunction = (OfxInverseDistortionFunctionV1)_imageProps.propGetPointer(kOfxPropInverseDistortionFunction, false);
+    _inverseDistortionFunctionData = _imageProps.propGetPointer(kOfxPropInverseDistortionFunctionData, false);
+    if (_inverseDistortionFunction) {
+      gotDistortion = true;
+    }
+
+    _transformIsIdentity = true;
+
+    if (!gotDistortion) {
+      // Check for canonical transform matrix
+      if (_imageProps.propGetDimension(kOfxPropMatrix3x3, false) != 0) {
+        gotDistortion = true;
+
+        std::fill(_transform, _transform + 9, 0.);
+        _imageProps.propGetDoubleN(kOfxPropMatrix3x3, _transform, 9);
+        // check if the transform is identity (a zero matrix is considered identity)
+        _transformIsIdentity = (_transform[1] == 0. && _transform[2] == 0. &&
+                                _transform[3] == 0. && _transform[5] == 0. &&
+                                _transform[6] == 0. && _transform[7] == 0. &&
+                                _transform[0] == _transform[2] && _transform[0] == _transform[8]);
+      }
+    }
 #endif
 #ifdef OFX_EXTENSIONS_NUKE
-    std::fill(_transform, _transform + 9, 0.);
-    if (_imageProps.propGetDimension(kFnOfxPropMatrix2D, false) == 0) {
-      // Host does not support transforms, just ignore
-      _transformIsIdentity = true;
-    } else {
+    if (!gotDistortion) {
       std::fill(_transform, _transform + 9, 0.);
-      _imageProps.propGetDoubleN(kFnOfxPropMatrix2D, _transform, 9);
-      // check if the transform is identity (a zero matrix is considered identity)
-      _transformIsIdentity = (_transform[1] == 0. && _transform[2] == 0. &&
-                              _transform[3] == 0. && _transform[5] == 0. &&
-                              _transform[6] == 0. && _transform[7] == 0. &&
-                              _transform[0] == _transform[2] && _transform[0] == _transform[8]);
+      if (_imageProps.propGetDimension(kFnOfxPropMatrix2D, false) != 0) {
+        // Check for deprecated pixel transform matrix
+
+        std::fill(_transform, _transform + 9, 0.);
+        _imageProps.propGetDoubleN(kFnOfxPropMatrix2D, _transform, 9);
+        // check if the transform is identity (a zero matrix is considered identity)
+        _transformIsIdentity = (_transform[1] == 0. && _transform[2] == 0. &&
+                                _transform[3] == 0. && _transform[5] == 0. &&
+                                _transform[6] == 0. && _transform[7] == 0. &&
+                                _transform[0] == _transform[2] && _transform[0] == _transform[8]);
+      }
     }
 #endif
   }
@@ -3064,11 +3089,11 @@ namespace OFX {
 
 #ifdef OFX_EXTENSIONS_NATRON
   /** @brief get the distortion function */
-  bool ImageEffect::getDistortion(const DistortionArguments &/*args*/, Clip * &/*transformClip*/, double /*transformMatrix*/[9],
-                                  OfxDistortionFunctionV1* /*distortionFunction*/,
+  bool ImageEffect::getInverseDistortion(const DistortionArguments &/*args*/, Clip * &/*transformClip*/, double /*transformMatrix*/[9],
+                                  OfxInverseDistortionFunctionV1* /*distortionFunction*/,
                                   void** /*distortionFunctionData*/,
                                   int* /*distortionFunctionDataSizeHintInBytes*/,
-                                  OfxDistortionFreeDataFunctionV1* /*freeDataFunction*/)
+                                  OfxInverseDistortionDataFreeFunctionV1* /*freeDataFunction*/)
   {
     // by default, do the default
     return false;
@@ -4691,7 +4716,7 @@ namespace OFX {
     /** @brief Action called in place of a render to recover a distortion function from an effect. */
     static
     bool
-      getDistortion(OfxImageEffectHandle handle, OFX::PropertySet inArgs, OFX::PropertySet &outArgs)
+      getInverseDistortion(OfxImageEffectHandle handle, OFX::PropertySet inArgs, OFX::PropertySet &outArgs)
     {
       ImageEffect *effectInstance = retrieveImageEffectPointer(handle);
       DistortionArguments args;
@@ -4722,21 +4747,21 @@ namespace OFX {
       Clip *transformClip = 0;
       double transformMatrix[9] = {1, 0, 0, 0, 1, 0, 0, 0, 1};
       if ( effectInstance->getCanDistort() ) {
-        OfxDistortionFunctionV1 distortionFunc = NULL;
+        OfxInverseDistortionFunctionV1 distortionFunc = NULL;
         void* distortionFunctionData = NULL;
         int distortionFunctionDataSize = 0;
-        OfxDistortionFreeDataFunctionV1 freeDataFunction = NULL;
-        bool v = effectInstance->getDistortion(args, transformClip, transformMatrix, &distortionFunc, &distortionFunctionData, &distortionFunctionDataSize, &freeDataFunction);
+        OfxInverseDistortionDataFreeFunctionV1 freeDataFunction = NULL;
+        bool v = effectInstance->getInverseDistortion(args, transformClip, transformMatrix, &distortionFunc, &distortionFunctionData, &distortionFunctionDataSize, &freeDataFunction);
 
         if(v && transformClip) {
           outArgs.propSetString(kOfxPropName, transformClip->name());
           if (distortionFunc == NULL) {
             outArgs.propSetDoubleN(kOfxPropMatrix3x3, transformMatrix, 9);
           } else {
-            outArgs.propSetPointer(kOfxPropDistortionFunction, (void*)distortionFunc);
-            outArgs.propSetPointer(kOfxPropDistortionFunctionData, distortionFunctionData);
-            outArgs.propSetInt(kOfxPropDistortionFunctionDataSize, distortionFunctionDataSize);
-            outArgs.propSetPointer(kOfxPropDistortionFreeDataFunction, (void*)freeDataFunction);
+            outArgs.propSetPointer(kOfxPropInverseDistortionFunction, (void*)distortionFunc);
+            outArgs.propSetPointer(kOfxPropInverseDistortionFunctionData, distortionFunctionData);
+            outArgs.propSetInt(kOfxPropInverseDistortionFunctionDataSize, distortionFunctionDataSize);
+            outArgs.propSetPointer(kOfxPropInverseDistortionDataFreeFunction, (void*)freeDataFunction);
           }
           return true; // the transfrom and clip name were set and can be used to modify the named image appropriately
         }
@@ -5121,11 +5146,11 @@ namespace OFX {
         }
 #endif
 #ifdef OFX_EXTENSIONS_NATRON
-        else if(action == kOfxImageEffectActionGetDistortion) {
+        else if(action == kOfxImageEffectActionGetInverseDistortion) {
           checkMainHandles(actionRaw, handleRaw, inArgsRaw, outArgsRaw, false, false, false);
 
           // call the get transform function
-          if(getDistortion(handle, inArgs, outArgs))
+          if(getInverseDistortion(handle, inArgs, outArgs))
             stat = kOfxStatOK;
         }
 #endif

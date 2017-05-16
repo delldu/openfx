@@ -676,6 +676,21 @@ namespace OFX {
         { kOfxImagePropRowBytes, Property::eInt, 1, true, "0", },
         { kOfxImagePropField, Property::eString, 1, true, "", },
         { kOfxImagePropUniqueIdentifier, Property::eString, 1, true, "" },
+#if defined(OFX_EXTENSIONS_NUKE) || defined(OFX_EXTENSIONS_NATRON)
+        // The following properties should be added using OFX::Host::Property::Set::addProperties()
+        // when attaching a transform or a distortion to an image. if they are not present, there
+        // is no transform/distortion
+        /*
+#ifdef OFX_EXTENSIONS_NUKE
+        { kFnOfxPropMatrix2D, Property::eDouble, 9, true, "0" }, // If the clip descriptor has kFnOfxImageEffectCanTransform set to 1, this property contains a 3x3 matrix corresponding to a transform in pixel coordinate space, going from the source image to the destination, defaults to the identity matrix. A matrix filled with zeroes is considered as the identity matrix (i.e. no transform)
+#endif
+#ifdef OFX_EXTENSIONS_NATRON
+        { kOfxPropMatrix3x3, OFX::Host::Property::eDouble, 9, true, "0" }, // If the clip descriptor has kOfxImageEffectPropCanDistort set to 1, this property contains a 3x3 matrix corresponding to a transform in canonical coordinate space, going from the source image to the destination, defaults to the identity matrix. A matrix filled with zeroes is considered as the identity matrix (i.e. no transform)
+        { kOfxPropInverseDistortionFunction, Property::ePointer, 1, true, NULL }, // If the clip descriptor has kOfxImageEffectPropCanDistort set to 1, this property contains a pointer to a distortion function going from a position in the output distorted image in canonical coordinates to a position in the source image.
+        { kOfxPropInverseDistortionFunctionData, Property::ePointer, 1, true, NULL }, // if kOfxPropDistortionFunction is set, this a pointer to the data that must be passed to the distortion function
+#endif
+          */
+#endif
         Property::propSpecEnd
       };
 

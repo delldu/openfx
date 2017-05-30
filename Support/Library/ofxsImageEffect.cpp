@@ -2116,10 +2116,11 @@ namespace OFX {
       throwSuiteStatusException(kOfxStatErrValue);
     }
     if (!OFX::Private::gImageEffectPlaneSuiteV1 || !OFX::Private::gImageEffectPlaneSuiteV1->clipGetImagePlane) {
-      if (plane == kFnOfxImagePlaneColour) {
+      if (std::string(plane) == kFnOfxImagePlaneColour) {
         return fetchImage(t);
       }
       throwHostMissingSuiteException(kFnOfxImageEffectPlaneSuite"V1");
+      return NULL;
     }
     OfxPropertySetHandle imageHandle;
     OfxStatus stat = OFX::Private::gImageEffectPlaneSuiteV1->clipGetImagePlane(_clipHandle, t, plane, NULL, &imageHandle);
@@ -2160,10 +2161,11 @@ namespace OFX {
       throwSuiteStatusException(kOfxStatErrValue);
     }
     if (!OFX::Private::gImageEffectPlaneSuiteV1 || !OFX::Private::gImageEffectPlaneSuiteV1->clipGetImagePlane) {
-      if (plane == kFnOfxImagePlaneColour) {
+      if (std::string(plane) == kFnOfxImagePlaneColour) {
         return fetchImage(t, bounds);
       }
       throwHostMissingSuiteException(kFnOfxImageEffectPlaneSuite"V1");
+      return NULL;
     }
     OfxPropertySetHandle imageHandle;
 

@@ -6,7 +6,8 @@
 
 OS = $(shell uname)
 DEBUG ?= false
-EXPAT_INCLUDE ?= expat-2.2.0/lib
+EXPAT ?= expat-2.2.1
+EXPAT_INCLUDE ?= $(EXPAT)/lib
 OBJSUF ?= .o
 LIBSUF ?= .a
 LIBPREFIX ?= lib
@@ -112,8 +113,8 @@ $(objects) : $(HEADERS)
 
 $(DST_DIR)/$(EXPATLIB):
 	mkdir -p $(DST_DIR)
-	cd expat-2.2.0;	pwd; ./configure --disable-shared $(EXPATFLAGS); make
-	cp expat-2.2.0/.libs/libexpat.a $(DST_DIR)
+	cd $(EXPAT);	pwd; ./configure --disable-shared $(EXPATFLAGS); make
+	cp $(EXPAT)/.libs/libexpat.a $(DST_DIR)
 
 all :	@echo "$(DST_DIR)/$(EXPATLIB)" $(DST_DIR)/$(EXPATLIB) $(DST_DIR)/$(LIBTARGET)
 

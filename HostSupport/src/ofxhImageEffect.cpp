@@ -130,6 +130,7 @@ namespace OFX {
         { kOfxImageEffectPropHelpContextID,     Property::eInt,        1, false, "0" },
 #endif
 #ifdef OFX_EXTENSIONS_NATRON
+        { kNatronOfxImageEffectPluginUsesMultipleThread, Property::eInt, 1, true, "0" },
         { kNatronOfxImageEffectPropChannelSelector, Property::eString, 1, true, kOfxImageComponentRGBA },
         { kNatronOfxImageEffectPropHostMasking, Property::eInt, 1, true, "0" },
         { kNatronOfxImageEffectPropHostMixing, Property::eInt, 1, true, "0" },
@@ -242,6 +243,13 @@ namespace OFX {
         return _properties.getStringProperty(kOfxImageEffectPluginRenderThreadSafety);
       }
 
+#ifdef OFX_EXTENSIONS_NATRON
+      bool Base::getUsesMultiThreading() const
+      {
+        return _properties.getIntProperty(kNatronOfxImageEffectPluginUsesMultipleThread) != 0;
+      }
+#endif
+      
       /// should the host attempt to managed multi-threaded rendering if it can
       /// via tiling or some such
       bool Base::getHostFrameThreading() const

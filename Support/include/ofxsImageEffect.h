@@ -772,6 +772,12 @@ namespace OFX {
     /** @brief How thread safe is the plugin, defaults to eRenderInstanceSafe */
     void setRenderThreadSafety(RenderSafetyEnum v);
 
+#ifdef OFX_EXTENSIONS_NATRON
+    /** @brief Indicates if the plug-in can make use of multiple CPU threads within a single call
+     of the kOfxImageEffectActionRender action, for instance by using the multi-thread suite.*/
+    void setUsesMultiThreading(bool isMultiThreaded);
+#endif
+
     /** @brief If the slave  param changes the clip preferences need to be re-evaluated */
     void addClipPreferencesSlaveParam(ParamDescriptor &p);
 

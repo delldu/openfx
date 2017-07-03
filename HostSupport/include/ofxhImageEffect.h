@@ -228,6 +228,14 @@ namespace OFX {
         /// via tiling or some such
         bool getHostFrameThreading() const;
 
+#ifdef OFX_EXTENSIONS_NATRON
+        // Indicates if a plug-in can make use of multiple CPU threads within a single call
+        // of the kOfxImageEffectActionRender action, for instance
+        // by using the multi-thread suite.
+        // The host should only account this as a hint to better organize its multi-threading priority queue.
+        bool getUsesMultiThreading() const;
+#endif
+
         /// get the overlay interact main entry if it exists
         OfxPluginEntryPoint *getOverlayInteractMainEntry() const;
 

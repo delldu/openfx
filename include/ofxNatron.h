@@ -412,6 +412,22 @@ This is a property on parameters of type ::kOfxParamTypeChoice, and tells the ch
  */
 #define kNatronOfxImageEffectPropInstanceId "NatronOfxImageEffectPropInstanceId"
 
+/** @brief Indicates if a plug-in can make use of multiple CPU threads within a single call of the kOfxImageEffectActionRender action, for instance
+ by using the multi-thread suite.
+ The host should only account this as a hint to better organize its multi-threading priority queue.
+ Unlike the kOfxImageEffectPluginRenderThreadSafety property, it does not inform in any way about the multi-thread safety of the plug-in.
+
+ - Type - int X 1
+ - Property Set - plugin descriptor (read/write)
+ - Default - 0
+ - Valid Values -
+ - 0: indicating that only the thread calling the kOfxImageEffectActionRender action is the only thread expected to be doing processing
+ - 1: indicating that the plug-in can launch multiple processing threads during a single call to the kOfxImageEffectActionRender action.
+ The plug-in should try to use at most the multi-thread suite and especially the multiThreadNumCPUs function to help the host application 
+ schedule threads over concurrent tasks.
+ */
+#define kNatronOfxImageEffectPluginUsesMultipleThread "NatronOfxImageEffectPluginUsesMultipleThread"
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////

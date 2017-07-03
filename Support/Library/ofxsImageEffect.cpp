@@ -1178,6 +1178,12 @@ namespace OFX {
   }
     
 #ifdef OFX_EXTENSIONS_NATRON
+
+  void ImageEffectDescriptor::setUsesMultiThreading(bool isMultiThreaded)
+  {
+    _effectProps.propSetInt(kNatronOfxImageEffectPluginUsesMultipleThread, (int)isMultiThreaded, 0, false);
+  }
+
     /*Indicates if the host may add a mask that will be handled automatically.*/
   void ImageEffectDescriptor::setHostMaskingEnabled(bool enabled)
   {

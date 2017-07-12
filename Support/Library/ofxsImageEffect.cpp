@@ -3052,7 +3052,7 @@ namespace OFX {
             hasSetComps = true;
             bool mostIsAlpha = (mostComponents == kOfxImageComponentAlpha);
             bool rawIsAlpha = (rawComp == kOfxImageComponentAlpha);
-            if (mostIsAlpha != rawIsAlpha) {
+            if (mostIsAlpha != rawIsAlpha && mostComponents != kOfxImageComponentNone) {
               // one is alpha, the other is anything else than just alpha: the union is RGBA
               mostComponents = kOfxImageComponentRGBA;
             }

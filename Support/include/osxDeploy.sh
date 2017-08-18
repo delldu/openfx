@@ -31,6 +31,16 @@ MACPORTS=/opt/local
 HOMEBREW=/brew2/local
 LOCAL=/usr/local
 
+# sed adds a newline on OSX! http://stackoverflow.com/questions/13325138/why-does-sed-add-a-new-line-in-osx
+# let's use gsed in binary mode.
+# gsed is provided by the gsed package on MacPorts or the gnu-sed package on homebrew
+# xhen using this variable, do not double-quote it ("$GSED"), because it contains options
+
+# The default path obfuscations with the sed call would actually corrupt the binaries
+# and make subsequent calls to install_name_tool fail with the following error:
+# 'install_name_tool: the __LINKEDIT segment does not cover the end of the file (can't be processed)'
+GSED="${MACPORTS}/bin/gsed -b"
+
 # add to PATH
 PATH="$MACPORTS/bin:$HOMEBREW/bin:$LOCAL/bin:$PATH"
 
@@ -151,5 +161,5 @@ fi
     HOMEBREWRAND=${RANDSTR:0:${#HOMEBREW}}
     LOCALRAND=${RANDSTR:0:${#LOCAL}}
     find $pkglib -type f -exec sed -e "s@$MACPORTS@$MACRAND@g" -e "s@$HOMEBREW@$HOMEBREWRAND@g" -e "s@$LOCAL@$LOCALRAND@g" -i "" {} \;
-    sed -e "s@$MACPORTS@$MACRAND@g" -e "s@$HOMEBREW@$HOMEBREWRAND@g" -e "s@$LOCAL@$LOCALRAND@g" -i "" "$binary"
+    $GSED -e "s@$MACPORTS@$MACRAND@g" -e "s@$HOMEBREW@$HOMEBREWRAND@g" -e "s@$LOCAL@$LOCALRAND@g" -i "$binary"
 #fi

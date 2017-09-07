@@ -36,20 +36,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef WINDOWS
 #define WINDOWS
 #endif
-#if defined(_WIN64) || defined(__amd64__)
-#define AMD64
-#else
-#define I386
-#endif
 #elif defined(__linux__) || defined(__FreeBSD__) || defined( __APPLE__) || defined(unix) || defined(__unix) || defined(_XOPEN_SOURCE) || defined(_POSIX_SOURCE)
 #define UNIX
-#ifdef __i386__
-#define I386
-#elif defined(__amd64__)
-#define AMD64
-#else
-#error cannot detect architecture
-#endif
 #else
 #error cannot detect operating system
 #endif

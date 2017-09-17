@@ -149,7 +149,7 @@ if [ -n "$alllibs" ]; then
                 echo "Error: 'install_name_tool $changes $f' failed"
                 exit 1
             fi
-            install_name_tool -id @rpath/`basename $f` "$f"
+                `basename $f` "$f"
             if ! install_name_tool -id @rpath/`basename $f` "$f"; then
                 echo "Error: 'install_name_tool -id @rpath/`basename $f` $f' failed"
                 exit 1
@@ -167,6 +167,6 @@ fi
     MACRAND=${RANDSTR:0:${#MACPORTS}}
     HOMEBREWRAND=${RANDSTR:0:${#HOMEBREW}}
     LOCALRAND=${RANDSTR:0:${#LOCAL}}
-    find $pkglib -type f -exec sed -e "s@$MACPORTS@$MACRAND@g" -e "s@$HOMEBREW@$HOMEBREWRAND@g" -e "s@$LOCAL@$LOCALRAND@g" -i "" {} \;
+    find $pkglib -type f -exec $GSED -e "s@$MACPORTS@$MACRAND@g" -e "s@$HOMEBREW@$HOMEBREWRAND@g" -e "s@$LOCAL@$LOCALRAND@g" -i "" {} \;
     $GSED -e "s@$MACPORTS@$MACRAND@g" -e "s@$HOMEBREW@$HOMEBREWRAND@g" -e "s@$LOCAL@$LOCALRAND@g" -i "$binary"
 #fi

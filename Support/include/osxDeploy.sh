@@ -149,7 +149,6 @@ if [ -n "$alllibs" ]; then
                 echo "Error: 'install_name_tool $changes $f' failed"
                 exit 1
             fi
-                `basename $f` "$f"
             if ! install_name_tool -id @rpath/`basename $f` "$f"; then
                 echo "Error: 'install_name_tool -id @rpath/`basename $f` $f' failed"
                 exit 1

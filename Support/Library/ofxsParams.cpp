@@ -3456,7 +3456,7 @@ namespace OFX {
 #endif
 #ifdef OFX_EXTENSIONS_NATRON
       if (_paramProps.propExists(kOfxParamPropChoiceEnum)) {
-        if (!newEntriesHint.empty()) {
+        if (!newEntriesEnum.empty()) {
           _paramProps.propSetStringN(kOfxParamPropChoiceEnum, newEntriesEnum, false);
         } else {
           _paramProps.propReset(kOfxParamPropChoiceEnum);

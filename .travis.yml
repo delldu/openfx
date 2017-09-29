@@ -42,7 +42,6 @@ addons:
     - g++-7
     - doxygen
     - xsltproc
-    - automake
   coverity_scan:
     # customized build script URL
     # TRAVIS_REPO_SLUG: owner_name/repo_name of repository currently being built
@@ -68,6 +67,9 @@ before_install:
 
 install:
   - git submodule update --init --recursive
+  - touch HostSupport/expat-*/configure.ac
+  - touch HostSupport/expat-*/Makefile.in
+  - touch HostSupport/expat-*/*/Makefile.in
   - if [[ ${COVERITY_BUILD_DISABLED} == 1 ]];
     then
         exit 0;
@@ -79,7 +81,7 @@ install:
         fi;
         sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test;
         sudo apt-get update;
-        sudo apt-get install gcc-7 g++-7 automake;
+        sudo apt-get install gcc-7 g++-7;
         sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-7 90;
         sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-7 90;
     fi

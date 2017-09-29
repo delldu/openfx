@@ -457,7 +457,7 @@
 				1E3CB8C1179935430032B538 /* xmltok.c */,
 			);
 			name = "Expat Sources";
-			path = "expat-2.2.1/lib";
+			path = "expat-2.2.4/lib";
 			sourceTree = "<group>";
 		};
 		1E742FE117992CF9007D295B = {
@@ -881,7 +881,7 @@
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					../include,
-					"expat-2.2.1/lib",
+					"expat-2.2.4/lib",
 				);
 				ONLY_ACTIVE_ARCH = YES;
 			};
@@ -922,7 +922,7 @@
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					../include,
-					"expat-2.2.1/lib",
+					"expat-2.2.4/lib",
 				);
 			};
 			name = Release;

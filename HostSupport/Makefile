@@ -113,8 +113,8 @@ $(objects) : $(HEADERS)
 
 $(DST_DIR)/$(EXPATLIB):
 	mkdir -p $(DST_DIR)
-	cd $(EXPAT);	pwd; ./configure --disable-shared $(EXPATFLAGS); make
-	cp $(EXPAT)/.libs/libexpat.a $(DST_DIR)
+	cd $(EXPAT);	pwd; ./configure --disable-shared CC="$(CC)" CFLAGS="$(CXX_OSFLAGS) $(OPTIMISE)" CXX="$(CXX)" CXXFLAGS="$(CXX_OSFLAGS) $(OPTIMISE)" $(EXPATFLAGS); make
+	cp $(EXPAT)/lib/.libs/libexpat.a $(DST_DIR)
 
 all :	@echo "$(DST_DIR)/$(EXPATLIB)" $(DST_DIR)/$(EXPATLIB) $(DST_DIR)/$(LIBTARGET)
 

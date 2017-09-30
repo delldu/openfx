@@ -68,8 +68,14 @@ before_install:
 install:
   - git submodule update --init --recursive
   - touch HostSupport/expat-*/configure.ac
+  - touch HostSupport/expat-*/Makefile.am
+  - touch HostSupport/expat-*/*/Makefile.am
+  - touch HostSupport/expat-*/*/*/Makefile.am
+  - touch HostSupport/expat-*/aclocal.m4
+  - touch HostSupport/expat-*/configure
   - touch HostSupport/expat-*/Makefile.in
   - touch HostSupport/expat-*/*/Makefile.in
+  - touch HostSupport/expat-*/*/*/Makefile.in
   - if [[ ${COVERITY_BUILD_DISABLED} == 1 ]];
     then
         exit 0;

@@ -222,7 +222,7 @@ namespace OFX {
 
 #ifdef OFX_EXTENSIONS_VEGAS
   /** @brief map a std::string to a keyframe interpolation type */
-  VegasInterpolationEnum mapToInterpolationEnum(const std::string &s) throw(std::invalid_argument)
+  VegasInterpolationEnum mapToInterpolationEnum(const std::string &s) OFX_THROW(std::invalid_argument)
   {
     if(s == kOfxVegasKeyframeInterpolationUnknown) return eVegasInterpolationUnknown;
     if(s == kOfxVegasKeyframeInterpolationLinear)  return eVegasInterpolationLinear;
@@ -2026,7 +2026,7 @@ namespace OFX {
 
   /** @brief get the time of the nth key, nth must be between 0 and getNumKeys-1 */
   double 
-    ValueParam::getKeyTime(int nthKey) throw(OFX::Exception::Suite, std::out_of_range)
+    ValueParam::getKeyTime(int nthKey) OFX_THROW2(OFX::Exception::Suite, std::out_of_range)
   {
     if(!OFX::Private::gParamSuite->paramGetKeyTime) throwHostMissingSuiteException("paramGetKeyTime");
     double v = 0;

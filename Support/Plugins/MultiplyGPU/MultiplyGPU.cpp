@@ -156,7 +156,7 @@ void MultiplyProcessorBase::processImagesOpenCL()
 
   const float* input = static_cast<const float*>(_srcImg->getPixelData());
   float* output = static_cast<float*>(_dstImg->getPixelData());
-  const float values[4] = { _values[0], _values[1], _values[2], _values[3] };
+  const float values[4] = { (float)_values[0], (float)_values[1], (float)_values[2], (float)_values[3] };
 
   // we could also pass x1,y1 if the effect were pixel-dependent
   RunOpenCLKernel(_pOpenCLCmdQ, width, height, values, input, output);
@@ -269,7 +269,12 @@ private:
   /* set up and run a processor */
   void setupAndProcess(MultiplyProcessorBase &, const RenderArguments &args);
 
-  virtual bool isIdentity(const IsIdentityArguments &args, Clip * &identityClip, double &identityTime);// OVERRIDE FINAL;
+  virtual bool isIdentity(const IsIdentityArguments &args, Clip * &identityClip, double &identityTime
+#ifdef OFX_EXTENSIONS_NUKE
+                          , int& view
+                          , std::string& plane
+#endif
+                          );// OVERRIDE FINAL;
 
   /** @brief called when a clip has just been changed in some way (a rewire maybe) */
   virtual void changedClip(const InstanceChangedArgs &args, const std::string &clipName);// OVERRIDE FINAL;
@@ -428,7 +433,12 @@ MultiplyPlugin::render(const RenderArguments &args)
 bool
 MultiplyPlugin::isIdentity(const IsIdentityArguments &args,
                            Clip * &identityClip,
-                           double & /*identityTime*/)
+                           double & /*identityTime*/
+#ifdef OFX_EXTENSIONS_NUKE
+                           , int& /*view*/
+                           , std::string& /*plane*/
+#endif
+                           )
 {
   const double time = args.time;
 

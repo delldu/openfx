@@ -236,7 +236,7 @@ namespace OFX {
 
 #ifdef OFX_EXTENSIONS_VEGAS
     VegasInterpolationEnum 
-    mapToInterpolationEnum(const std::string &s) throw(std::invalid_argument);
+    mapToInterpolationEnum(const std::string &s) OFX_THROW(std::invalid_argument);
 
     const char* 
     mapToInterpolationTypeEnum(OFX::VegasInterpolationEnum type);
@@ -1313,7 +1313,7 @@ namespace OFX {
         unsigned int getNumKeys(void);
 
         /** @brief get the time of the nth key, nth must be between 0 and getNumKeys-1 */
-        double getKeyTime(int nthKey) throw(OFX::Exception::Suite, std::out_of_range);
+        double getKeyTime(int nthKey) OFX_THROW2(OFX::Exception::Suite, std::out_of_range);
 
         /** @brief find the index of a key by a time */
         int getKeyIndex(double time, 

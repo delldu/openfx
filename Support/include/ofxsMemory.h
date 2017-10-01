@@ -63,13 +63,13 @@ namespace OFX {
     Suceeds or throws std::bad_alloc
     */   
     void *allocate(size_t nBytes,
-      ImageEffect *handle = 0) throw(std::bad_alloc);
+      ImageEffect *handle = 0) OFX_THROW(std::bad_alloc);
 
     /** @brief release memory
 
     \arg \e ptr	      - pointer previously returned by OFX::Memory::allocate
     */
-    void free(void *ptr) throw();
+    void free(void *ptr) OFX_NOTHROW;
   };
 
 };

@@ -299,7 +299,7 @@ namespace OFX {
   };
 
   /** @brief map a std::string to a context */
-  ContextEnum mapToContextEnum(const std::string &s) throw(std::invalid_argument)
+  ContextEnum mapToContextEnum(const std::string &s) OFX_THROW(std::invalid_argument)
   {
     if(s == kOfxImageEffectContextGenerator) return eContextGenerator;
     if(s == kOfxImageEffectContextFilter) return eContextFilter;
@@ -318,7 +318,7 @@ namespace OFX {
     throw std::invalid_argument(s);
   }
 
-  const char* mapContextEnumToStr(ContextEnum context) throw(std::invalid_argument)
+  const char* mapContextEnumToStr(ContextEnum context) OFX_THROW(std::invalid_argument)
   {
     switch (context) {
       case eContextGenerator:
@@ -382,7 +382,7 @@ namespace OFX {
   }
 
   /** @brief map a std::string to a context */
-  InstanceChangeReason mapToInstanceChangedReason(const std::string &s) throw(std::invalid_argument)
+  InstanceChangeReason mapToInstanceChangedReason(const std::string &s) OFX_THROW(std::invalid_argument)
   {
     if(s == kOfxChangePluginEdited) return eChangePluginEdit;
     if(s == kOfxChangeUserEdited) return eChangeUserEdit;
@@ -392,7 +392,7 @@ namespace OFX {
   }
 
   /** @brief turns a bit depth string into and enum */
-  BitDepthEnum mapStrToBitDepthEnum(const std::string &str) throw(std::invalid_argument)
+  BitDepthEnum mapStrToBitDepthEnum(const std::string &str) OFX_THROW(std::invalid_argument)
   {
     if(str == kOfxBitDepthByte) {
       return eBitDepthUByte;
@@ -426,7 +426,7 @@ namespace OFX {
   }
 
   /** @brief turns a bit depth string into and enum */
-  const char* mapBitDepthEnumToStr(BitDepthEnum bitDepth) throw(std::invalid_argument)
+  const char* mapBitDepthEnumToStr(BitDepthEnum bitDepth) OFX_THROW(std::invalid_argument)
   {
     switch (bitDepth) {
       case eBitDepthUByte:
@@ -456,7 +456,7 @@ namespace OFX {
   }
 
   /** @brief turns a pixel component string into and enum */
-  PixelComponentEnum mapStrToPixelComponentEnum(const std::string &str) throw(std::invalid_argument)
+  PixelComponentEnum mapStrToPixelComponentEnum(const std::string &str) OFX_THROW(std::invalid_argument)
   {
     if(str == kOfxImageComponentRGBA) {
       return ePixelComponentRGBA;
@@ -489,7 +489,7 @@ namespace OFX {
   }
 
   /** @brief turns a pixel component string into and enum */
-  const char* mapPixelComponentEnumToStr(PixelComponentEnum pixelComponent) throw(std::invalid_argument)
+  const char* mapPixelComponentEnumToStr(PixelComponentEnum pixelComponent) OFX_THROW(std::invalid_argument)
   {
     switch (pixelComponent) {
       case ePixelComponentRGBA:
@@ -519,7 +519,7 @@ namespace OFX {
   }
 
   /** @brief turns a premultiplication string into and enum */
-  static PreMultiplicationEnum mapStrToPreMultiplicationEnum(const std::string &str) throw(std::invalid_argument)
+  static PreMultiplicationEnum mapStrToPreMultiplicationEnum(const std::string &str) OFX_THROW(std::invalid_argument)
   {
     if(str == kOfxImageOpaque) {
       return eImageOpaque;
@@ -536,7 +536,7 @@ namespace OFX {
   }
 
   /** @brief turns a field string into and enum */
-  FieldEnum mapStrToFieldEnum(const std::string &str)  throw(std::invalid_argument)
+  FieldEnum mapStrToFieldEnum(const std::string &str) OFX_THROW(std::invalid_argument)
   {
     if(str == kOfxImageFieldNone) {
       return eFieldNone;
@@ -557,7 +557,7 @@ namespace OFX {
 
 #ifdef OFX_EXTENSIONS_VEGAS
   /** @brief map a std::string to a RenderQuality */
-  VegasRenderQualityEnum mapToVegasRenderQualityEnum(const std::string &s) throw(std::invalid_argument)
+  VegasRenderQualityEnum mapToVegasRenderQualityEnum(const std::string &s) OFX_THROW(std::invalid_argument)
   {
     if(s == kOfxImageEffectPropRenderQualityDraft  )       return eVegasRenderQualityDraft;
     if(s == kOfxImageEffectPropRenderQualityPreview)       return eVegasRenderQualityPreview;
@@ -568,7 +568,7 @@ namespace OFX {
   }
 
   /** @brief map a std::string to a context */
-  VegasContextEnum mapToVegasContextEnum(const std::string &s) throw(std::invalid_argument)
+  VegasContextEnum mapToVegasContextEnum(const std::string &s) OFX_THROW(std::invalid_argument)
   {
     if(s.empty() || s == kOfxImageEffectPropVegasContextUnknown)       return eVegasContextUnknown;
     if(s == kOfxImageEffectPropVegasContextMedia)         return eVegasContextMedia;
@@ -1590,7 +1590,7 @@ namespace OFX {
         std::string planeName, planeLabel, channelsLabel;
         std::vector<std::string> channels;
         extractCustomPlane(str, &planeName, &planeLabel, &channelsLabel, &channels);
-        _pixelComponentCount = channels.size();
+        _pixelComponentCount = (int)channels.size();
 #else
         _pixelComponentCount = 0;
 #endif
@@ -1951,7 +1951,7 @@ namespace OFX {
         std::string planeName, planeLabel, channelsLabel;
         std::vector<std::string> channels;
         extractCustomPlane(str, &planeName, &planeLabel, &channelsLabel, &channels);
-        return channels.size();
+        return (int)channels.size();
 #else
         return 0;
 #endif
@@ -2307,7 +2307,7 @@ namespace OFX {
 #endif
     {
 #if defined(OFX_EXTENSIONS_VEGAS) && defined(OFX_EXTENSIONS_NUKE)
-      throwHostMissingSuiteException(kFnOfxImageEffectPlaneSuite"V2 & "kOfxVegasStereoscopicImageEffectSuite);
+      throwHostMissingSuiteException(kFnOfxImageEffectPlaneSuite "V2 & " kOfxVegasStereoscopicImageEffectSuite);
 #else
 #ifdef OFX_EXTENSIONS_VEGAS
       throwHostMissingSuiteException(kOfxVegasStereoscopicImageEffectSuite);

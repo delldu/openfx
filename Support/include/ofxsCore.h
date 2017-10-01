@@ -199,7 +199,7 @@ namespace OFX {
       operator OfxStatus() const {return _status;}
 
       /** @brief reimplemented from std::exception */
-      virtual const char * what () const throw () {return mapStatusToString(_status);}
+      virtual const char * what () const OFX_NOTHROW {return mapStatusToString(_status);}
 
     };
 
@@ -212,7 +212,7 @@ namespace OFX {
       virtual ~PropertyUnknownToHost() OFX_NOTHROW {}
 
       /** @brief reimplemented from std::exception */
-      virtual const char * what () const throw ()
+      virtual const char * what () const OFX_NOTHROW
       {
         return _what.c_str();
       }
@@ -227,7 +227,7 @@ namespace OFX {
       virtual ~PropertyValueIllegalToHost() OFX_NOTHROW {}
 
       /** @brief reimplemented from std::exception */
-      virtual const char * what () const throw ()
+      virtual const char * what () const OFX_NOTHROW
       {
         return _what.c_str();
       }
@@ -244,7 +244,7 @@ namespace OFX {
       virtual ~TypeRequest() OFX_NOTHROW {}
 
       /** @brief reimplemented from std::exception */
-      virtual const char * what () const throw ()
+      virtual const char * what () const OFX_NOTHROW
       {
         return _what.c_str();
       }
@@ -264,7 +264,7 @@ namespace OFX {
       virtual ~HostInadequate() OFX_NOTHROW {}
 
       /** @brief reimplemented from std::exception */
-      virtual const char * what () const throw ()
+      virtual const char * what () const OFX_NOTHROW
       {
         return _what.c_str();
       }

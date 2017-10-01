@@ -136,7 +136,7 @@ defined(_MSC_FULL_VER) && _MSC_FULL_VER >= 190023026
 #if defined(_NOEXCEPT)
 #define OFX_NOTHROW _NOEXCEPT
 #else
-#define OFX_NOTHROW OFX_NOTHROW
+#define OFX_NOTHROW throw()
 #endif
 #endif
 

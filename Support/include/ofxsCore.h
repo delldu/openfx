@@ -128,15 +128,22 @@ of the direct OFX objects and any library side only functions.
 
 // Is noexcept supported?
 // "noexcept" is only supported since the Visual Studio 2015, as stated here: https://msdn.microsoft.com/en-us/library/wfa0edys.aspx
-#if defined(__clang__) && __has_feature(cxx_noexcept) || \
-defined(__GXX_EXPERIMENTAL_CXX0X__) && __GNUC__ * 10 + __GNUC_MINOR__ >= 46 || \
-defined(_MSC_FULL_VER) && _MSC_FULL_VER >= 190023026
+#if defined(__clang__)
+#if __has_feature(cxx_noexcept)
+#define OFX_NOTHROW noexcept(true)
+#else
+#define OFX_NOTHROW throw()
+#endif
+#else
+#if defined(__GXX_EXPERIMENTAL_CXX0X__) && __GNUC__ * 10 + __GNUC_MINOR__ >= 46 || \
+    defined(_MSC_FULL_VER) && _MSC_FULL_VER >= 190023026
 #define OFX_NOTHROW noexcept(true)
 #else
 #if defined(_NOEXCEPT)
 #define OFX_NOTHROW _NOEXCEPT
 #else
 #define OFX_NOTHROW throw()
+#endif
 #endif
 #endif
 

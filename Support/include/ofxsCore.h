@@ -332,6 +332,11 @@ namespace OFX {
     PropertySet(OfxPropertySetHandle h = NULL) : _propHandle(h) {}
     virtual ~PropertySet();
 
+    /** @brief copy constructor */
+    PropertySet(const PropertySet& p) { _propHandle = p.propSetHandle(); }
+    PropertySet& operator=(const PropertySet& p) { _propHandle = p.propSetHandle(); return *this; }
+
+  public:
     /** @brief set the handle to use for this set */
     void propSetHandle(OfxPropertySetHandle h) { _propHandle = h;}
 

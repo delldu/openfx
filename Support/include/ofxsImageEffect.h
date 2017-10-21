@@ -687,10 +687,10 @@ namespace OFX {
     std::map<std::string, std::string> _clipFrameViewsPropNames;
 #endif
 
-    std::auto_ptr<EffectOverlayDescriptor> _overlayDescriptor;
+    auto_ptr<EffectOverlayDescriptor> _overlayDescriptor;
 #ifdef OFX_EXTENSIONS_VEGAS
 #if defined(WIN32) || defined(WIN64)
-    std::auto_ptr<HWNDInteractDescriptor>  _hwndInteractDescriptor;
+    auto_ptr<HWNDInteractDescriptor>  _hwndInteractDescriptor;
 #endif // #if defined(WIN32) || defined(WIN64)
 #endif
   public :

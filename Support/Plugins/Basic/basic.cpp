@@ -264,7 +264,11 @@ public :
   virtual void render(const OFX::RenderArguments &args);
 
   /* override is identity */
-  virtual bool isIdentity(const OFX::IsIdentityArguments &args, OFX::Clip * &identityClip, double &identityTime);
+  virtual bool isIdentity(const OFX::IsIdentityArguments &args, OFX::Clip * &identityClip, double &identityTime
+#ifdef OFX_EXTENSIONS_NUKE
+                          , int& view, std::string& plane
+#endif
+  );
 
   /* override changedParam */
   virtual void changedParam(const OFX::InstanceChangedArgs &args, const std::string &paramName);
@@ -296,12 +300,12 @@ void
 BasicPlugin::setupAndProcess(ImageScalerBase &processor, const OFX::RenderArguments &args)
 {
   // get a dst image
-  std::auto_ptr<OFX::Image> dst(dstClip_->fetchImage(args.time));
+  OFX::auto_ptr<OFX::Image> dst(dstClip_->fetchImage(args.time));
   OFX::BitDepthEnum dstBitDepth       = dst->getPixelDepth();
   OFX::PixelComponentEnum dstComponents  = dst->getPixelComponents();
 
   // fetch main input image
-  std::auto_ptr<OFX::Image> src(srcClip_->fetchImage(args.time));
+  OFX::auto_ptr<OFX::Image> src(srcClip_->fetchImage(args.time));
 
   // make sure bit depths are sane
   if(src.get()) {
@@ -316,7 +320,7 @@ BasicPlugin::setupAndProcess(ImageScalerBase &processor, const OFX::RenderArgume
   // auto ptr for the mask.
   // Should do this inside the if statement below but the MS compiler I have doesn't have
   // a 'reset' function on the auto_ptr class
-  std::auto_ptr<OFX::Image> mask(getContext() != OFX::eContextFilter ? maskClip_->fetchImage(args.time) : 0);
+  OFX::auto_ptr<OFX::Image> mask(getContext() != OFX::eContextFilter ? maskClip_->fetchImage(args.time) : 0);
 
   // do we do masking
   if(getContext() != OFX::eContextFilter) {
@@ -435,7 +439,11 @@ default :
 
 // overridden is identity
 bool
-BasicPlugin:: isIdentity(const OFX::IsIdentityArguments &args, OFX::Clip * &identityClip, double &identityTime)
+BasicPlugin:: isIdentity(const OFX::IsIdentityArguments &args, OFX::Clip * &identityClip, double &identityTime
+#ifdef OFX_EXTENSIONS_NUKE
+                         , int& /*view*/, std::string& /*plane*/
+#endif
+)
 {
   // get the scale parameters
   double scale = scale_->getValueAtTime(args.time);

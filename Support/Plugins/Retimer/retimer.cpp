@@ -161,7 +161,7 @@ void
 RetimerPlugin::setupAndProcess(OFX::ImageBlenderBase &processor, const OFX::RenderArguments &args)
 {
     // get a dst image
-    std::auto_ptr<OFX::Image>  dst(dstClip_->fetchImage(args.time));
+    OFX::auto_ptr<OFX::Image>  dst(dstClip_->fetchImage(args.time));
     OFX::BitDepthEnum          dstBitDepth    = dst->getPixelDepth();
     OFX::PixelComponentEnum    dstComponents  = dst->getPixelComponents();
   
@@ -183,8 +183,8 @@ RetimerPlugin::setupAndProcess(OFX::ImageBlenderBase &processor, const OFX::Rend
     framesNeeded(sourceTime, args.fieldToRender, &fromTime, &toTime, &blend);
 
     // fetch the two source images
-    std::auto_ptr<OFX::Image> fromImg(srcClip_->fetchImage(fromTime));
-    std::auto_ptr<OFX::Image> toImg(srcClip_->fetchImage(toTime));
+    OFX::auto_ptr<OFX::Image> fromImg(srcClip_->fetchImage(fromTime));
+    OFX::auto_ptr<OFX::Image> toImg(srcClip_->fetchImage(toTime));
 
     // make sure bit depths are sane
     if(fromImg.get()) checkComponents(*fromImg, dstBitDepth, dstComponents);

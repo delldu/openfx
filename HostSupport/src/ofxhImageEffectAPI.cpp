@@ -231,7 +231,7 @@ namespace OFX {
         OFX::Host::Property::Set inarg(inargspec);
 
         PluginHandle *ph = getPluginHandle();
-        std::auto_ptr<ImageEffect::Descriptor> newContext( gImageEffectHost->makeDescriptor(getDescriptor(), this));
+        auto_ptr<ImageEffect::Descriptor> newContext( gImageEffectHost->makeDescriptor(getDescriptor(), this));
 
         OfxStatus stat;
         try {

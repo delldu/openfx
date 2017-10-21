@@ -65,7 +65,7 @@ namespace OFX {
         mutable std::set<std::string> _knownContexts;
         mutable bool _madeKnownContexts;
 
-        std::auto_ptr<PluginHandle> _pluginHandle;
+        auto_ptr<PluginHandle> _pluginHandle;
 
         void addContextInternal(const std::string &context) const;
 

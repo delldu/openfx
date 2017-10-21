@@ -109,6 +109,7 @@ of the direct OFX objects and any library side only functions.
 #include <exception>
 #include <stdexcept>
 #include <sstream>
+#include <memory>
 
 #ifdef OFX_CLIENT_EXCEPTION_HEADER
 #include OFX_CLIENT_EXCEPTION_HEADER
@@ -171,6 +172,13 @@ struct Ofx3DPointD {
 /** @brief The core 'OFX Support' namespace, used by plugin implementations. All code for these are defined in the common support libraries.
 */
 namespace OFX {
+#if __cplusplus >= 201103L
+  template <typename T>
+  using auto_ptr = std::unique_ptr<T>;
+#else
+  using std::auto_ptr;
+#endif
+  
   /** forward class declarations */
   class PropertySet;
 

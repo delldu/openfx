@@ -31,9 +31,17 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef OFX_MEMORY_H
 #define OFX_MEMORY_H
 
+#include <memory>
+
 namespace OFX {
 
   namespace Host {
+#if __cplusplus >= 201103L
+    template <typename T>
+    using auto_ptr = std::unique_ptr<T>;
+#else
+    using std::auto_ptr;
+#endif
 
     namespace Memory {
 

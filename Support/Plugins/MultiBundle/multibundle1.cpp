@@ -199,7 +199,11 @@ public :
   }
   void setEnabledness();
   virtual void render(const OFX::RenderArguments &args);
-  virtual bool isIdentity(const OFX::IsIdentityArguments &args, OFX::Clip * &identityClip, double &identityTime);
+  virtual bool isIdentity(const OFX::IsIdentityArguments &args, OFX::Clip * &identityClip, double &identityTime
+#ifdef OFX_EXTENSIONS_NUKE
+                          , int& view, std::string& plane
+#endif
+  );
   virtual void changedParam(const OFX::InstanceChangedArgs &args, const std::string &paramName);
   virtual void changedClip(const OFX::InstanceChangedArgs &args, const std::string &clipName);
   virtual bool getRegionOfDefinition(const OFX::RegionOfDefinitionArguments &args, OfxRectD &rod);
@@ -209,10 +213,10 @@ public :
 
 void GammaPlugin::setupAndProcess(ImageScalerBase &processor, const OFX::RenderArguments &args)
 {
-  std::auto_ptr<OFX::Image> dst(dstClip_->fetchImage(args.time));
+  OFX::auto_ptr<OFX::Image> dst(dstClip_->fetchImage(args.time));
   OFX::BitDepthEnum dstBitDepth       = dst->getPixelDepth();
   OFX::PixelComponentEnum dstComponents  = dst->getPixelComponents();
-  std::auto_ptr<OFX::Image> src(srcClip_->fetchImage(args.time));
+  OFX::auto_ptr<OFX::Image> src(srcClip_->fetchImage(args.time));
   if(src.get()) 
   {
     OFX::BitDepthEnum    srcBitDepth      = src->getPixelDepth();
@@ -220,7 +224,7 @@ void GammaPlugin::setupAndProcess(ImageScalerBase &processor, const OFX::RenderA
     if(srcBitDepth != dstBitDepth || srcComponents != dstComponents)
       throw int(1);
   }
-  std::auto_ptr<OFX::Image> mask(getContext() != OFX::eContextFilter ? maskClip_->fetchImage(args.time) : 0);
+  OFX::auto_ptr<OFX::Image> mask(getContext() != OFX::eContextFilter ? maskClip_->fetchImage(args.time) : 0);
   if(getContext() != OFX::eContextFilter) 
   {
     processor.doMasking(true);
@@ -312,7 +316,11 @@ void GammaPlugin::render(const OFX::RenderArguments &args)
   } 
 }
 
-bool GammaPlugin:: isIdentity(const OFX::IsIdentityArguments &args, OFX::Clip * &identityClip, double &identityTime)
+bool GammaPlugin:: isIdentity(const OFX::IsIdentityArguments &args, OFX::Clip * &identityClip, double &identityTime
+#ifdef OFX_EXTENSIONS_NUKE
+                              , int& /*view*/, std::string& /*plane*/
+#endif
+)
 {
   double scale = scale_->getValueAtTime(args.time);
   double rScale = 1, gScale = 1, bScale = 1, aScale = 1;

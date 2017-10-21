@@ -72,7 +72,11 @@ public :
   virtual void render(const OFX::RenderArguments &args);
 
   /* override is identity */
-  virtual bool isIdentity(const OFX::IsIdentityArguments &args, OFX::Clip * &identityClip, double &identityTime);
+  virtual bool isIdentity(const OFX::IsIdentityArguments &args, OFX::Clip * &identityClip, double &identityTime
+#ifdef OFX_EXTENSIONS_NUKE
+                          , int& view, std::string& plane
+#endif
+  );
 
   /* set up and run a processor */
   void
@@ -105,13 +109,13 @@ void
 CrossFadePlugin::setupAndProcess(OFX::ImageBlenderBase &processor, const OFX::RenderArguments &args)
 {
   // get a dst image
-  std::auto_ptr<OFX::Image>  dst(dstClip_->fetchImage(args.time));
+  OFX::auto_ptr<OFX::Image>  dst(dstClip_->fetchImage(args.time));
   OFX::BitDepthEnum          dstBitDepth    = dst->getPixelDepth();
   OFX::PixelComponentEnum    dstComponents  = dst->getPixelComponents();
 
   // fetch the two source images
-  std::auto_ptr<OFX::Image> fromImg(fromClip_->fetchImage(args.time));
-  std::auto_ptr<OFX::Image> toImg(toClip_->fetchImage(args.time));
+  OFX::auto_ptr<OFX::Image> fromImg(fromClip_->fetchImage(args.time));
+  OFX::auto_ptr<OFX::Image> toImg(toClip_->fetchImage(args.time));
 
   // make sure bit depths are sane
   if(fromImg.get()) checkComponents(*fromImg, dstBitDepth, dstComponents);
@@ -194,7 +198,11 @@ default :
 
 // overridden is identity
 bool
-CrossFadePlugin::isIdentity(const OFX::IsIdentityArguments &args, OFX::Clip * &identityClip, double &identityTime)
+CrossFadePlugin::isIdentity(const OFX::IsIdentityArguments &args, OFX::Clip * &identityClip, double &identityTime
+#ifdef OFX_EXTENSIONS_NUKE
+                            , int& /*view*/, std::string& /*plane*/
+#endif
+)
 {
   // get the transition value
   float blend = (float)transition_->getValueAtTime(args.time);

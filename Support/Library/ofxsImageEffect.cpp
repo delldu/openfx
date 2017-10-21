@@ -5446,7 +5446,7 @@ OFX::OfxPlugInfo generatePlugInfo(OFX::PluginFactory* factory, std::string& newI
 {
   validateXMLString(factory->getID(), true);
   newID = factory->getUID();
-  std::auto_ptr<OfxPlugin> ofxPlugin(new OfxPlugin());
+  OFX::auto_ptr<OfxPlugin> ofxPlugin(new OfxPlugin());
   ofxPlugin->pluginApi  = kOfxImageEffectPluginApi;
   ofxPlugin->apiVersion = 1;
   ofxPlugin->pluginIdentifier   = factory->getID().c_str();

@@ -380,7 +380,7 @@ namespace OFX {
         ValueParamDescriptor(const std::string &name, ParamTypeEnum type, OfxPropertySetHandle props);
 
         friend class ParamSetDescriptor;
-        std::auto_ptr<ParamInteractDescriptor> _interact;
+        auto_ptr<ParamInteractDescriptor> _interact;
     public :
         /** @brief dtor */
         ~ValueParamDescriptor();
@@ -932,7 +932,7 @@ namespace OFX {
 
         OfxParamHandle _ofxParamHandle;
         ParamSetDescriptor* _paramSet;
-        std::auto_ptr<ParamInteractDescriptor> _interact;
+        auto_ptr<ParamInteractDescriptor> _interact;
 
         // so it can make one
         friend class ParamSetDescriptor;

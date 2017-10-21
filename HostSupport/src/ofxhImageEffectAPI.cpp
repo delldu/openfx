@@ -69,7 +69,7 @@ namespace OFX {
         , _pc(pc)
         , _baseDescriptor(NULL)
         , _madeKnownContexts(false)
-        , _pluginHandle(NULL)
+        , _pluginHandle()
       {
         _baseDescriptor = gImageEffectHost->makeDescriptor(this);
       }
@@ -87,7 +87,7 @@ namespace OFX {
         , _pc(pc)
         , _baseDescriptor(NULL) 
         , _madeKnownContexts(false)
-        , _pluginHandle(NULL)
+        , _pluginHandle()
       {        
         _baseDescriptor = gImageEffectHost->makeDescriptor(this);
       }

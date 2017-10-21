@@ -54,7 +54,7 @@ public :
   /** @brief no arg ctor */
   InvertBase(OFX::ImageEffect &instance)
     : OFX::ImageProcessor(instance)
-    , _srcImg(0)
+    , _srcImg(NULL)
   {        
   }
 
@@ -115,8 +115,8 @@ public :
   /** @brief ctor */
   InvertPlugin(OfxImageEffectHandle handle)
     : ImageEffect(handle)
-    , dstClip_(0)
-    , srcClip_(0)
+    , dstClip_(NULL)
+    , srcClip_(NULL)
   {
     dstClip_ = fetchClip(kOfxImageEffectOutputClipName);
     srcClip_ = fetchClip(kOfxImageEffectSimpleSourceClipName);

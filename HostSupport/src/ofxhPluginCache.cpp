@@ -248,7 +248,7 @@ PluginCache::~PluginCache()
   _binaries.clear();
 }
 
-PluginCache::PluginCache() : _hostSpec(0), _xmlCurrentBinary(0), _xmlCurrentPlugin(0) {
+PluginCache::PluginCache() : _hostSpec(NULL), _xmlCurrentBinary(NULL), _xmlCurrentPlugin(NULL) {
   
   _cacheVersion = "";
   _ignoreCache = false;

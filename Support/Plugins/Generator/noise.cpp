@@ -122,8 +122,8 @@ public :
   /** @brief ctor */
   NoisePlugin(OfxImageEffectHandle handle)
     : ImageEffect(handle)
-    , dstClip_(0)
-    , noise_(0)
+    , dstClip_(NULL)
+    , noise_(NULL)
   {
     dstClip_ = fetchClip(kOfxImageEffectOutputClipName);
     noise_   = fetchDoubleParam("Noise");

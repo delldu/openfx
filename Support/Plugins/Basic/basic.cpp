@@ -110,8 +110,8 @@ public :
   /** @brief no arg ctor */
   ImageScalerBase(OFX::ImageEffect &instance)
     : OFX::ImageProcessor(instance)
-    , _srcImg(0)
-    , _maskImg(0)
+    , _srcImg(NULL)
+    , _maskImg(NULL)
     , _rScale(1)
     , _gScale(1)
     , _bScale(1)
@@ -233,14 +233,14 @@ public :
   /** @brief ctor */
   BasicPlugin(OfxImageEffectHandle handle)
     : ImageEffect(handle)
-    , dstClip_(0)
-    , srcClip_(0)
-    , scale_(0)
-    , rScale_(0)
-    , gScale_(0)
-    , bScale_(0)
-    , aScale_(0)
-    , componentScalesEnabled_(0)
+    , dstClip_(NULL)
+    , srcClip_(NULL)
+    , scale_(NULL)
+    , rScale_(NULL)
+    , gScale_(NULL)
+    , bScale_(NULL)
+    , aScale_(NULL)
+    , componentScalesEnabled_(NULL)
   {
     dstClip_ = fetchClip(kOfxImageEffectOutputClipName);
     srcClip_ = fetchClip(kOfxImageEffectSimpleSourceClipName);

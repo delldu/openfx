@@ -69,7 +69,7 @@ namespace OFX {
         , _pc(pc)
         , _baseDescriptor(NULL)
         , _madeKnownContexts(false)
-        , _pluginHandle(0)
+        , _pluginHandle(NULL)
       {
         _baseDescriptor = gImageEffectHost->makeDescriptor(this);
       }
@@ -87,7 +87,7 @@ namespace OFX {
         , _pc(pc)
         , _baseDescriptor(NULL) 
         , _madeKnownContexts(false)
-        , _pluginHandle(0)
+        , _pluginHandle(NULL)
       {        
         _baseDescriptor = gImageEffectHost->makeDescriptor(this);
       }
@@ -169,7 +169,7 @@ namespace OFX {
           OfxPlugin *op = _pluginHandle->getOfxPlugin();
           
           if (!op) {
-            _pluginHandle.reset(0);
+            _pluginHandle.reset(NULL);
             return 0;
           }
 
@@ -185,7 +185,7 @@ namespace OFX {
           } CatchAllSetStatus(stat, gImageEffectHost, op, kOfxActionLoad);
 
           if (stat != kOfxStatOK && stat != kOfxStatReplyDefault) {
-            _pluginHandle.reset(0);
+            _pluginHandle.reset(NULL);
             return 0;
           }
           
@@ -200,7 +200,7 @@ namespace OFX {
           } CatchAllSetStatus(stat, gImageEffectHost, op, kOfxActionDescribe);
 
           if (stat != kOfxStatOK && stat != kOfxStatReplyDefault) {
-            _pluginHandle.reset(0);
+            _pluginHandle.reset(NULL);
             return 0;
           }
         }
@@ -294,11 +294,11 @@ namespace OFX {
 
       PluginCache::PluginCache(OFX::Host::ImageEffect::Host &host) 
         : PluginAPICacheI(kOfxImageEffectPluginApi, 1, 1)
-        , _currentPlugin(0)
-        , _currentProp(0)
-        , _currentContext(0)
-        , _currentParam(0)
-        , _currentClip(0)
+        , _currentPlugin(NULL)
+        , _currentProp(NULL)
+        , _currentContext(NULL)
+        , _currentParam(NULL)
+        , _currentClip(NULL)
         , _host(&host)
       {
         gImageEffectHost = &host;

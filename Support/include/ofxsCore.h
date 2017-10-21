@@ -329,7 +329,7 @@ namespace OFX {
     static bool getThrowOnUnsupportedProperties(void) {return _gThrowOnUnsupported;}
 
     /** @brief construct a property set */
-    PropertySet(OfxPropertySetHandle h = 0) : _propHandle(h) {}
+    PropertySet(OfxPropertySetHandle h = NULL) : _propHandle(h) {}
     virtual ~PropertySet();
 
     /** @brief set the handle to use for this set */

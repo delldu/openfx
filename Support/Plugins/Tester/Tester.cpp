@@ -214,7 +214,7 @@ class GenericTestBase : public OFX::ImageProcessor {
 protected :
   OFX::Image *_srcImg;
 public :
-  GenericTestBase(OFX::ImageEffect &instance): OFX::ImageProcessor(instance), _srcImg(0)
+  GenericTestBase(OFX::ImageEffect &instance): OFX::ImageProcessor(instance), _srcImg(NULL)
   {        
   }
   void setSrcImg(OFX::Image *v) {_srcImg = v;}
@@ -277,7 +277,7 @@ protected :
   OFX::Clip *srcClip_;
 
 public :
-  GenericTestPlugin(OfxImageEffectHandle handle) : ImageEffect(handle), dstClip_(0), srcClip_(0)
+  GenericTestPlugin(OfxImageEffectHandle handle) : ImageEffect(handle), dstClip_(NULL), srcClip_(NULL)
   {
     dstClip_ = fetchClip(kOfxImageEffectOutputClipName);
     srcClip_ = fetchClip(kOfxImageEffectSimpleSourceClipName);

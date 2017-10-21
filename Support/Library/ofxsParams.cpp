@@ -1362,8 +1362,8 @@ namespace OFX {
   /** @brief hidden constructor */
   ParametricParamDescriptor::ParametricParamDescriptor(const std::string &name, OfxPropertySetHandle props)
     : ParamDescriptor(name, eParametricParam, props)
-    , _ofxParamHandle(0)
-    , _paramSet(0)
+    , _ofxParamHandle(NULL)
+    , _paramSet(NULL)
   {
   }
 
@@ -1456,7 +1456,7 @@ namespace OFX {
   // Descriptor for a set of parameters
   /** @brief hidden ctor */
   ParamSetDescriptor::ParamSetDescriptor(void)
-    : _paramSetHandle(0)
+    : _paramSetHandle(NULL)
   {
   }
 
@@ -1483,7 +1483,7 @@ namespace OFX {
       throwSuiteStatusException(stat);
     }
     else {
-      _paramSetProps.propSetHandle(0);
+      _paramSetProps.propSetHandle(NULL);
     }
   }
 
@@ -3918,7 +3918,7 @@ namespace OFX {
   //  for a set of parameters
   /** @brief hidden ctor */
   ParamSet::ParamSet(void)
-    : _paramSetHandle(0)
+    : _paramSetHandle(NULL)
   {
   }
 
@@ -3937,7 +3937,7 @@ namespace OFX {
       throwSuiteStatusException(stat);
     }
     else {
-      _paramSetProps.propSetHandle(0);
+      _paramSetProps.propSetHandle(NULL);
     }
   }
 

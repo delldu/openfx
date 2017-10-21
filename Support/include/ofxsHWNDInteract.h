@@ -136,7 +136,7 @@ namespace OFX {
   class InteractDescriptor2
   {
   public:
-    InteractDescriptor2():_props(0) {}
+    InteractDescriptor2():_props(NULL) {}
     virtual ~InteractDescriptor2() {}
     void                         setPropertySet(OFX::PropertySet* props){ _props = props; }
     virtual HWNDInteract*        createInstance(OfxInteractHandle handle, ImageEffect *effect) = 0;

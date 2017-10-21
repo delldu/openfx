@@ -166,11 +166,11 @@ namespace OFX {
       double vDouble;
       void  *vPointer;
 
-      ValueHolder(void) : vString(), vInt(0), vDouble(0.), vPointer(0) {}
-      ValueHolder(char  *s) : vString(s), vInt(0), vDouble(0.), vPointer(0) {}
-      ValueHolder(const std::string &s) : vString(s), vInt(0), vDouble(0.), vPointer(0) {}
-      ValueHolder(int    i) : vString(), vInt(i), vDouble(0.), vPointer(0) {}
-      ValueHolder(double d) : vString(), vInt(0), vDouble(d), vPointer(0) {}
+      ValueHolder(void) : vString(), vInt(0), vDouble(0.), vPointer(NULL) {}
+      ValueHolder(char  *s) : vString(s), vInt(0), vDouble(0.), vPointer(NULL) {}
+      ValueHolder(const std::string &s) : vString(s), vInt(0), vDouble(0.), vPointer(NULL) {}
+      ValueHolder(int    i) : vString(), vInt(i), vDouble(0.), vPointer(NULL) {}
+      ValueHolder(double d) : vString(), vInt(0), vDouble(d), vPointer(NULL) {}
       ValueHolder(void  *p) : vString(), vInt(0), vDouble(0.), vPointer(p) {}
 
       ValueHolder &operator = (char *v)  {vString = v; return *this;}

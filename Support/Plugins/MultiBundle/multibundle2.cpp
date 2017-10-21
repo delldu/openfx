@@ -145,7 +145,7 @@ protected:
   OFX::RGBAParam *colour_;
   OFX::Double2DParam* position_;
 public:
-  DotExamplePlugin(OfxImageEffectHandle handle): ImageEffect(handle), dstClip_(0), radius_(0) , colour_(0), position_(0)
+  DotExamplePlugin(OfxImageEffectHandle handle): ImageEffect(handle), dstClip_(NULL), radius_(NULL) , colour_(NULL), position_(NULL)
   {
     dstClip_ = fetchClip(kOfxImageEffectOutputClipName);
     radius_   = fetchDoubleParam("radius");

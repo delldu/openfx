@@ -688,7 +688,7 @@ namespace OFX {
       Instance::Instance(Descriptor& descriptor, Param::SetInstance* paramSet) 
         : Base(descriptor.getName(), descriptor.getType(), descriptor.getProperties())
         , _paramSetInstance(paramSet)
-        , _parentInstance(0)
+        , _parentInstance(NULL)
       {
         _properties.addNotifyHook(kOfxParamPropEnabled, this);
         _properties.addNotifyHook(kOfxParamPropSecret, this);

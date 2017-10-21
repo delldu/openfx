@@ -198,7 +198,7 @@ public :
   /** @brief ctor */
   BasePlugin(OfxImageEffectHandle handle)
     : ImageEffect(handle)
-    , dstClip_(0)
+    , dstClip_(NULL)
   {
     dstClip_ = fetchClip(kOfxImageEffectOutputClipName);
   }
@@ -229,7 +229,7 @@ public :
   /** @brief ctor */
   FilterPlugin(OfxImageEffectHandle handle)
     : BasePlugin(handle)
-    , srcClip_(0)
+    , srcClip_(NULL)
   {
     srcClip_ = fetchClip(kOfxImageEffectSimpleSourceClipName);
   }
@@ -250,7 +250,7 @@ public :
   /** @brief ctor */
   GeneralPlugin(OfxImageEffectHandle handle)
     : FilterPlugin(handle)
-    , extraClip_(0)
+    , extraClip_(NULL)
   {
     extraClip_ = fetchClip("Extra");
   }

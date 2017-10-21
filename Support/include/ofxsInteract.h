@@ -458,7 +458,7 @@ namespace OFX {
   class InteractDescriptor
   {
   public:
-    InteractDescriptor():_props(0) {}
+    InteractDescriptor():_props(NULL) {}
     virtual ~InteractDescriptor() {}
     void setPropertySet(OFX::PropertySet* props){ _props = props; }
     virtual Interact* createInstance(OfxInteractHandle handle, ImageEffect *effect) = 0;

@@ -16,8 +16,8 @@ namespace OFX {
         /** @brief no arg ctor */
         ImageBlenderBase(OFX::ImageEffect &instance)
           : OFX::ImageProcessor(instance)
-          , _fromImg(0)
-          , _toImg(0)
+          , _fromImg(NULL)
+          , _toImg(NULL)
           , _blend(0.5f)
         {        
         }

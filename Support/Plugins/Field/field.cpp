@@ -56,7 +56,7 @@ public :
   /** @brief no arg ctor */
   FieldBase(OFX::ImageEffect &instance, OFX::FieldEnum field)
     : OFX::ImageProcessor(instance)
-      , _srcImg(0), _field(field)
+      , _srcImg(NULL), _field(field)
   {        
   }
 
@@ -130,8 +130,8 @@ public :
   /** @brief ctor */
   FieldPlugin(OfxImageEffectHandle handle)
     : ImageEffect(handle)
-    , dstClip_(0)
-    , srcClip_(0)
+    , dstClip_(NULL)
+    , srcClip_(NULL)
   {
     dstClip_ = fetchClip(kOfxImageEffectOutputClipName);
     srcClip_ = fetchClip(kOfxImageEffectSimpleSourceClipName);

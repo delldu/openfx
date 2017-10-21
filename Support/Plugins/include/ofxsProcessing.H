@@ -71,7 +71,7 @@ namespace OFX {
         /** @brief ctor */
         ImageProcessor(OFX::ImageEffect &effect)
           : _effect(effect)
-          , _dstImg(0)
+          , _dstImg(NULL)
 #ifdef OFX_EXTENSIONS_RESOLVE
           , _isEnabledOpenCLRender(false)
           , _isEnabledCudaRender(false)

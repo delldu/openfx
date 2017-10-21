@@ -56,7 +56,7 @@ public:
 
   MultiplyProcessorBase(ImageEffect &instance)
   : ImageProcessor(instance)
-  , _srcImg(0)
+  , _srcImg(NULL)
   {
     _values[0] = 1.;
     _values[1] = 1.;
@@ -247,9 +247,9 @@ public:
   /** @brief ctor */
   MultiplyPlugin(OfxImageEffectHandle handle)
   : ImageEffect(handle)
-  , _dstClip(0)
-  , _srcClip(0)
-  , _value(0)
+  , _dstClip(NULL)
+  , _srcClip(NULL)
+  , _value(NULL)
   {
     _dstClip = fetchClip(kOfxImageEffectOutputClipName);
     assert( _dstClip && (!_dstClip->isConnected() || _dstClip->getPixelComponents() == ePixelComponentRGB ||

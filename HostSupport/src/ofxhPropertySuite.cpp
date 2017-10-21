@@ -196,7 +196,7 @@ namespace OFX {
         , _type(type)
         , _dimension(dimension)
         , _pluginReadOnly(pluginReadOnly) 
-        , _getHook(0)          
+        , _getHook(NULL)
       {
       }
 
@@ -205,7 +205,7 @@ namespace OFX {
         , _type(other._type)
         , _dimension(other._dimension)
         , _pluginReadOnly(other._pluginReadOnly) 
-        , _getHook(0)          
+        , _getHook(NULL)
       {
       }
       

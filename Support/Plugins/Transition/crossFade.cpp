@@ -57,10 +57,10 @@ public :
   /** @brief ctor */
   CrossFadePlugin(OfxImageEffectHandle handle)
     : ImageEffect(handle)
-    , dstClip_(0)
-    , fromClip_(0)
-    , toClip_(0)
-    , transition_(0)
+    , dstClip_(NULL)
+    , fromClip_(NULL)
+    , toClip_(NULL)
+    , transition_(NULL)
   {
     dstClip_ = fetchClip(kOfxImageEffectOutputClipName);
     fromClip_ = fetchClip(kOfxImageEffectTransitionSourceFromClipName);

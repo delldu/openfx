@@ -66,11 +66,11 @@ public :
     /** @brief ctor */
     RetimerPlugin(OfxImageEffectHandle handle)
       : ImageEffect(handle)
-      , dstClip_(0)
-      , srcClip_(0)
-      , sourceTime_(0)
-      , speed_(0)
-      , duration_(0)
+      , dstClip_(NULL)
+      , srcClip_(NULL)
+      , sourceTime_(NULL)
+      , speed_(NULL)
+      , duration_(NULL)
     {
         dstClip_ = fetchClip(kOfxImageEffectOutputClipName);
         srcClip_ = fetchClip(kOfxImageEffectSimpleSourceClipName);

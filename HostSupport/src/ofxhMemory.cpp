@@ -42,7 +42,7 @@ namespace OFX {
 
     namespace Memory {
 
-      Instance::Instance() : _ptr(0), _locked(0) {}
+      Instance::Instance() : _ptr(NULL), _locked(0) {}
 
       Instance::~Instance() {
         delete [] _ptr;

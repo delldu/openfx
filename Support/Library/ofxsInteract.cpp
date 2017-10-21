@@ -90,7 +90,7 @@ namespace OFX {
   /** @brief ctor */
   Interact::Interact(OfxInteractHandle handle)
     : _interactHandle(handle)
-    , _effect(0)
+    , _effect(NULL)
   {
     // get the properties set on this handle
     OfxPropertySetHandle propHandle;

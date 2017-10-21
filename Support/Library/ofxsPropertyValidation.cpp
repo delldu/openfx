@@ -365,7 +365,7 @@ namespace OFX {
       PropertyDescription(kOfxImageEffectPropSupportsMultipleClipPARs,     OFX::eInt, 1, eDescDefault, 0, eDescFinished),
 
       // Pointer props with defaults that can be checked against
-      PropertyDescription(kOfxImageEffectPluginPropOverlayInteractV1,      OFX::ePointer, 1, eDescDefault, (void *)(0), eDescFinished),
+      PropertyDescription(kOfxImageEffectPluginPropOverlayInteractV1,      OFX::ePointer, 1, eDescDefault, NULLPTR, eDescFinished),
 
       // string props that have variable dimension, and can't be checked against for defaults
       PropertyDescription(kOfxImageEffectPropSupportedContexts,  OFX::eString, -1, eDescFinished),
@@ -389,7 +389,7 @@ namespace OFX {
       PropertyDescription(kOfxImageEffectPropSupportsTiles,            OFX::eInt,     1, eDescDefault, 1, eDescFinished),
 
       // Pointer props with defaults that can be checked against
-      PropertyDescription(kOfxPropInstanceData,                        OFX::ePointer, 1, eDescDefault, (void *)(0), eDescFinished),
+      PropertyDescription(kOfxPropInstanceData,                        OFX::ePointer, 1, eDescDefault, NULLPTR, eDescFinished),
       PropertyDescription(kOfxImageEffectPropPluginHandle,             OFX::ePointer, 1, eDescFinished),
 
       // string props that have no defaults that can be checked against
@@ -794,7 +794,7 @@ namespace OFX {
       PropertyDescription(kOfxParamPropScriptName,        OFX::eString, 1, eDescFinished),
       PropertyDescription(kOfxParamPropParent,            OFX::eString, 1, eDescFinished),
       PropertyDescription(kOfxParamPropEnabled,           OFX::eInt,    1, eDescDefault, 1, eDescFinished),
-      PropertyDescription(kOfxParamPropDataPtr,           OFX::ePointer,1, eDescDefault, (void *)(0), eDescFinished),
+      PropertyDescription(kOfxParamPropDataPtr,           OFX::ePointer,1, eDescDefault, NULLPTR, eDescFinished),
     };
 
 
@@ -987,7 +987,7 @@ namespace OFX {
       PropertyDescription(kOfxParamPropCanUndo,                      OFX::eInt,     1, eDescDefault, 1, eDescFinished),
       PropertyDescription(kOfxParamPropParametricDimension,          OFX::eInt,     1, eDescDefault, 1, eDescFinished),
       PropertyDescription(kOfxParamPropParametricUIColour,           OFX::eDouble, -1, eDescFinished),
-      PropertyDescription(kOfxParamPropParametricInteractBackground, OFX::ePointer, 1, eDescDefault, (void*)(0), eDescFinished),
+      PropertyDescription(kOfxParamPropParametricInteractBackground, OFX::ePointer, 1, eDescDefault, NULLPTR, eDescFinished),
       PropertyDescription(kOfxParamPropParametricRange,              OFX::eDouble,  2, eDescDefault, 0.0, 1.0, eDescFinished),
     };
 

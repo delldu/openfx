@@ -146,7 +146,7 @@ namespace OFX {
 
     /** @brief ctor */
     Mutex::Mutex(int lockCount)
-      : _handle(0)
+      : _handle(NULL)
     {
       OfxStatus stat = OFX::Private::gThreadSuite ? OFX::Private::gThreadSuite->mutexCreate(&_handle, lockCount) : kOfxStatReplyDefault;
       throwSuiteStatusException(stat);

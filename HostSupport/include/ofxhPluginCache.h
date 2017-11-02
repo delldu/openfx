@@ -401,9 +401,14 @@ namespace OFX {
       std::set<std::string>     _nonrecursePath; ///< list of directories to look in (non-recursively)
       std::list<std::string>    _pluginDirs;  ///< list of directories we found
       std::list<PluginBinary *> _binaries; ///< all the binaries we know about, we own these
+#ifdef OFX_USE_STATIC_PLUGINS
       PluginBinary* _staticBinary; /// < the statically linked binary
+#endif
       std::list<Plugin *>       _plugins;  ///< all the plugins inside the binaries, we don't own these, populated from _binaries
       std::set<std::string>     _knownBinFiles;
+#ifdef OFX_USE_STATIC_PLUGINS
+      std::string               _hostAppBinFilePath; ///< file path of the host application binary, used to timestamp statically linked plug-ins
+#endif
 
       PluginBinary *_xmlCurrentBinary;
       Plugin *_xmlCurrentPlugin;
@@ -467,6 +472,11 @@ namespace OFX {
           _nonrecursePath.insert(f);
         }
       }
+#ifdef OFX_USE_STATIC_PLUGINS
+      void setHostApplicationBinPath(const std::string& f) {
+        _hostAppBinFilePath = f;
+      }
+#endif
 
       /// specify which subdirectory of /usr/OFX or equivilant
       /// (as well as 'Plugins') to look in for plugins.

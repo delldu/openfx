@@ -480,11 +480,23 @@ void PluginCache::scanPluginFiles()
        paths++) {
     scanDirectory(foundBinFiles, *paths, _nonrecursePath.find(*paths) == _nonrecursePath.end());
   }
-  
+
+#ifdef OFX_USE_STATIC_PLUGINS
   // Now add all static plug-ins
-  _staticBinary = new PluginBinary(&OfxGetNumberOfPlugins,&OfxGetPlugin,this);
-  _binaries.push_back(_staticBinary);
-  
+
+  // If already loaded from the cache, the static binary must point to the same host binary file
+  assert(!_staticBinary || _staticBinary->getFilePath() == _hostAppBinFilePath);
+  if (!_staticBinary) {
+    _staticBinary = new PluginBinary(_hostAppBinFilePath, &OfxGetNumberOfPlugins,&OfxGetPlugin,this, 0, 0);
+    if (_staticBinary->isInvalid()) {
+      std::cerr << "WARNING: ignoring statically linked plug-ins because host application binary file path (" << _hostAppBinFilePath << ") is wrongly set" << std::endl;
+      delete _staticBinary;
+      _staticBinary = 0;
+    } else {
+      _binaries.push_back(_staticBinary);
+    }
+  }
+#endif
   
   std::list<PluginBinary *>::iterator i=_binaries.begin();
   while (i!=_binaries.end()) {
@@ -592,14 +604,33 @@ void PluginCache::elementBeginCallback(void */*userData*/, const XML_Char *name,
     if (!mapHasAll(attmap, binAtts)) {
       // no path: bad XML
     }
-    
+
+#ifdef OFX_USE_STATIC_PLUGINS
+    bool isStaticLinkedCachedBinary = OFX::Host::Property::stringToInt(attmap["static_bin"]);
+#endif
+
     std::string fname = attmap["path"];
     std::string bname = attmap["bundle_path"];
     time_t mtime = OFX::Host::Property::stringToInt(attmap["mtime"]);
-    size_t size = OFX::Host::Property::stringToInt(attmap["size"]);
-    
-    
-    _xmlCurrentBinary = new PluginBinary(fname, bname, mtime, size);
+    off_t size = OFX::Host::Property::stringToInt(attmap["size"]);
+
+    PluginBinary* pb;
+#ifdef OFX_USE_STATIC_PLUGINS
+    if (isStaticLinkedCachedBinary) {
+      // only 1 static binary allowed!
+      if (_staticBinary) {
+        _ignoreCache = true;
+        return;
+      }
+      // We need to provide the 2 function pointers for the static binary
+      pb = new PluginBinary(_hostAppBinFilePath, &OfxGetNumberOfPlugins,&OfxGetPlugin, this, &fname, &mtime, &size);
+      _staticBinary = pb;
+    } else
+#endif
+    {
+      pb = new PluginBinary(fname, bname, mtime, size);
+    }
+    _xmlCurrentBinary = pb;
     _binaries.push_back(_xmlCurrentBinary);
     _knownBinFiles.insert(fname);
     

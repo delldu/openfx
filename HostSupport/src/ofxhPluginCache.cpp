@@ -186,10 +186,15 @@ PluginHandle::PluginHandle(Plugin *p, OFX::Host::Host *host)
     _b->_binary->ref();
   }
   _op = 0;
-  assert(_b->_getPluginFunc);
-  //OfxPlugin* (*getPlug)(int) = (OfxPlugin*(*)(int)) _b->_binary->findSymbol("OfxGetPlugin");
+  OfxPlugin* (*getPlug)(int) = 0;
   if (_b->_getPluginFunc) {
-    _op = _b->_getPluginFunc(p->getIndex());
+    getPlug = _b->_getPluginFunc;
+  }
+  if (!getPlug && _b->_binary) {
+    getPlug = (OfxPlugin*(*)(int)) _b->_binary->findSymbol("OfxGetPlugin");
+  }
+  if (getPlug) {
+    _op = getPlug(p->getIndex());
     if (_op) {         
       _op->setHost(host->getHandle());
     }

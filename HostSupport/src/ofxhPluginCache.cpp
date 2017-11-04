@@ -104,6 +104,13 @@ static const char *getArchStr()
 #include "shlobj.h"
 #endif
 
+#ifdef OFX_USE_STATIC_PLUGINS
+// See https://stackoverflow.com/questions/5202142/static-variable-initialization-over-a-library
+// When linked statically, the plug-ins automatic registration using static variable need
+// to be enforced with a static variable in a header
+#include "ofxsCore.h"
+#endif
+
 bool OFX::Host::PluginCache::_useStdOFXPluginsLocation = true;
 OFX::Host::PluginCache* OFX::Host::PluginCache::gPluginCachePtr = 0;
 
@@ -118,8 +125,6 @@ void PluginBinary::loadPluginInfo(PluginCache *cache) {
   if (isInvalid()) {
     return;
   }
-  
-  _binaryChanged = false;
 
   if (_binary) {
     _fileModificationTime = _binary->getTime();
@@ -147,7 +152,7 @@ void PluginBinary::loadPluginInfo(PluginCache *cache) {
     
   } else {
     int pluginCount = (*_getNumberOfPlugins)();
-    
+    _plugins.clear();
     _plugins.reserve(pluginCount);
     
     for (int i=0;i<pluginCount;i++) {
@@ -498,6 +503,12 @@ void PluginCache::scanPluginFiles()
       delete _staticBinary;
       _staticBinary = 0;
     } else {
+      _dirty = true;
+      for (int j=0;j<_staticBinary->getNPlugins();j++) {
+         Plugin *plug = &_staticBinary->getPlugin(j);
+         const APICache::PluginAPICacheI &api = plug->getApiHandler();
+         api.loadFromPlugin(plug);
+      }
       _binaries.push_back(_staticBinary);
     }
   }
@@ -780,12 +791,6 @@ void PluginCache::writePluginCache(std::ostream &os) const {
     std::vector<Plugin*> plugins(b->getNPlugins());
     for (std::size_t j = 0; j < plugins.size(); ++j) {
       plugins[j] = &b->getPlugin((int)j);
-    }
-    
-    //For a static plug-in, we need to also cache the static plug-in identifier
-    std::string firstPluginIdentifier;
-    if (!plugins.empty() && plugins.front()) {
-      firstPluginIdentifier = plugins.front()->getIdentifier();
     }
     
     os << "<bundle>\n";

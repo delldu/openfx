@@ -104,12 +104,6 @@ static const char *getArchStr()
 #include "shlobj.h"
 #endif
 
-#ifdef OFX_USE_STATIC_PLUGINS
-// See https://stackoverflow.com/questions/5202142/static-variable-initialization-over-a-library
-// When linked statically, the plug-ins automatic registration using static variable need
-// to be enforced with a static variable in a header
-#include "ofxsCore.h"
-#endif
 
 bool OFX::Host::PluginCache::_useStdOFXPluginsLocation = true;
 OFX::Host::PluginCache* OFX::Host::PluginCache::gPluginCachePtr = 0;

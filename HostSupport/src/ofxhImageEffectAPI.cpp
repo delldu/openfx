@@ -560,13 +560,13 @@ namespace OFX {
         }
         _plugins.push_back(plugin);
 
-        if (_pluginsByID.find(plugin->getIdentifier()) != _pluginsByID.end()) {
-          ImageEffectPlugin *otherPlugin = _pluginsByID[plugin->getIdentifier()];
-          if (plugin->trumps(otherPlugin)) {
-            _pluginsByID[plugin->getIdentifier()] = plugin;
+        std::map<std::string, ImageEffectPlugin *>::iterator foundPlugin = _pluginsByID.find(plugin->getIdentifier());
+        if (foundPlugin != _pluginsByID.end()) {
+          if (plugin->trumps(foundPlugin->second)) {
+            foundPlugin->second = plugin;
           }
         } else {
-          _pluginsByID[plugin->getIdentifier()] = plugin;
+          _pluginsByID.insert(std::make_pair(plugin->getIdentifier(),plugin));
         }
 
         MajorPlugin maj(plugin);
@@ -576,27 +576,32 @@ namespace OFX {
           if (plugin->trumps(otherPlugin)) {
             _pluginsByIDMajor[maj] = plugin;
           } else if(plugin->equals(otherPlugin)) {
-            // if the plugin *before* otherPlugin in the plugin path, insert it.
-            const std::string& thisPath = plugin->getBinary()->getBundlePath();
-            const std::string& otherPath = otherPlugin->getBinary()->getBundlePath();
-            int thisRank = -1;
-            int otherRank = -1;
-            int rank = 0;
-            for (std::list<std::string>::const_iterator paths= pluginPath.begin();
-                 paths != pluginPath.end();
-                 ++paths, ++rank) {
-              const std::string& p = *paths;
-              // check if the bundle path for each plugin starts with the current path item
-              if (!thisPath.compare(0, p.size(), p)) {
-                thisRank = rank;
-              }
-              if (!otherPath.compare(0, p.size(), p)) {
-                otherRank = rank;
-              }
-            }
-            assert(thisRank != -1 && otherRank != -1);
-            if (thisRank < otherRank) {
+            // A static plug-in is considered prioritary
+            if (plugin->getBinary()->isStaticallyLinkedPlugin()) {
               _pluginsByIDMajor[maj] = plugin;
+            } else {
+              // if the plugin *before* otherPlugin in the plugin path, insert it.
+              const std::string& thisPath = plugin->getBinary()->getBundlePath();
+              const std::string& otherPath = otherPlugin->getBinary()->getBundlePath();
+              int thisRank = -1;
+              int otherRank = -1;
+              int rank = 0;
+              for (std::list<std::string>::const_iterator paths= pluginPath.begin();
+                   paths != pluginPath.end();
+                   ++paths, ++rank) {
+                const std::string& p = *paths;
+                // check if the bundle path for each plugin starts with the current path item
+                if (!thisPath.compare(0, p.size(), p)) {
+                  thisRank = rank;
+                }
+                if (!otherPath.compare(0, p.size(), p)) {
+                  otherRank = rank;
+                }
+              }
+              assert(thisRank != -1 && otherRank != -1);
+              if (thisRank < otherRank) {
+                _pluginsByIDMajor[maj] = plugin;
+              }
             }
           }
         } else {

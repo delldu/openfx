@@ -163,6 +163,11 @@ namespace OFX {
         // hooks to live kOfxInteractPropPixelScale in the property set
         virtual void getPixelScale(double& xScale, double& yScale) const = 0;
 
+#ifdef OFX_EXTENSIONS_NATRON
+        // hooks to live kOfxInteractPropScreenPixelRatio in the property set
+        virtual double getScreenPixelRatio() const = 0;
+#endif
+
         // hooks to kOfxInteractPropBackgroundColour in the property set
         virtual void getBackgroundColour(double &r, double &g, double &b) const = 0;
 

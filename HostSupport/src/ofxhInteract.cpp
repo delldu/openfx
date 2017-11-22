@@ -141,6 +141,7 @@ namespace OFX {
 #endif
 #ifdef OFX_EXTENSIONS_NATRON
         { kNatronOfxPropPickerColour, Property::eDouble, 4, false, "-1.0f" },
+        { kOfxInteractPropScreenPixelRatio, Property::eDouble, 1, false, "1.f" },
 #endif
         { kOfxInteractPropBackgroundColour , Property::eDouble, 3, false, "0.0f" },
 #ifdef kOfxInteractPropViewportSize // removed in OFX 1.4
@@ -175,7 +176,9 @@ namespace OFX {
 #ifdef OFX_EXTENSIONS_NUKE
         _properties.setGetHook(kOfxPropOverlayColour,this);
 #endif
-
+#ifdef OFX_EXTENSIONS_NATRON
+        _properties.setGetHook(kOfxInteractPropScreenPixelRatio, this);
+#endif
         _argProperties.setGetHook(kOfxInteractPropPixelScale, this);
         _argProperties.setGetHook(kOfxInteractPropBackgroundColour,this);
 #ifdef kOfxInteractPropViewportSize // removed in OFX 1.4
@@ -269,6 +272,11 @@ namespace OFX {
           return first[index];
         }
 #endif
+#ifdef OFX_EXTENSIONS_NATRON
+        else if (name == kOfxInteractPropScreenPixelRatio) {
+          return getScreenPixelRatio();
+        }
+#endif
         else
           throw Property::Exception(kOfxStatErrUnknown);
       }
@@ -344,6 +352,7 @@ namespace OFX {
           const double noColor[4] = { -1., -1., -1., -1.};
           props.setDoublePropertyN(kNatronOfxPropPickerColour, noColor, 4);
         }
+        props.setDoubleProperty(kOfxInteractPropScreenPixelRatio, getScreenPixelRatio());
 #endif
       }
 

@@ -1175,4 +1175,18 @@ typedef void (*OfxInverseDistortionDataFreeFunctionV1)(void* customData);
 
 #define kOfxPropMatrix3x3 "OfxPropMatrix3x3"
 
+/** @brief The pixel ratio of the screen. On Retina screens, this would typically return 2.
+ This is needed because typically when displayed on a Retina screen, the OpenGL framebuffer drawn to
+ would be bigger, hence all functions taking pixels need to be scaled accordingly. Namely:
+ - glPointSize
+ - glLineWidth
+ - glScissor,
+ - etc...
+
+ - Type - double X 1
+ - Property Set - read only in argument to the ::kOfxInteractActionPenMotion, ::kOfxInteractActionPenDown and ::kOfxInteractActionPenUp actions
+ - Default value - 1.
+ */
+#define kOfxInteractPropScreenPixelRatio "OfxInteractPropScreenPixelRatio"
+
 #endif // #ifndef _ofxNatron_h_

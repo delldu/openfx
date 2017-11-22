@@ -70,6 +70,9 @@ namespace OFX {
 #ifdef OFX_EXTENSIONS_NATRON
     bool            hasPickerColour;   /**< @brief If true, the pickerColour is valid and may be used */
     OfxRGBAColourD  pickerColour;      /**< @brief The picked colour */
+
+    /**@brief pixel ratio of the screen, typically 2 for Retina screen. Should be used for functions using screen pixels such as glPointSize, glLineWidth, etc...*/
+    double          screenPixelRatio;
 #endif
   };
 

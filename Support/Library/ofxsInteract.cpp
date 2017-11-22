@@ -350,6 +350,8 @@ namespace OFX {
       props.propGetDoubleN(kNatronOfxPropPickerColour, &pickerColour.r, 4, false);
       hasPickerColour = (pickerColour.r != -1. || pickerColour.g != -1. || pickerColour.b != -1. || pickerColour.a != -1.);
     }
+    screenPixelRatio = 1.;
+    screenPixelRatio = props.propGetDouble(kOfxInteractPropScreenPixelRatio, 0, false);
 #endif
   }
 

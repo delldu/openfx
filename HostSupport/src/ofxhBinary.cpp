@@ -73,13 +73,14 @@ void Binary::load()
     LPVOID lpMsgBuf = NULL;
     DWORD err = GetLastError();
 
+    // explicitely use the ANSI version of FOrmatMessage to get a char*
     FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER |
       FORMAT_MESSAGE_FROM_SYSTEM |
       FORMAT_MESSAGE_IGNORE_INSERTS,
       NULL,
       err,
       MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-      (LPTSTR) &lpMsgBuf,
+      (LPSTR) &lpMsgBuf,
       0, NULL);
 
     std::cerr << "couldn't open library " << _binaryPath << " because " << (char*)lpMsgBuf << " was returned" << std::endl;

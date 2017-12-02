@@ -43,13 +43,13 @@ PATH="$MACPORTS/bin:$HOMEBREW/bin:$LOCAL/bin:$PATH"
 # and make subsequent calls to install_name_tool fail with the following error:
 # 'install_name_tool: the __LINKEDIT segment does not cover the end of the file (can't be processed)'
 
-# use the gsed available in the PATH (works with homebrew and MacPorts)
-if [[ ! $(type -P gsed) ]]; then
-    echo "gsed (GNU sed) not available"
+# use the SED environment variable or the gsed available in the PATH (works with homebrew and MacPorts)
+SED="${SED:=gsed}"
+if [[ ! $(type -P "$SED") ]]; then
+    echo "$SED (GNU sed) not available"
     echo "please install the gsed package on MacPorts, or the gnu-sed package on homebrew."
     exit 1
 fi
-GSED="gsed -b"
 
 package="$1"
 binary="$package/Contents/MacOS/$2"
@@ -166,6 +166,6 @@ fi
     MACRAND=${RANDSTR:0:${#MACPORTS}}
     HOMEBREWRAND=${RANDSTR:0:${#HOMEBREW}}
     LOCALRAND=${RANDSTR:0:${#LOCAL}}
-    find $pkglib -type f -exec $GSED -e "s@$MACPORTS@$MACRAND@g" -e "s@$HOMEBREW@$HOMEBREWRAND@g" -e "s@$LOCAL@$LOCALRAND@g" -i "" {} \;
-    $GSED -e "s@$MACPORTS@$MACRAND@g" -e "s@$HOMEBREW@$HOMEBREWRAND@g" -e "s@$LOCAL@$LOCALRAND@g" -i "$binary"
+    find $pkglib -type f -exec $SED -b -i -e "s@$MACPORTS@$MACRAND@g" -e "s@$HOMEBREW@$HOMEBREWRAND@g" -e "s@$LOCAL@$LOCALRAND@g" {} \;
+    $SED -b -i -e "s@$MACPORTS@$MACRAND@g" -e "s@$HOMEBREW@$HOMEBREWRAND@g" -e "s@$LOCAL@$LOCALRAND@g" "$binary"
 #fi

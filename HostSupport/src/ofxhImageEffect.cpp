@@ -605,10 +605,6 @@ namespace OFX {
         _properties.setStringProperty(kOfxImageEffectPropContext,context);
         _properties.setIntProperty(kOfxPropIsInteractive,interactive);
 
-        // copy is sequential over
-        bool sequential = other.getProps().getIntProperty(kOfxImageEffectInstancePropSequentialRender) != 0;
-        _properties.setIntProperty(kOfxImageEffectInstancePropSequentialRender,sequential);
-
         while(effectInstanceStuff[i].name) {
           
           // don't set hooks for context or isinteractive or kOfxImageEffectInstancePropSequentialRender

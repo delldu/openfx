@@ -33,11 +33,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <string>
 #include <list>
 #include <vector>
-#include <math.h> // isnan
 #if defined(_MSC_VER)
 #include <float.h> // _isnan
 #endif
-#include <limits> // std::isnan
+#include <cmath> // isnan, std::isnan
 
 #include "ofxCore.h"
 

@@ -110,11 +110,10 @@ of the direct OFX objects and any library side only functions.
 #include <stdexcept>
 #include <sstream>
 #include <memory>
-#include <math.h> // isnan
 #if defined(_MSC_VER)
 #include <float.h> // _isnan
 #endif
-#include <limits> // std::isnan
+#include <cmath> // isnan, std::isnan
 
 #ifdef OFX_CLIENT_EXCEPTION_HEADER
 #include OFX_CLIENT_EXCEPTION_HEADER

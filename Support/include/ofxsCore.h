@@ -110,6 +110,11 @@ of the direct OFX objects and any library side only functions.
 #include <stdexcept>
 #include <sstream>
 #include <memory>
+#include <math.h> // isnan
+#if defined(_MSC_VER)
+#include <float.h> // _isnan
+#endif
+#include <limits> // std::isnan
 
 #ifdef OFX_CLIENT_EXCEPTION_HEADER
 #include OFX_CLIENT_EXCEPTION_HEADER
@@ -179,6 +184,36 @@ namespace OFX {
   using std::auto_ptr;
 #endif
   
+#if defined(_MSC_VER)
+  inline bool IsFinite  (double x) { return _finite(x) != 0;                   }
+  inline bool IsInfinite(double x) { return _finite(x) == 0 && _isnan(x) == 0; }
+  inline bool IsNaN     (double x) { return _isnan(x) != 0;                    }
+  inline bool IsNormal  (double x) {  // NOLINT
+    const int classification = _fpclass(x);
+    return (classification == _FPCLASS_NN || classification == _FPCLASS_PN);
+  }
+#else
+#  if __cplusplus >= 201103L
+  // These definitions are for the normal Unix suspects.
+  inline bool IsFinite  (double x) { return std::isfinite(x); }
+  inline bool IsInfinite(double x) { return std::isinf(x);    }
+  inline bool IsNaN     (double x) { return std::isnan(x);    }
+  inline bool IsNormal  (double x) { return std::isnormal(x); }
+#  else
+#    ifdef isnan // isnan is defined as a macro
+  inline bool IsFinite  (double x) { return isfinite(x); }
+  inline bool IsInfinite(double x) { return isinf(x);    }
+  inline bool IsNaN     (double x) { return isnan(x);    }
+  inline bool IsNormal  (double x) { return isnormal(x); }
+#    else
+  inline bool IsFinite  (double x) { return ::isfinite(x); }
+  inline bool IsInfinite(double x) { return ::isinf(x);    }
+  inline bool IsNaN     (double x) { return ::isnan(x);    }
+  inline bool IsNormal  (double x) { return ::isnormal(x); }
+#    endif
+#  endif
+#endif
+
   /** forward class declarations */
   class PropertySet;
 

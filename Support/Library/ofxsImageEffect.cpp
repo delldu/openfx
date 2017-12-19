@@ -2106,8 +2106,7 @@ namespace OFX {
   /** @brief get the RoD for this clip in the cannonical coordinate system */
   OfxRectD Clip::getRegionOfDefinition(double t)
   {
-    if (t != t) {
-      // time is NaN
+    if ( OFX::IsNaN(t) ) {
       throwSuiteStatusException(kOfxStatErrValue);
     }
     OfxRectD bounds;
@@ -2130,8 +2129,7 @@ namespace OFX {
   /** @brief fetch an image */
   Image *Clip::fetchImage(double t)
   {
-    if (t != t) {
-      // time is NaN
+    if ( OFX::IsNaN(t) ) {
       throwSuiteStatusException(kOfxStatErrValue);
     }
     OfxPropertySetHandle imageHandle;
@@ -2148,8 +2146,7 @@ namespace OFX {
   /** @brief fetch an image, with a specific region in cannonical coordinates */
   Image *Clip::fetchImage(double t, const OfxRectD &bounds)
   {
-    if (t != t) {
-      // time is NaN
+    if ( OFX::IsNaN(t) ) {
       throwSuiteStatusException(kOfxStatErrValue);
     }
     OfxPropertySetHandle imageHandle;
@@ -2166,8 +2163,7 @@ namespace OFX {
 #ifdef OFX_EXTENSIONS_NUKE
   OfxRectD Clip::getRegionOfDefinition(double t, int view)
   {
-    if (t != t) {
-      // time is NaN
+    if ( OFX::IsNaN(t) ) {
       throwSuiteStatusException(kOfxStatErrValue);
     }
     if (!OFX::Private::gImageEffectPlaneSuiteV2) {
@@ -2184,8 +2180,7 @@ namespace OFX {
 
   Image* Clip::fetchImagePlane(double t, int view, const char* plane)
   {
-    if (t != t) {
-      // time is NaN
+    if ( OFX::IsNaN(t) ) {
       throwSuiteStatusException(kOfxStatErrValue);
     }
     if (!OFX::Private::gImageEffectPlaneSuiteV2 || !OFX::Private::gImageEffectPlaneSuiteV2->clipGetImagePlane) {
@@ -2204,8 +2199,7 @@ namespace OFX {
     
   Image* Clip::fetchImagePlane(double t, const char* plane)
   {
-    if (t != t) {
-      // time is NaN
+    if ( OFX::IsNaN(t) ) {
       throwSuiteStatusException(kOfxStatErrValue);
     }
     if (!OFX::Private::gImageEffectPlaneSuiteV1 || !OFX::Private::gImageEffectPlaneSuiteV1->clipGetImagePlane) {
@@ -2228,8 +2222,7 @@ namespace OFX {
     
   Image* Clip::fetchImagePlane(double t, int view, const char* plane, const OfxRectD& bounds)
   {
-    if (t != t) {
-      // time is NaN
+    if ( OFX::IsNaN(t) ) {
       throwSuiteStatusException(kOfxStatErrValue);
     }
     if (!OFX::Private::gImageEffectPlaneSuiteV2 || !OFX::Private::gImageEffectPlaneSuiteV2->clipGetImagePlane) {
@@ -2249,8 +2242,7 @@ namespace OFX {
     
   Image* Clip::fetchImagePlane(double t, const char* plane, const OfxRectD& bounds)
   {
-    if (t != t) {
-      // time is NaN
+    if ( OFX::IsNaN(t) ) {
       throwSuiteStatusException(kOfxStatErrValue);
     }
     if (!OFX::Private::gImageEffectPlaneSuiteV1 || !OFX::Private::gImageEffectPlaneSuiteV1->clipGetImagePlane) {
@@ -2282,8 +2274,7 @@ namespace OFX {
   /** @brief fetch an image */
   Image *Clip::fetchStereoscopicImage(double t, int view)
   {
-    if (t != t) {
-      // time is NaN
+    if ( OFX::IsNaN(t) ) {
       throwSuiteStatusException(kOfxStatErrValue);
     }
 #ifdef OFX_EXTENSIONS_NUKE
@@ -2323,8 +2314,7 @@ namespace OFX {
 #ifdef OFX_SUPPORTS_OPENGLRENDER
   Texture *Clip::loadTexture(double t, BitDepthEnum format, const OfxRectD *region)
   {
-    if (t != t) {
-      // time is NaN
+    if ( OFX::IsNaN(t) ) {
       throwSuiteStatusException(kOfxStatErrValue);
     }
     if (!gHostDescription.supportsOpenGLRender) {
@@ -3305,8 +3295,7 @@ namespace OFX {
   /// false if you should abandon processing, true to continue
   bool ImageEffect::progressUpdate(double t)
   {
-    if (t != t) {
-      // time is NaN
+    if ( OFX::IsNaN(t) ) {
       throwSuiteStatusException(kOfxStatErrValue);
     }
     if(_progressStartSuccess) {
@@ -3343,8 +3332,7 @@ namespace OFX {
   /// set the timeline to a specific time
   void ImageEffect::timeLineGotoTime(double t)
   {
-    if (t != t) {
-      // time is NaN
+    if ( OFX::IsNaN(t) ) {
       throwSuiteStatusException(kOfxStatErrValue);
     }
     if(OFX::Private::gTimeLineSuite) {
@@ -3423,8 +3411,7 @@ namespace OFX {
     
   void ClipComponentsSetter::setPassThroughClip(const Clip* clip, double time, int view)
   {
-      if (time != time) {
-          // time is NaN
+    if ( OFX::IsNaN(time) ) {
           throwSuiteStatusException(kOfxStatErrValue);
       }
       _doneSomething = true;

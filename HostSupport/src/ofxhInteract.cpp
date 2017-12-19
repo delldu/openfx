@@ -324,8 +324,7 @@ namespace OFX {
 #endif
                                  )
       {
-        if (time != time) {
-          // time is NaN
+        if ( OFX::IsNaN(time) ) {
           throw Property::Exception(kOfxStatErrValue);
         }
         double pixelScale[2];
@@ -386,8 +385,7 @@ namespace OFX {
 #endif
                                      )
       {        
-        if (time != time) {
-          // time is NaN
+        if ( OFX::IsNaN(time) ) {
           return kOfxStatErrValue;
         }
         initArgProp(_argProperties,
@@ -415,8 +413,7 @@ namespace OFX {
                                           const OfxPointI &penPosViewport,
                                           double  pressure)
       {
-        if (time != time) {
-          // time is NaN
+        if ( OFX::IsNaN(time) ) {
           return kOfxStatErrValue;
         }
         initArgProp(_argProperties,
@@ -445,8 +442,7 @@ namespace OFX {
                                       const OfxPointI &penPosViewport,
                                       double pressure)
       {
-        if (time != time) {
-          // time is NaN
+        if ( OFX::IsNaN(time) ) {
           return kOfxStatErrValue;
         }
         initArgProp(_argProperties,
@@ -475,8 +471,7 @@ namespace OFX {
                                         const OfxPointI &penPosViewport,
                                         double pressure)
       {
-        if (time != time) {
-          // time is NaN
+        if ( OFX::IsNaN(time) ) {
           return kOfxStatErrValue;
         }
         initArgProp(_argProperties,
@@ -504,8 +499,7 @@ namespace OFX {
                                         int     key,
                                         char*   keyString)
       {
-        if (time != time) {
-          // time is NaN
+        if ( OFX::IsNaN(time) ) {
           return kOfxStatErrValue;
         }
         initArgProp(_argProperties,
@@ -533,8 +527,7 @@ namespace OFX {
                                       int     key,
                                       char*   keyString)
       {
-        if (time != time) {
-          // time is NaN
+        if ( OFX::IsNaN(time) ) {
           return kOfxStatErrValue;
         }
         initArgProp(_argProperties,
@@ -562,8 +555,7 @@ namespace OFX {
                                           int     key,
                                           char*   keyString)
       {
-        if (time != time) {
-          // time is NaN
+        if ( OFX::IsNaN(time) ) {
           return kOfxStatErrValue;
         }
         initArgProp(_argProperties,
@@ -590,8 +582,7 @@ namespace OFX {
 #endif
                                           )
       {
-        if (time != time) {
-          // time is NaN
+        if ( OFX::IsNaN(time) ) {
           return kOfxStatErrValue;
         }
         initArgProp(_argProperties,

@@ -33,6 +33,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <string>
 #include <list>
 #include <vector>
+#include <math.h> // isnan
+#if defined(_MSC_VER)
+#include <float.h> // _isnan
+#endif
+#include <limits> // std::isnan
+
 #include "ofxCore.h"
 
 // macro that intercepts any exception that passes through a plugin's entry point, and transforms it into a message on the host using Host::vmessage()
@@ -136,42 +142,72 @@ namespace OFX {
     return r;
   }
 
-    inline const char* StatStr(OfxStatus stat) {
-        switch(stat) {
-            case kOfxStatOK:
-                return "kOfxStatOK";
-            case kOfxStatFailed:
-                return "kOfxStatFailed";
-            case kOfxStatErrFatal:
-                return "kOfxStatErrFatal";
-            case kOfxStatErrUnknown:
-                return "kOfxStatErrUnknown";
-            case kOfxStatErrMissingHostFeature:
-                return "kOfxStatErrMissingHostFeature";
-            case kOfxStatErrUnsupported:
-                return "kOfxStatErrUnsupported";
-            case kOfxStatErrExists:
-                return "kOfxStatErrExists";
-            case kOfxStatErrFormat:
-                return "kOfxStatErrFormat";
-            case kOfxStatErrMemory:
-                return "kOfxStatErrMemory";
-            case kOfxStatErrBadHandle:
-                return "kOfxStatErrBadHandle";
-            case kOfxStatErrBadIndex:
-                return "kOfxStatErrBadIndex";
-            case kOfxStatErrValue:
-                return "kOfxStatErrValue";
-            case kOfxStatReplyYes:
-                return "kOfxStatReplyYes";
-            case kOfxStatReplyNo:
-                return "kOfxStatReplyNo";
-            case kOfxStatReplyDefault:
-                return "kOfxStatReplyDefault";
-            default:
-                return "(unknown error code)";
-        }
+  inline const char* StatStr(OfxStatus stat) {
+    switch(stat) {
+      case kOfxStatOK:
+        return "kOfxStatOK";
+      case kOfxStatFailed:
+        return "kOfxStatFailed";
+      case kOfxStatErrFatal:
+        return "kOfxStatErrFatal";
+      case kOfxStatErrUnknown:
+        return "kOfxStatErrUnknown";
+      case kOfxStatErrMissingHostFeature:
+        return "kOfxStatErrMissingHostFeature";
+      case kOfxStatErrUnsupported:
+        return "kOfxStatErrUnsupported";
+      case kOfxStatErrExists:
+        return "kOfxStatErrExists";
+      case kOfxStatErrFormat:
+        return "kOfxStatErrFormat";
+      case kOfxStatErrMemory:
+        return "kOfxStatErrMemory";
+      case kOfxStatErrBadHandle:
+        return "kOfxStatErrBadHandle";
+      case kOfxStatErrBadIndex:
+        return "kOfxStatErrBadIndex";
+      case kOfxStatErrValue:
+        return "kOfxStatErrValue";
+      case kOfxStatReplyYes:
+        return "kOfxStatReplyYes";
+      case kOfxStatReplyNo:
+        return "kOfxStatReplyNo";
+      case kOfxStatReplyDefault:
+        return "kOfxStatReplyDefault";
+      default:
+        return "(unknown error code)";
     }
+  }
+
+#if defined(_MSC_VER)
+  inline bool IsFinite  (double x) { return _finite(x) != 0;                   }
+  inline bool IsInfinite(double x) { return _finite(x) == 0 && _isnan(x) == 0; }
+  inline bool IsNaN     (double x) { return _isnan(x) != 0;                    }
+  inline bool IsNormal  (double x) {  // NOLINT
+    const int classification = _fpclass(x);
+    return (classification == _FPCLASS_NN || classification == _FPCLASS_PN);
+  }
+#else
+#  if __cplusplus >= 201103L
+  // These definitions are for the normal Unix suspects.
+  inline bool IsFinite  (double x) { return std::isfinite(x); }
+  inline bool IsInfinite(double x) { return std::isinf(x);    }
+  inline bool IsNaN     (double x) { return std::isnan(x);    }
+  inline bool IsNormal  (double x) { return std::isnormal(x); }
+#  else
+#    ifdef isnan // isnan is defined as a macro
+  inline bool IsFinite  (double x) { return isfinite(x); }
+  inline bool IsInfinite(double x) { return isinf(x);    }
+  inline bool IsNaN     (double x) { return isnan(x);    }
+  inline bool IsNormal  (double x) { return isnormal(x); }
+#    else
+  inline bool IsFinite  (double x) { return ::isfinite(x); }
+  inline bool IsInfinite(double x) { return ::isinf(x);    }
+  inline bool IsNaN     (double x) { return ::isnan(x);    }
+  inline bool IsNormal  (double x) { return ::isnormal(x); }
+#    endif
+#  endif
+#endif
 
 # ifdef WINDOWS
   std::wstring  utf8_to_utf16(const std::string& s);

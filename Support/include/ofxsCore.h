@@ -190,8 +190,8 @@ namespace OFX {
 #else
 #  if __cplusplus >= 201103L
   // These definitions are for the normal Unix suspects.
-  inline bool IsInfinite(double x) { return std::isinf(x);    }
-  inline bool IsNaN     (double x) { return std::isnan(x);    }
+  inline bool IsInfinite(double x) { return (std::isinf)(x);    }
+  inline bool IsNaN     (double x) { return (std::isnan)(x);    }
 #  else
 #    ifdef isnan // isnan is defined as a macro
   inline bool IsInfinite(double x) { return isinf(x);    }

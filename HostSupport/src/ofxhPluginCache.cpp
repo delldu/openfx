@@ -268,8 +268,14 @@ PluginCache::~PluginCache()
   _binaries.clear();
 }
 
-PluginCache::PluginCache() : _hostSpec(0), _staticBinary(0),  _xmlCurrentBinary(0), _xmlCurrentPlugin(0) {
-  
+PluginCache::PluginCache()
+: _hostSpec(NULL)
+#ifdef OFX_USE_STATIC_PLUGINS
+, _staticBinary(NULL)
+#endif
+, _xmlCurrentBinary(NULL)
+, _xmlCurrentPlugin(NULL)
+{
   _cacheVersion = "";
   _ignoreCache = false;
   _dirty = false;

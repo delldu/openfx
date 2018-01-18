@@ -88,6 +88,9 @@ namespace OFX {
         char *answer = getcwd(buffer, sizeof(buffer));
         std::cout << "INFO: OFX Log is \"" << gLogFileName << "\", working directory is \"" << answer << '\"' << std::endl;
         gLogFP = fopen(gLogFileName.c_str(), "w");
+        if (!gLogFP) {
+          std::cout << "INFO: Failed to open OFX Log for writing" << std::endl;
+        }
         return gLogFP != 0;
       }
 #endif

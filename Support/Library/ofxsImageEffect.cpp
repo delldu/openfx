@@ -82,6 +82,10 @@ static bool starts_with(std::string const & value, std::string const & beginning
   return std::equal(beginning.begin(), beginning.end(), value.begin());
 }
 
+template<typename T>
+static inline void
+unused(const T&) {}
+
 #ifdef DEBUG
 //table for xml encoding compatibility with expat decoding
 //see expat/src/xmltok_impl.h
@@ -4069,7 +4073,7 @@ namespace OFX {
       args.renderScale.x = args.renderScale.y = 1.;
       inArgs.propGetDoubleN(kOfxImageEffectPropRenderScale, &args.renderScale.x, 2);
 
-      args.renderWindow.x1 = args.renderWindow.y1 = args.renderWindow.x2 = args.renderWindow.y2 = 0.;
+      args.renderWindow.x1 = args.renderWindow.y1 = args.renderWindow.x2 = args.renderWindow.y2 = 0;
       inArgs.propGetIntN(kOfxImageEffectPropRenderWindow, &args.renderWindow.x1, 4);
 
 #ifdef OFX_EXTENSIONS_RESOLVE
@@ -4252,7 +4256,7 @@ namespace OFX {
       args.renderScale.x = args.renderScale.y = 1.;
       inArgs.propGetDoubleN(kOfxImageEffectPropRenderScale, &args.renderScale.x, 2);
 
-      args.renderWindow.x1 = args.renderWindow.y1 = args.renderWindow.x2 = args.renderWindow.y2 = 0.;
+      args.renderWindow.x1 = args.renderWindow.y1 = args.renderWindow.x2 = args.renderWindow.y2 = 0;
       inArgs.propGetIntN(kOfxImageEffectPropRenderWindow, &args.renderWindow.x1, 4);
 
 #ifdef OFX_EXTENSIONS_NUKE
@@ -5250,6 +5254,7 @@ namespace OFX {
 #      ifdef DEBUG
         std::cout << "Caught OFX::Exception::HostInadequate: " << e.what() << std::endl;
 #      endif
+        unused(e);
         stat = kOfxStatErrMissingHostFeature;
       }
 
@@ -5259,6 +5264,7 @@ namespace OFX {
 #      ifdef DEBUG
         std::cout << "Caught OFX::Exception::PropertyUnknownToHost: " << e.what() << std::endl;
 #      endif
+        unused(e);
         stat = kOfxStatErrMissingHostFeature;
       }
 
@@ -5281,6 +5287,7 @@ namespace OFX {
 #      ifdef DEBUG
         std::cout << "Caught exception: " << e.what() << std::endl;
 #      endif
+        unused(e);
         stat = kOfxStatFailed;
       }
       catch (...)

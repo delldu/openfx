@@ -172,8 +172,8 @@ namespace OFX {
 #endif
             {
                 // make sure there are at least 4096 pixels per CPU and at least 1 line par CPU
-                unsigned int nCPUs = (std::min(_renderWindow.x2 - _renderWindow.x1, 4096) *
-                                      (_renderWindow.y2 - _renderWindow.y1)) / 4096;
+                unsigned int nCPUs = (unsigned int)((std::min(std::max(0, _renderWindow.x2 - _renderWindow.x1), 4096) *
+                                      (std::max(0, _renderWindow.y2 - _renderWindow.y1))) / 4096);
                 // make sure the number of CPUs is valid (and use at least 1 CPU)
                 nCPUs = std::max(1u, std::min(nCPUs, OFX::MultiThread::getNumCPUs()));
 

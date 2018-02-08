@@ -175,7 +175,7 @@ namespace OFX {
 
       public:  
 
-        explicit PluginCache(OFX::Host::ImageEffect::Host &host);
+        explicit PluginCache(OFX::Host::ImageEffect::Host* host);
 
         virtual ~PluginCache();        
 

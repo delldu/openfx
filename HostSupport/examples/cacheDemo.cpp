@@ -161,7 +161,7 @@ int main(int argc, char **argv)
   CacheHost myHost;
 
   /// make an image effect plugin cache
-  OFX::Host::ImageEffect::PluginCache imageEffectPluginCache(myHost);
+  OFX::Host::ImageEffect::PluginCache imageEffectPluginCache(&myHost);
 
   /// register the image effect cache with the global plugin cache
   imageEffectPluginCache.registerInCache(*OFX::Host::PluginCache::getPluginCache());

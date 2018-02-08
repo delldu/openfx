@@ -292,16 +292,16 @@ namespace OFX {
         }
       }
 
-      PluginCache::PluginCache(OFX::Host::ImageEffect::Host &host) 
+      PluginCache::PluginCache(OFX::Host::ImageEffect::Host* host)
         : PluginAPICacheI(kOfxImageEffectPluginApi, 1, 1)
         , _currentPlugin(NULL)
         , _currentProp(NULL)
         , _currentContext(NULL)
         , _currentParam(NULL)
         , _currentClip(NULL)
-        , _host(&host)
+        , _host(host)
       {
-        gImageEffectHost = &host;
+        gImageEffectHost = host;
       }
 
       PluginCache::~PluginCache() {}       

@@ -79,7 +79,7 @@ namespace OFX {
     }
   }
 
-  void throwHostMissingSuiteException(std::string name) OFX_THROW(OFX::Exception::Suite)
+  void throwHostMissingSuiteException(const std::string& name) OFX_THROW(OFX::Exception::Suite)
   {
 #  ifdef DEBUG
     std::cout << "Throwing suite exception! Host missing '" << name << "' suite." << std::endl;

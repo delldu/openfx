@@ -187,7 +187,7 @@ namespace OFX {
   inline bool IsInfinite(double x) { return _finite(x) == 0 && _isnan(x) == 0; }
   inline bool IsNaN     (double x) { return _isnan(x) != 0;                    }
 #else
-#  if __cplusplus >= 201103L
+#  if __cplusplus >= 201103L || _GLIBCXX_USE_C99_MATH
   // These definitions are for the normal Unix suspects.
   inline bool IsInfinite(double x) { return (std::isinf)(x);    }
   inline bool IsNaN     (double x) { return (std::isnan)(x);    }
@@ -316,7 +316,7 @@ namespace OFX {
     OFX_THROW2(OFX::Exception::Suite, std::bad_alloc);
 
   void 
-    throwHostMissingSuiteException(std::string name) 
+    throwHostMissingSuiteException(const std::string& name) 
     OFX_THROW(OFX::Exception::Suite);
 
   /** @brief This struct is used to return an identifier for the plugin by the function @ref OFX:Plugin::getPlugin. 

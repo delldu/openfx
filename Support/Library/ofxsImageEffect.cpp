@@ -1478,7 +1478,13 @@ namespace OFX {
 
     ClipDescriptor *clip = new ClipDescriptor(name, propSet);
 
-    _definedClips[name] = clip;
+    std::map<std::string, ClipDescriptor *>::iterator it = _definedClips.find(name);
+    if (it != _definedClips.end()) {
+      delete it->second;
+      it->second = clip;
+    } else {
+      _definedClips[name] = clip;
+    }
     _clipComponentsPropNames[name] = std::string("OfxImageClipPropComponents_") + name;
     _clipDepthPropNames[name] = std::string("OfxImageClipPropDepth_") + name;
     _clipPARPropNames[name] = std::string("OfxImageClipPropPAR_") + name;
@@ -1512,7 +1518,13 @@ namespace OFX {
 
     CameraDescriptor *camera = new CameraDescriptor(name, propSet);
 
-    _definedCameras[name] = camera;
+    std::map<std::string, CameraDescriptor *>::iterator it = _definedCameras.find(name);
+    if (it != _definedCameras.end()) {
+      delete it->second;
+      it->second = camera;
+    } else {
+      _definedCameras[name] = camera;
+    }
 
     return camera;
   }
@@ -2694,7 +2706,13 @@ namespace OFX {
     Clip *newClip = new Clip(this, name, clipHandle, propHandle);
 
     // add it in
-    _fetchedClips[name] = newClip;
+    std::map<std::string, Clip *>::iterator it = _fetchedClips.find(name);
+    if (it != _fetchedClips.end()) {
+      delete it->second;
+      it->second = newClip;
+    } else {
+      _fetchedClips[name] = newClip;
+    }
 
     // return it
     return newClip;
@@ -2723,7 +2741,13 @@ namespace OFX {
     Camera *newCamera = new Camera(this, name, cameraHandle, propHandle);
 
     // add it in
-    _fetchedCameras[name] = newCamera;
+    std::map<std::string, Camera *>::iterator it = _fetchedCameras.find(name);
+    if (it != _fetchedCameras.end()) {
+      delete it->second;
+      it->second = newCamera;
+    } else {
+      _fetchedCameras[name] = newCamera;
+    }
 
     // return it
     return newCamera;
@@ -4963,6 +4987,14 @@ namespace OFX {
           key.id = it->first;
           key.majorVersion = it->second._plug->pluginVersionMajor;
           key.minorVersion = it->second._plug->pluginVersionMinor;
+          EffectDescriptorMap::iterator it = gEffectDescriptors.find(key);
+          if (it != gEffectDescriptors.end()) {
+            EffectContextMap& contextMap = it->second;
+            EffectContextMap::iterator it2 = contextMap.find(eContextNone);
+            if (it2 != contextMap.end()) {
+              delete it2->second;
+            }
+          }
           gEffectDescriptors[key][eContextNone] = desc;
 
           // got here, must be good
@@ -4989,6 +5021,14 @@ namespace OFX {
           key.id = it->first;
           key.majorVersion = it->second._plug->pluginVersionMajor;
           key.minorVersion = it->second._plug->pluginVersionMinor;
+          EffectDescriptorMap::iterator it = gEffectDescriptors.find(key);
+          if (it != gEffectDescriptors.end()) {
+            EffectContextMap& contextMap = it->second;
+            EffectContextMap::iterator it2 = contextMap.find(context);
+            if (it2 != contextMap.end()) {
+              delete it2->second;
+            }
+          }
           gEffectDescriptors[key][context] = desc;
 
           // got here, must be good

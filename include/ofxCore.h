@@ -185,8 +185,6 @@ These are the actions passed to a plug-in's 'main' function
  The \ref handle, \ref inArgs and \ref outArgs arguments to the \ref mainEntry
  are redundant and should be set to NULL.
 
- 
-
  \pre
  - The plugin's \ref OfxPlugin::setHost function has been called
 
@@ -196,10 +194,8 @@ These are the actions passed to a plug-in's 'main' function
  @returns
  -  \ref kOfxStatOK, the action was trapped and all was well,
  -  \ref kOfxStatReplyDefault, the action was ignored,
- -  \ref kOfxStatFailed, the load action failed, no further actions will be passed to the plug-in.
- Interpret if possible  kOfxStatFailed as plug-in indicating it does not want to load 
- Do not create an entry in the host's UI for plug-in then.  
- Plug-in also has the option to return 0 for OfxGetNumberOfPlugins or kOfxStatFailed if host supports OfxSetHost in which case kOfxActionLoad will never be called.
+ -  \ref kOfxStatFailed, the load action failed, no further actions will be
+ passed to the plug-in,
  -  \ref kOfxStatErrFatal, fatal error in the plug-in.
  */
 #define  kOfxActionLoad "OfxActionLoad"
@@ -238,8 +234,7 @@ These are the actions passed to a plug-in's 'main' function
      without worrying about it changing between actions).
      -  \ref kOfxImageEffectActionDescribeInContext
      will be called once for each context that the host and plug-in
-     mutually support.  If a plug-in does not report to support any context supported by host, 
-	 host should not enable the plug-in.
+     mutually support.
 
  @returns
      -  \ref kOfxStatOK, the action was trapped and all was well

@@ -56,6 +56,9 @@ Documentation/ofxPropertiesReference.xml
 Documentation/ofxPropertySuiteReference.xml
 
 Documentation/ofxThreadingSuiteReference.xml
+Documentation/ofxTimeLineSuiteReference.xml
+Documentation/build
+Documentation/doxygen_build
 
 HostSupport/expat*/autom4te.cache
 HostSupport/expat*/*/.deps

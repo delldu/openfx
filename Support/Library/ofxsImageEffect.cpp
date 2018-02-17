@@ -1678,7 +1678,9 @@ namespace OFX {
     _renderScale.x = _renderScale.y = 1.;
     _imageProps.propGetDoubleN(kOfxImageEffectPropRenderScale, &_renderScale.x, 2, false);
 
+#if defined(OFX_EXTENSIONS_NATRON) || defined(OFX_EXTENSIONS_NUKE)
     bool gotDistortion = false;
+#endif
 #ifdef OFX_EXTENSIONS_NATRON
 
     // Check for distortion function

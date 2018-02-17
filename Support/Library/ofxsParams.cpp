@@ -46,6 +46,10 @@ England
 #include "nuke/camera.h"
 #endif
 
+template<typename T>
+static inline void
+unused(const T&) {}
+
 #ifdef DEBUG
 // We check that strings contained in StringParam are UTF-8 encoded
 // See http://openfx.sourceforge.net/Documentation/1.4/ofxProgrammingReference.html#kOfxParamTypeString
@@ -1097,6 +1101,8 @@ namespace OFX {
     if (_paramProps.propExists(kOfxParamPropChoiceEnum)) {
       _paramProps.propSetString(kOfxParamPropChoiceEnum, optionEnum.empty() ? optionLabel : optionEnum, nCurrentValues);
     }
+#else
+    unused(optionEnum);
 #endif
     _paramProps.propSetString(kOfxParamPropChoiceOption, optionLabel, nCurrentValues);
   }
@@ -3329,11 +3335,15 @@ namespace OFX {
     if (optionsHints) {
       _paramProps.propGetStringN(kOfxParamPropChoiceLabelOption, optionsHints, false);
     }
+#else
+    unused(optionsHints);
 #endif
 #ifdef OFX_EXTENSIONS_NATRON
     if (optionsNames) {
       _paramProps.propGetStringN(kOfxParamPropChoiceEnum, optionsNames, false);
     }
+#else
+    unused(optionsNames);
 #endif
   }
 
@@ -3369,6 +3379,8 @@ namespace OFX {
     if (_paramProps.propExists(kOfxParamPropChoiceEnum)) {
       _paramProps.propSetString(kOfxParamPropChoiceEnum, optionEnum.empty() ? optionLabel : optionEnum, nCurrentValues);
     }
+#else
+    unused(optionEnum);
 #endif
     _paramProps.propSetString(kOfxParamPropChoiceOption, optionLabel, nCurrentValues);
   }

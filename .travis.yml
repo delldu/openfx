@@ -64,9 +64,9 @@ before_install:
   - date -u
   - uname -a
   - if [ ${TRAVIS_OS_NAME} = "linux" ]; then
-      echo -n | openssl s_client -connect https://scan.coverity.com:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | sudo tee -a /etc/ssl/certs/ca-
-#  - export J='-j3';
+      echo -n | openssl s_client -connect https://scan.coverity.com:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | sudo tee -a /etc/ssl/certs/ca- ;
     fi
+#  - export J='-j3';
 
 install:
   - git submodule update --init --recursive

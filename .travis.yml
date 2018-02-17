@@ -4,7 +4,7 @@ env:
   global:
    # The next declaration is the encrypted COVERITY_SCAN_TOKEN, created
    #   via the "travis encrypt" command using the project repo's public key
-   - secure: "M1+7Zx4c8zTEIwUbAh8p9f8ZZ0jI9E9EAgCRgun6dO4G8wjfF/F44YLTZTqC2qMPKd4yPIm/p43y5qXxFNWFhTRsobeg6wVhoOOOCAB4AmndT212xh6aXu+U3lqT3z7gl8kDhxTS2liEzl0L22a9ljREsuMOIzU8lPFWvLdvm6k="
+   - secure: "DlcDZMxRcRC6WSlFLlIcFvj366OXwAmbuyWOBc1xJB/jwWt9T+u1E6z5LGV1KSe/xE9KJMNAmR8/vowVfZNCv8Xu55ybPV3MNDkxAexIzTckGYTjrUIbJZ3rrhVmyK7klt4NS3Yey/Fvg8LBD7nxQp72aei0lKDc+S+tklEuVZeDhyVoYGYj9Ok6BjALCRF2MoB3XPNvMzy1pi8oGEfoPgsoYqAdYC0veKH8mDFFAtXmZo5vUAF7V3hiUI09Ip/WnkljdwJf3gdRxl6DYx9zu4L8mD8gFQJCwgy6+sxythQW8UGlUsDO4zuA6boGeoHwrS7eCqBQ3Nw626lrihJQp4Wc9xKq1+vBqfR07TQvmQrPELI6gqidcDdlFWbdhpPp5npZsSWgd5txPY2Akmsr3Rzdt+f1jszXsrnI+nipHOz6Ocy2IHCwlUGlYMtsXYQv6lZU58y8wj4wpYhAyYIAeiJvhu74K+uGaOCb5PwlElZzFjlzYHGhjjhEX4VTieghJirZfGukybU3Eb6dzJvC8RG4Rw/+08lx7hE6YYdIoLKvUsN66kUQk1f+/dw8P/n2srdOtxvZCG1qqQdFkG2mO0hDDQKiQ7W//KA6syo1DOOiLimaJlV+QORZ8VmAQs9hEesfwxU5JOhbZZM8PYkDCYLoSVkHLXter0N6v7PYyns="
    # Coverity run condition (avoid matrix multiple runs), need customized
    # build script. Need an update if new matrix cases.
    - coverity_scan_run_condition='"$CC" = gcc -a "$TRAVIS_OS_NAME" != osx'
@@ -63,6 +63,7 @@ addons:
 before_install:
   - date -u
   - uname -a
+  - echo -n | openssl s_client -connect https://scan.coverity.com:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | sudo tee -a /etc/ssl/certs/ca-
 #  - export J='-j3'
 
 install:

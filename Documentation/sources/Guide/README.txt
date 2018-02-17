@@ -31,7 +31,7 @@ need to modify the file...
 
 and change the line
 
-   OFX_INC_DIR = -I../../../include
+   OFX_INC_DIR = -I../../../../../include
 
 to point to the directory where you have put the headers.
 

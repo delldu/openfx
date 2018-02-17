@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Package all local libraries into an application or plugin bundle on OSX
 
@@ -61,7 +61,7 @@ if [ ! -x "$binary" ]; then
    exit 1
 fi
 
-rpath=`otool -l $binary | grep -A 3 LC_RPATH |grep path|awk '{ print $2 }'`
+rpath=$(otool -l "$binary" | grep -A 3 LC_RPATH |grep path|awk '{ print $2 }')
 if [[ ! ("$rpath" == *"@loader_path/../$libdir"*) ]]; then
     echo "Error:: The runtime search path in $binary does not contain \"@loader_path/../$libdir\". Please set it in your Xcode project, or link the binary with the flags -Xlinker -rpath -Xlinker \"@loader_path/../$libdir\""
     exit 1
@@ -73,7 +73,7 @@ LIBADD=
 
 #############################
 # test if ImageMagick is used
-if otool -L "$binary"  | fgrep libMagick > /dev/null; then
+if otool -L "$binary"  | grep -F libMagick > /dev/null; then
     # Check that ImageMagick is properly installed
     if ! pkg-config --modversion ImageMagick >/dev/null 2>&1; then
         echo "Missing ImageMagick -- please install ImageMagick ('sudo port install ImageMagick +no_x11 +universal') and try again." >&2
@@ -81,18 +81,24 @@ if otool -L "$binary"  | fgrep libMagick > /dev/null; then
     fi
 
     # Update the ImageMagick path in startup script.
-    IMAGEMAGICKVER=`pkg-config --modversion ImageMagick`
+    IMAGEMAGICKVER=$(pkg-config --modversion ImageMagick)
     IMAGEMAGICKMAJ=${IMAGEMAGICKVER%.*.*}
-    IMAGEMAGICKLIB=`pkg-config --variable=libdir ImageMagick`
-    IMAGEMAGICKSHARE=`pkg-config --variable=prefix ImageMagick`/share
+    IMAGEMAGICKLIB=$(pkg-config --variable=libdir ImageMagick)
+    IMAGEMAGICKSHARE=$(pkg-config --variable=prefix ImageMagick)/share
     # if I get this right, sed substitutes in the exe the occurences of IMAGEMAGICKVER
     # into the actual value retrieved from the package.
     # We don't need this because we use MAGICKCORE_PACKAGE_VERSION declared in the <magick/magick-config.h>
     # sed -e "s,IMAGEMAGICKVER,$IMAGEMAGICKVER,g" -i "" $pkgbin/DisparityKillerM
 
     # copy the ImageMagick libraries (.la and .so)
-    cp -r "$IMAGEMAGICKLIB/ImageMagick-$IMAGEMAGICKVER" "$pkglib/"
     test -d "$pkglib/share" || mkdir "$pkglib/share"
+    if [ -d  "$IMAGEMAGICKLIB/ImageMagick-$IMAGEMAGICKVER" ]; then
+	# MacPorts
+	cp -r "$IMAGEMAGICKLIB/ImageMagick-$IMAGEMAGICKVER" "$pkglib/"
+    elif [ -d  "$IMAGEMAGICKLIB/ImageMagick" ]; then
+	# HomeBrew
+	cp -r "$IMAGEMAGICKLIB/ImageMagick" "$pkglib/"
+    fi
     cp -r "$IMAGEMAGICKSHARE/ImageMagick-$IMAGEMAGICKMAJ" "$pkglib/share/"
 
     LIBADD="$LIBADD $pkglib/ImageMagick-$IMAGEMAGICKVER/modules-*/*/*.so"
@@ -100,7 +106,7 @@ if otool -L "$binary"  | fgrep libMagick > /dev/null; then
 fi
 
 # expand glob patterns in LIBADD
-LIBADD=`echo $LIBADD`
+LIBADD=$(echo $LIBADD)
 
 # Find out the library dependencies
 # (i.e. $LOCAL or $MACPORTS), then loop until no changes.
@@ -110,17 +116,21 @@ alllibs=""
 endl=true
 while $endl; do
     #echo -e "\033[1mLooking for dependencies.\033[0m Round" $a
-    libs="`otool -L $pkglib/* $LIBADD $binary 2>/dev/null | fgrep compatibility | cut -d\( -f1 | grep -e $LOCAL'\\|'$HOMEBREW'\\|'$MACPORTS | sort | uniq`"
+    pkglibs=
+    if compgen -G "$pkglib/*" > /dev/null; then
+        pkglibs="$pkglib"/*
+    fi
+    libs="$(otool -L $pkglibs $LIBADD "$binary" 2>/dev/null | grep -F compatibility | cut -d\( -f1 | grep -e $LOCAL'\\|'$HOMEBREW'\\|'$MACPORTS | sort | uniq)"
     if [ -n "$libs" ]; then
-        cp -f $libs $pkglib
-        alllibs="`ls $alllibs $libs | sort | uniq`"
+        cp -f $libs "$pkglib"
+        alllibs="$(ls $alllibs $libs | sort | uniq)"
     fi
     let "a+=1"      
-    nnfiles=`ls $pkglib | wc -l`
-    if [ $nnfiles = $nfiles ]; then
+    nnfiles=$(ls "$pkglib" | wc -l)
+    if [ "$nnfiles" = "$nfiles" ]; then
         endl=false
     else
-        nfiles=$nnfiles
+        nfiles="$nnfiles"
     fi
 done
 
@@ -134,7 +144,7 @@ done
 if [ -n "$alllibs" ]; then
     changes=""
     for l in $alllibs; do
-        changes="$changes -change $l @rpath/`basename $l`"
+        changes="$changes -change $l @rpath/$(basename "$l")"
     done
 
     for f in  $pkglib/* $LIBADD "$binary"; do
@@ -145,16 +155,15 @@ if [ -n "$alllibs" ]; then
                 echo "Error: 'install_name_tool $changes $f' failed"
                 exit 1
             fi
-            install_name_tool -id @rpath/`basename $f` "$f"
-            if ! install_name_tool -id @rpath/`basename $f` "$f"; then
-                echo "Error: 'install_name_tool -id @rpath/`basename $f` $f' failed"
+            if ! install_name_tool -id @rpath/$(basename "$f") "$f"; then
+                echo "Error: 'install_name_tool -id @rpath/$(basename "$f") $f' failed"
                 exit 1
             fi
         fi
     done
 fi
 
-#if [ "$WITH_IMAGEMAGICK" = "yes" ]; then
+if [ "$WITH_IMAGEMAGICK" = "yes" ]; then
     # and now, obfuscate all the default paths in dynamic libraries
     # and ImageMagick modules and config files
 
@@ -163,6 +172,6 @@ fi
     MACRAND=${RANDSTR:0:${#MACPORTS}}
     HOMEBREWRAND=${RANDSTR:0:${#HOMEBREW}}
     LOCALRAND=${RANDSTR:0:${#LOCAL}}
-    find $pkglib -type f -exec $SED -b -i -e "s@$MACPORTS@$MACRAND@g" -e "s@$HOMEBREW@$HOMEBREWRAND@g" -e "s@$LOCAL@$LOCALRAND@g" {} \;
+    find "$pkglib" -type f -exec $SED -b -i -e "s@$MACPORTS@$MACRAND@g" -e "s@$HOMEBREW@$HOMEBREWRAND@g" -e "s@$LOCAL@$LOCALRAND@g" {} \;
     $SED -b -i -e "s@$MACPORTS@$MACRAND@g" -e "s@$HOMEBREW@$HOMEBREWRAND@g" -e "s@$LOCAL@$LOCALRAND@g" "$binary"
-#fi
+fi

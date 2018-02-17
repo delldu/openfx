@@ -1,4 +1,4 @@
-SUBDIRS = HostSupport Examples Support/Plugins Support/PropTester Guide/Code
+SUBDIRS = HostSupport Examples Support/Plugins Support/PropTester Documentation/sources/Guide/Code
 
 all: subdirs
 

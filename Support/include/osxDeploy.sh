@@ -117,8 +117,8 @@ endl=true
 tofix="$LOCAL\|$HOMEBREW\|$MACPORTS"
 osver=$(uname -r | awk -F . '{print $1}')
 if [ "$osver" -le 10 ]; then
-    # Lion and later have libc++ installed, but we if we are building with libc++ on Snow Leopard
-    # (see https://trac.macports.org/wiki/LibcxxOnOlderSystems) must ship libc++.1.dylib and libc++abi.dylib
+    # Lion and later have libc++ installed, but if we are building with libc++ on Snow Leopard
+    # (see https://trac.macports.org/wiki/LibcxxOnOlderSystems) we must ship libc++.1.dylib and libc++abi.dylib
     tofix="$tofix\|/usr/lib/libc++.1.dylib\|/usr/lib/libc++abi.dylib"
 fi
 while $endl; do

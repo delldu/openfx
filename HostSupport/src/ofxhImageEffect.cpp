@@ -148,6 +148,7 @@ namespace OFX {
         { kNatronOfxImageEffectPropInViewerContextShortcutHasShiftModifier, Property::eInt, 0, true, "" },
         { kNatronOfxImageEffectPropInViewerContextShortcutHasAltModifier, Property::eInt, 0, true, "" },
         { kNatronOfxImageEffectPropInViewerContextShortcutHasMetaModifier, Property::eInt, 0, true, "" },
+        { kNatronOfxImageEffectPropInViewerContextShortcutHasKeypadModifier, Property::eInt, 0, true, "" },
         { kNatronOfxPropNativeOverlays, Property::eString, 0, false, ""},
         { kOfxImageEffectPropCanDistort, Property::eInt, 1, true, "0" },
         { kOfxImageEffectPropRenderAllPlanes, Property::eInt, 1, true, "0"},
@@ -421,9 +422,10 @@ namespace OFX {
         const int nShift = _properties.getDimension(kNatronOfxImageEffectPropInViewerContextShortcutHasShiftModifier);
         const int nAlt = _properties.getDimension(kNatronOfxImageEffectPropInViewerContextShortcutHasAltModifier);
         const int nMeta = _properties.getDimension(kNatronOfxImageEffectPropInViewerContextShortcutHasMetaModifier);
+        const int nKeypad = _properties.getDimension(kNatronOfxImageEffectPropInViewerContextShortcutHasKeypadModifier);
 
         // Invalid properties
-        if (nIds != nSyms || nIds != nCtrl || nIds != nShift || nIds != nAlt || nIds != nMeta) {
+        if (nIds != nSyms || nIds != nCtrl || nIds != nShift || nIds != nAlt || nIds != nMeta || nIds != nKeypad) {
           return;
         }
 
@@ -431,10 +433,11 @@ namespace OFX {
           PluginShortcut p;
           p.shortcutID = _properties.getStringProperty(kNatronOfxImageEffectPropInViewerContextDefaultShortcuts, i);
           p.symbol = _properties.getIntProperty(kNatronOfxImageEffectPropInViewerContextShortcutSymbol, i);
-          p.hasCtrlMod = _properties.getIntProperty(kNatronOfxImageEffectPropInViewerContextShortcutHasControlModifier, i);
-          p.hasShiftMod = _properties.getIntProperty(kNatronOfxImageEffectPropInViewerContextShortcutHasShiftModifier, i);
-          p.hasAltMod = _properties.getIntProperty(kNatronOfxImageEffectPropInViewerContextShortcutHasAltModifier, i);
-          p.hasMetaMod = _properties.getIntProperty(kNatronOfxImageEffectPropInViewerContextShortcutHasMetaModifier, i);
+          p.hasCtrlModifier = _properties.getIntProperty(kNatronOfxImageEffectPropInViewerContextShortcutHasControlModifier, i);
+          p.hasShiftModifier = _properties.getIntProperty(kNatronOfxImageEffectPropInViewerContextShortcutHasShiftModifier, i);
+          p.hasAltModifier = _properties.getIntProperty(kNatronOfxImageEffectPropInViewerContextShortcutHasAltModifier, i);
+          p.hasMetaModifier = _properties.getIntProperty(kNatronOfxImageEffectPropInViewerContextShortcutHasMetaModifier, i);
+          p.hasKeypadModifier = _properties.getIntProperty(kNatronOfxImageEffectPropInViewerContextShortcutHasKeypadModifier, i);
           shortcuts->push_back(p);
         }
 

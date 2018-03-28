@@ -321,7 +321,11 @@ namespace OFX {
         {
           std::string shortcutID;
           int symbol;
-          bool hasCtrlMod,hasAltMod,hasShiftMod,hasMetaMod;
+          bool hasCtrlModifier;
+          bool hasAltModifier;
+          bool hasShiftModifier;
+          bool hasMetaModifier;
+          bool hasKeypadModifier;
         };
 
         // Get the default shortcuts defined for in viewport parameters

@@ -513,7 +513,7 @@ This is a property on parameters of type ::kOfxParamTypeChoice, and tells the ch
  3) PushButton parameters, Boolean Parameters with property kNatronOfxBooleanParamPropIsToggableButton, and Group parameters with the property kNatronOfxParamPropInViewerContextIsInToolbar can have shortcuts. Instead of responding to specific key strokes in the overlay interact actions, the plug-in can then just inform the host about the shortcut associated to this parameter. This enables the host to represent the shortcut in some sort of shortcut editor where the user could modify the shortcut.
  The plug-in informs to the host via the property on the image effect kNatronOfxImageEffectPropInViewerContextDefaultShortcuts the default shortcuts for a parameter.
  Each shortcut, should be specified with a symbol kNatronOfxImageEffectPropInViewerContextShortcutSymbol, as well and indicate its modifiers via
- kNatronOfxImageEffectPropInViewerContextShortcutHasControlModifier, kNatronOfxImageEffectPropInViewerContextShortcutHasShiftModifier, kNatronOfxImageEffectPropInViewerContextShortcutHasAltModifier and kNatronOfxImageEffectPropInViewerContextShortcutHasMetaModifier.
+ kNatronOfxImageEffectPropInViewerContextShortcutHasControlModifier, kNatronOfxImageEffectPropInViewerContextShortcutHasShiftModifier, kNatronOfxImageEffectPropInViewerContextShortcutHasAltModifier, kNatronOfxImageEffectPropInViewerContextShortcutHasMetaModifier and kNatronOfxImageEffectPropInViewerContextShortcutHasKeypadModifier.
  All these properties should have the same dimension as kNatronOfxImageEffectPropInViewerContextDefaultShortcuts.
  
  When a shortcut is triggered, the host will not call the associated keydown action but instead will call the action kOfxActionInstanceChanged.
@@ -834,6 +834,7 @@ property is set to 1.
  - kNatronOfxParamPropInViewerContextShortcutHasShiftModifier
  - kNatronOfxParamPropInViewerContextShortcutHasAltModifier
  - kNatronOfxParamPropInViewerContextShortcutHasMetaModifier
+ - kNatronOfxParamPropInViewerContextShortcutHasKeypadModifier
 
  - Type - string x N
  - Property Set - image effect descriptor (read/write) and instance (read/write)
@@ -894,6 +895,17 @@ property is set to 1.
  - Valid Values - 0 or 1
  */
 #define kNatronOfxImageEffectPropInViewerContextShortcutHasMetaModifier "NatronOfxImageEffectPropInViewerContextShortcutHasMetaModifier"
+
+
+/** @brief Property indicating whether the key should be pressed on the keypad for a parameter shortcut to trigger.
+ The shortcut is associated to kNatronOfxImageEffectPropInViewerContextDefaultShortcuts and should thus have the same dimension.
+
+ - Type - int x N
+ - Property Set - image effect descriptor (read/write) and instance (read/write)
+ - Default - 0
+ - Valid Values - 0 or 1
+ */
+#define kNatronOfxImageEffectPropInViewerContextShortcutHasKeypadModifier "NatronOfxImageEffectPropInViewerContextShortcutHasKeypadModifier"
 
 
 /** @brief A pointer property used to hold OpenGL context-specific data, such as texture or program IDs.

@@ -2027,7 +2027,7 @@ namespace OFX {
 #ifdef OFX_EXTENSIONS_TUTTLE
                      // Writers are special: they don't support tiled rendering, but can still ask for an RoI,
                      // so there's no need to render the full RoD for their input
-                     || getContext() != kOfxImageEffectContextWriter
+                     || getContext() == kOfxImageEffectContextWriter
 #endif
                      ) {
                     std::string name = "OfxImageClipPropRoI_"+it->first;

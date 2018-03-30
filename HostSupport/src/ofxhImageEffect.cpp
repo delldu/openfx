@@ -1910,7 +1910,13 @@ namespace OFX {
         // reset the map
         rois.clear();
 
-        if(!supportsTiles()) {
+        if(!supportsTiles()
+#ifdef OFX_EXTENSIONS_TUTTLE
+           // Writers are special: they don't support tiled rendering, but can still ask for an RoI,
+           // so there's no need to render the full RoD for their input
+           && getContext() != kOfxImageEffectContextWriter
+#endif
+           ) {
           /// No tiling support on the effect at all. So set the roi of each input clip to be the RoD of that clip.
           for(std::map<std::string, ClipInstance*>::iterator it=_clips.begin();
               it!=_clips.end();
@@ -2017,7 +2023,13 @@ namespace OFX {
                getContext() == kOfxImageEffectContextGenerator) {
                 if (it->second->isOutput() || it->second->getConnected()) { // needed to be able to fetch the RoD
                   
-                  if(it->second->supportsTiles()) {
+                  if(it->second->supportsTiles()
+#ifdef OFX_EXTENSIONS_TUTTLE
+                     // Writers are special: they don't support tiled rendering, but can still ask for an RoI,
+                     // so there's no need to render the full RoD for their input
+                     || getContext() != kOfxImageEffectContextWriter
+#endif
+                     ) {
                     std::string name = "OfxImageClipPropRoI_"+it->first;
                     OfxRectD thisRoi;
                     thisRoi.x1 = outArgs.getDoubleProperty(name,0);

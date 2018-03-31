@@ -1,5 +1,5 @@
 DEBUG ?= false
-EXPAT_INCLUDE ?= expat-2.0.1/lib
+EXPAT_INCLUDE ?= expat-2.2.5/lib
 OBJSUF ?= .o
 LIBSUF ?= .a
 LIBPREFIX ?= lib

@@ -454,7 +454,7 @@
 				1E3CB8C1179935430032B538 /* xmltok.c */,
 			);
 			name = "Expat Sources";
-			path = "expat-2.0.1/lib";
+			path = "expat-2.2.4/lib";
 			sourceTree = "<group>";
 		};
 		1E742FE117992CF9007D295B = {
@@ -933,6 +933,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"HAVE_MEMMOVE=1",
 					"HAVE_BCOPY=1",
+					"XML_POOR_ENTROPY=1",
 					"$(inherited)",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
@@ -951,6 +952,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"HAVE_MEMMOVE=1",
 					"HAVE_BCOPY=1",
+					"XML_POOR_ENTROPY=1",
 					"$(inherited)",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.8;

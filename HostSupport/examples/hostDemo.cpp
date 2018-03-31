@@ -272,7 +272,36 @@ int main(int argc, char **argv)
         }
 #else
         // render a frame
-        stat = instance->renderAction(t,kOfxImageFieldBoth,renderWindow, renderScale, /*sequential=*/true, /*interactive=*/false, /*draft=*/false);
+#       ifdef OFX_EXTENSIONS_NUKE
+          std::list<std::string> planes;
+          planes.push_back(kOfxImagePlaneColour);
+#       endif
+          stat = instance->renderAction(t, //OfxTime      time,
+                                        kOfxImageFieldBoth, // const std::string &  field,
+                                        renderWindow, // const OfxRectI &renderRoI,
+                                        renderScale, // OfxPointD   renderScale,
+                                        true, // bool     sequentialRender,
+                                        false, // bool     interactiveRender,
+#                                    ifdef OFX_SUPPORTS_OPENGLRENDER
+                                        false, // bool     openGLRender,
+#                                     ifdef OFX_EXTENSIONS_NATRON
+                                        NULL, // void*    contextData,
+#                                     endif
+#                                    endif
+                                        false // bool     draftRender
+#                                    if defined(OFX_EXTENSIONS_VEGAS) || defined(OFX_EXTENSIONS_NUKE)
+                                        ,
+                                        0 // int view
+#                                    endif
+#                                    ifdef OFX_EXTENSIONS_VEGAS
+                                        ,
+                                        1 // int nViews
+#                                    endif
+#                                    ifdef OFX_EXTENSIONS_NUKE
+                                        ,
+                                        planes // const std::list<std::string>& planes
+#                                    endif
+                                        );
         assert(stat == kOfxStatOK);
 
         // get the output image buffer

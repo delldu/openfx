@@ -1910,158 +1910,135 @@ namespace OFX {
         // reset the map
         rois.clear();
 
-        if(!supportsTiles()
-#ifdef OFX_EXTENSIONS_TUTTLE
-           // Writers are special: they don't support tiled rendering, but can still ask for an RoI,
-           // so there's no need to render the full RoD for their input
-           && getContext() != kOfxImageEffectContextWriter
-#endif
-           ) {
-          /// No tiling support on the effect at all. So set the roi of each input clip to be the RoD of that clip.
-          for(std::map<std::string, ClipInstance*>::iterator it=_clips.begin();
-              it!=_clips.end();
-              ++it) {
-            if(!it->second->isOutput() ||
-#ifdef OFX_EXTENSIONS_TUTTLE
-               getContext() == kOfxImageEffectContextReader ||
-#endif
-               getContext() == kOfxImageEffectContextGenerator) {
-              if (it->second->isOutput() || it->second->getConnected()) {// needed to be able to fetch the RoD
-					/// @todo tuttle: how to support size on generators... check if this is correct in all cases.
-#ifdef OFX_EXTENSIONS_NUKE
-                OfxRectD roi = it->second->getRegionOfDefinition(time, view);
-#else
-                OfxRectD roi = it->second->getRegionOfDefinition(time);
-#endif
-                rois[it->second] = roi;
-              }
-            }
-          }
-          stat = kOfxStatOK;
-        }
-        else {
-          /// set up the in args 
-          static const Property::PropSpec inStuff[] = {
-            { kOfxPropTime, Property::eDouble, 1, true, "0" },
-            { kOfxImageEffectPropRenderScale, Property::eDouble, 2, true, "0" },
-            { kOfxImageEffectPropRegionOfInterest , Property::eDouble, 4, true, 0 },
-#ifdef OFX_EXTENSIONS_NUKE
-            { kFnOfxImageEffectPropView, Property::eInt, 1, true, "0" },
-#endif
-            Property::propSpecEnd
-          };
-          Property::Set inArgs(inStuff);
+        // If an effect does not support tiles, it cannot *render* tiles, but it still may implement
+        // kOfxImageEffectActionGetRegionsOfInterest. For example, if an input clip is not needed, it can
+        // set the roi to an empty region on that input. On it can set the roi on each input to the
+        // renderwindow instead of the input region of definition.
+        // The only difference between effects that support tiles and thos that don't is the defaut
+        // region set on each input:
+        // - for effects that support tiles, it is the renderwindow
+        // - for effect that don't, it is the region of definition of the input clip
+        //
+        // Same goes for the input clips: if an input clip does not support tiles, then set the default
+        // RoI for this clip to its RoD, but still call action and let the effect have the final decision.
+        bool supportstiles = supportsTiles();
 
-          inArgs.setDoublePropertyN(kOfxImageEffectPropRenderScale, &renderScale.x, 2);
-          inArgs.setDoubleProperty(kOfxPropTime,time);
-          inArgs.setDoublePropertyN(kOfxImageEffectPropRegionOfInterest, &roi.x1, 4);
-#ifdef OFX_EXTENSIONS_NUKE
-          inArgs.setIntProperty(kFnOfxImageEffectPropView, view);
-#endif
-            
-          Property::Set outArgs;
-          for(std::map<std::string, ClipInstance*>::iterator it=_clips.begin();
-              it!=_clips.end();
-              ++it) {
-            if(!it->second->isOutput() ||
-#ifdef OFX_EXTENSIONS_TUTTLE
-               getContext() == kOfxImageEffectContextReader ||
-#endif
-               getContext() == kOfxImageEffectContextGenerator) {
-              Property::PropSpec s;
-              std::string name = "OfxImageClipPropRoI_"+it->first;
-            
-              s.name = name.c_str();
-              s.type = Property::eDouble;
-              s.dimension = 4;
-              s.readonly = false;
-              s.defaultValue = "";
-              outArgs.createProperty(s);
-            
-              /// initialise to the default
-              outArgs.setDoublePropertyN(s.name, &roi.x1, 4);
-            }
-          }
-
-#         ifdef OFX_DEBUG_ACTIONS
-            OfxPlugin *ofxp = _plugin->getPluginHandle()->getOfxPlugin();
-            const char* id = ofxp->pluginIdentifier;
-            std::cout << "OFX: "<<id<<"("<<(void*)ofxp<<")->"<<kOfxImageEffectActionGetRegionsOfInterest<<"("<<time<<",("<<renderScale.x<<","<<renderScale.y<<"),("<<roi.x1<<","<<roi.y1<<","<<roi.x2<<","<<roi.y2<<"))"<<std::endl;
+        /// set up the in args 
+        static const Property::PropSpec inStuff[] = {
+          { kOfxPropTime, Property::eDouble, 1, true, "0" },
+          { kOfxImageEffectPropRenderScale, Property::eDouble, 2, true, "0" },
+          { kOfxImageEffectPropRegionOfInterest , Property::eDouble, 4, true, 0 },
+#         ifdef OFX_EXTENSIONS_NUKE
+          { kFnOfxImageEffectPropView, Property::eInt, 1, true, "0" },
 #         endif
-          /// call the action
-          stat = mainEntry(kOfxImageEffectActionGetRegionsOfInterest,
-                           this->getHandle(),
-                           &inArgs,
-                           &outArgs);
+          Property::propSpecEnd
+        };
+        Property::Set inArgs(inStuff);
 
-#         ifdef OFX_DEBUG_ACTIONS
-            std::cout << "OFX: "<<id<<"("<<(void*)ofxp<<")->"<<kOfxImageEffectActionGetRegionsOfInterest<<"("<<time<<",("<<renderScale.x<<","<<renderScale.y<<"),("<<roi.x1<<","<<roi.y1<<","<<roi.x2<<","<<roi.y2<<"))->"<<StatStr(stat);
-            if (stat == kOfxStatOK) {
-                std::cout << ": ";
-                for(std::map<std::string, ClipInstance*>::iterator it=_clips.begin();
-                    it!=_clips.end();
-                    ++it) {
-                    std::string name = "OfxImageClipPropRoI_"+it->first;
-                    OfxRectD thisRoi;
-                    thisRoi.x1 = outArgs.getDoubleProperty(name,0);
-                    thisRoi.y1 = outArgs.getDoubleProperty(name,1);
-                    thisRoi.x2 = outArgs.getDoubleProperty(name,2);
-                    thisRoi.y2 = outArgs.getDoubleProperty(name,3);
-                    std::cout << it->first << "->("<<thisRoi.x1<<","<<thisRoi.y1<<","<<thisRoi.x2<<","<<thisRoi.y2<<") ";
-                }
+        inArgs.setDoublePropertyN(kOfxImageEffectPropRenderScale, &renderScale.x, 2);
+        inArgs.setDoubleProperty(kOfxPropTime,time);
+        inArgs.setDoublePropertyN(kOfxImageEffectPropRegionOfInterest, &roi.x1, 4);
+#       ifdef OFX_EXTENSIONS_NUKE
+        inArgs.setIntProperty(kFnOfxImageEffectPropView, view);
+#       endif
+
+        Property::Set outArgs;
+        for (std::map<std::string, ClipInstance*>::iterator it=_clips.begin();
+            it!=_clips.end();
+            ++it) {
+          if (!it->second->isOutput() ||
+#             ifdef OFX_EXTENSIONS_TUTTLE
+              getContext() == kOfxImageEffectContextReader ||
+#             endif
+              getContext() == kOfxImageEffectContextGenerator) {
+            Property::PropSpec s;
+            std::string name = "OfxImageClipPropRoI_"+it->first;
+
+            s.name = name.c_str();
+            s.type = Property::eDouble;
+            s.dimension = 4;
+            s.readonly = false;
+            s.defaultValue = "";
+            outArgs.createProperty(s);
+            
+            /// initialise to the default
+            if (supportstiles && it->second->supportsTiles()) {
+              outArgs.setDoublePropertyN(s.name, &roi.x1, 4);
+            } else {
+              OfxRectD rod = roi;
+              // needed to be able to fetch the RoD
+              if (it->second->isOutput() || it->second->getConnected()) {
+#               ifdef OFX_EXTENSIONS_NUKE
+                rod = it->second->getRegionOfDefinition(time, view);
+#               else
+                rod = it->second->getRegionOfDefinition(time);
+#               endif
+              }
+              outArgs.setDoublePropertyN(s.name, &rod.x1, 4);
             }
-            std::cout << std::endl;
-#           endif
-          /// set the thing up
+          }
+        }
+
+#       ifdef OFX_DEBUG_ACTIONS
+        OfxPlugin *ofxp = _plugin->getPluginHandle()->getOfxPlugin();
+        const char* id = ofxp->pluginIdentifier;
+        std::cout << "OFX: "<<id<<"("<<(void*)ofxp<<")->"<<kOfxImageEffectActionGetRegionsOfInterest<<"("<<time<<",("<<renderScale.x<<","<<renderScale.y<<"),("<<roi.x1<<","<<roi.y1<<","<<roi.x2<<","<<roi.y2<<"))"<<std::endl;
+#       endif
+        /// call the action
+        stat = mainEntry(kOfxImageEffectActionGetRegionsOfInterest,
+                         this->getHandle(),
+                         &inArgs,
+                         &outArgs);
+
+#       ifdef OFX_DEBUG_ACTIONS
+        std::cout << "OFX: "<<id<<"("<<(void*)ofxp<<")->"<<kOfxImageEffectActionGetRegionsOfInterest<<"("<<time<<",("<<renderScale.x<<","<<renderScale.y<<"),("<<roi.x1<<","<<roi.y1<<","<<roi.x2<<","<<roi.y2<<"))->"<<StatStr(stat);
+        if (stat == kOfxStatOK) {
+          std::cout << ": ";
           for(std::map<std::string, ClipInstance*>::iterator it=_clips.begin();
               it!=_clips.end();
               ++it) {
-              if(!it->second->isOutput() ||
-#ifdef OFX_EXTENSIONS_TUTTLE
-               getContext() == kOfxImageEffectContextReader ||
-#endif
-               getContext() == kOfxImageEffectContextGenerator) {
-                if (it->second->isOutput() || it->second->getConnected()) { // needed to be able to fetch the RoD
-                  
-                  if(it->second->supportsTiles()
-#ifdef OFX_EXTENSIONS_TUTTLE
-                     // Writers are special: they don't support tiled rendering, but can still ask for an RoI,
-                     // so there's no need to render the full RoD for their input
-                     || getContext() == kOfxImageEffectContextWriter
-#endif
-                     ) {
-                    std::string name = "OfxImageClipPropRoI_"+it->first;
-                    OfxRectD thisRoi;
-                    thisRoi.x1 = outArgs.getDoubleProperty(name,0);
-                    thisRoi.y1 = outArgs.getDoubleProperty(name,1);
-                    thisRoi.x2 = outArgs.getDoubleProperty(name,2);
-                    thisRoi.y2 = outArgs.getDoubleProperty(name,3);
-                  
-                    // and DON'T clamp it to the clip's rod
-                    // We cannot clip it against the RoD because the RoI may be used for frames
-                    // at different a time or view than the current time and view passed to this action
-                    // which would result in a wrong clipping. Unfortunately only the implementation of
-                    // the host can do the correct clipping.
-                    //thisRoi = Clamp(thisRoi, rod);
-                    rois[it->second] = thisRoi;
-                  }
-                  else {
-                    /// not supporting tiles on this input, so set it to the rod
-                    OfxRectD rod = it->second->getRegionOfDefinition(time
-#ifdef OFX_EXTENSIONS_NUKE
-                                                                    , view
-#endif
-                                                                       );
-                    rois[it->second] = rod;
-                  }
-                }
-              }
-            }
+            std::string name = "OfxImageClipPropRoI_"+it->first;
+            OfxRectD thisRoi;
+            thisRoi.x1 = outArgs.getDoubleProperty(name,0);
+            thisRoi.y1 = outArgs.getDoubleProperty(name,1);
+            thisRoi.x2 = outArgs.getDoubleProperty(name,2);
+            thisRoi.y2 = outArgs.getDoubleProperty(name,3);
+            std::cout << it->first << "->("<<thisRoi.x1<<","<<thisRoi.y1<<","<<thisRoi.x2<<","<<thisRoi.y2<<") ";
+          }
         }
-  
+        std::cout << std::endl;
+#       endif
+        // get the results
+        for (std::map<std::string, ClipInstance*>::iterator it=_clips.begin();
+             it!=_clips.end();
+             ++it) {
+          if (!it->second->isOutput() ||
+#ifdef OFX_EXTENSIONS_TUTTLE
+              getContext() == kOfxImageEffectContextReader ||
+#endif
+              getContext() == kOfxImageEffectContextGenerator) {
+            if (it->second->isOutput() || it->second->getConnected()) { // needed to be able to fetch the RoD
+                  
+              std::string name = "OfxImageClipPropRoI_"+it->first;
+              OfxRectD thisRoi;
+              thisRoi.x1 = outArgs.getDoubleProperty(name,0);
+              thisRoi.y1 = outArgs.getDoubleProperty(name,1);
+              thisRoi.x2 = outArgs.getDoubleProperty(name,2);
+              thisRoi.y2 = outArgs.getDoubleProperty(name,3);
+                  
+              // and DON'T clamp it to the clip's rod
+              // We cannot clip it against the RoD because the RoI may be used for frames
+              // at different a time or view than the current time and view passed to this action
+              // which would result in a wrong clipping. Unfortunately only the implementation of
+              // the host can do the correct clipping.
+              //thisRoi = Clamp(thisRoi, rod);
+              rois[it->second] = thisRoi;
+            }
+          }
+        }
         return stat;
       }
-        
+
 #ifdef OFX_EXTENSIONS_NUKE
       OfxStatus Instance::getClipComponentsAction(OfxTime time,
                                                   int view,

@@ -1763,9 +1763,8 @@ namespace OFX {
   Texture::~Texture()
   {
     OfxStatus stat = OFX::Private::gOpenGLRenderSuite->clipFreeTexture(_imageProps.propSetHandle());
-    if (stat != kOfxStatOK) {
-      throwSuiteStatusException(stat);
-    }
+    // ignore status code for exception purposes
+    (void)stat;
   }
 #endif
 
@@ -2466,7 +2465,7 @@ namespace OFX {
   ImageEffect::~ImageEffect()
   {
     // clobber the instance data property on the effect handle
-    _effectProps.propSetPointer(kOfxPropInstanceData, 0);
+    _effectProps.propSetPointer(kOfxPropInstanceData, 0, false);
 
     // delete any clip instances we may have constructed
     std::map<std::string, Clip *>::iterator iter;

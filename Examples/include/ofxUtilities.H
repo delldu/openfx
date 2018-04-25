@@ -66,8 +66,8 @@ ofxuIsClipConnected(OfxImageEffectHandle pluginInstance, const char *clipName)
   OfxImageClipHandle clipHandle = NULL;
   OfxPropertySetHandle props = NULL;
   gEffectHost->clipGetHandle(pluginInstance, clipName, &clipHandle, &props);
-
-  gPropHost->propGetInt(props,  kOfxImageClipPropConnected, 0, &connected);
+  if (props)
+    gPropHost->propGetInt(props,  kOfxImageClipPropConnected, 0, &connected);
   return connected != 0;
 }
 
@@ -78,8 +78,10 @@ ofxuGetProjectSetup(OfxImageEffectHandle pluginInstance, OfxPointD &projSize, Of
 {
   OfxPropertySetHandle props = NULL;
   gEffectHost->getPropertySet(pluginInstance, &props);
-  gPropHost->propGetDoubleN(props, kOfxImageEffectPropProjectSize, 2, &projSize.x); 
-  gPropHost->propGetDoubleN(props, kOfxImageEffectPropProjectOffset, 2, &projOffset.x); 
+  if (props) {
+    gPropHost->propGetDoubleN(props, kOfxImageEffectPropProjectSize, 2, &projSize.x);
+    gPropHost->propGetDoubleN(props, kOfxImageEffectPropProjectOffset, 2, &projOffset.x);
+  }
 }
 
 // get the pixel scale from an interact instance
@@ -104,7 +106,7 @@ ofxuGetTime(OfxImageEffectHandle pluginInstance)
 {
   OfxPropertySetHandle props = NULL;
   gEffectHost->getPropertySet(pluginInstance, &props);
-  return ofxuGetTime(props);
+  return props ? ofxuGetTime(props) : 0;
 }
 
 // routines to extract image properties
@@ -156,7 +158,7 @@ ofxuGetImagePixelDepth(OfxPropertySetHandle imageHandle, bool isUnMapped = false
     gPropHost->propGetString(imageHandle, kOfxImageClipPropUnmappedPixelDepth, 0, &bitString); // get unmapped component types of a clip
   else
     gPropHost->propGetString(imageHandle, kOfxImageEffectPropPixelDepth, 0, &bitString);
-  return ofxuMapPixelDepth(bitString);
+  return bitString ? ofxuMapPixelDepth(bitString) : 0;
 }
 
 inline bool
@@ -167,7 +169,7 @@ ofxuGetImagePixelsAreRGBA(OfxPropertySetHandle imageHandle, bool unmapped = fals
     gPropHost->propGetString(imageHandle, kOfxImageClipPropUnmappedComponents, 0, &v); // get unmapped pixel depths
   else
     gPropHost->propGetString(imageHandle, kOfxImageEffectPropComponents, 0, &v);
-  return strcmp(v, kOfxImageComponentAlpha) != 0;
+  return v ? strcmp(v, kOfxImageComponentAlpha) != 0 : 0;
 }
 
 inline int
@@ -175,7 +177,7 @@ ofxuGetClipPixelDepth(OfxImageClipHandle clipHandle, bool unmapped = false)
 {
   OfxPropertySetHandle props = NULL;
   gEffectHost->clipGetPropertySet(clipHandle, &props);
-  return ofxuGetImagePixelDepth(props, unmapped); // same property
+  return props ? ofxuGetImagePixelDepth(props, unmapped) : 0; // same property
 }
 
 inline bool
@@ -183,7 +185,7 @@ ofxuGetClipPixelsAreRGBA(OfxImageClipHandle clipHandle, bool unmapped = false)
 {
   OfxPropertySetHandle props = NULL;
   gEffectHost->clipGetPropertySet(clipHandle, &props);
-  return ofxuGetImagePixelsAreRGBA(props, unmapped); // same property
+  return props ? ofxuGetImagePixelsAreRGBA(props, unmapped) : 0; // same property
 }
 
 inline void
@@ -199,7 +201,8 @@ ofxuSetInteractInstanceData(OfxInteractHandle interactInstance, void *data)
 {
   OfxPropertySetHandle props = NULL;
   gInteractHost->interactGetPropertySet(interactInstance, &props);
-  gPropHost->propSetPointer(props, kOfxPropInstanceData, 0, data); 
+  if (props)
+    gPropHost->propSetPointer(props, kOfxPropInstanceData, 0, data);
 }
 
 // get the data pointer from an interact instance
@@ -209,7 +212,8 @@ ofxuGetInteractInstanceData(OfxInteractHandle interactInstance)
   OfxPropertySetHandle props = NULL;
   gInteractHost->interactGetPropertySet(interactInstance, &props);
   void *data = NULL;
-  gPropHost->propGetPointer(props, kOfxPropInstanceData, 0, &data);   
+  if (props)
+    gPropHost->propGetPointer(props, kOfxPropInstanceData, 0, &data);
   return data;
 }
 
@@ -219,7 +223,8 @@ ofxuSetEffectInstanceData(OfxImageEffectHandle effect, void *data)
 {
   OfxPropertySetHandle props = NULL;
   gEffectHost->getPropertySet(effect, &props);
-  gPropHost->propSetPointer(props, kOfxPropInstanceData, 0, data); 
+  if (props)
+    gPropHost->propSetPointer(props, kOfxPropInstanceData, 0, data);
 }
 
 // get the data pointer from an interact instance
@@ -229,7 +234,8 @@ ofxuGetEffectInstanceData(OfxImageEffectHandle effect)
   OfxPropertySetHandle props = NULL;
   gEffectHost->getPropertySet(effect, &props);
   void *data = NULL;
-  gPropHost->propGetPointer(props, kOfxPropInstanceData, 0, &data);   
+  if (props)
+    gPropHost->propGetPointer(props, kOfxPropInstanceData, 0, &data);   
   return data;
 }
 

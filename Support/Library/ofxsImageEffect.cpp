@@ -62,7 +62,7 @@ England
 #  define EXPORT
 #  define LOCAL
 # endif
-#elif defined _WIN32
+#elif defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
 #  define EXPORT OfxExport
 #  define LOCAL
 #else

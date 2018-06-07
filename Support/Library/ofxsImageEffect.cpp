@@ -2645,8 +2645,10 @@ namespace OFX {
   }
 
   OFX::Message::MessageReplyEnum ImageEffect::clearPersistentMessage(bool throwIfMissing)
-  {   
-    if (!OFX::Private::gMessageSuiteV2 || !OFX::Private::gMessageSuiteV2->clearPersistentMessage) {
+  {
+    // If there is no setPersistentMessage, clearPersistentMessage has no reason to exist.
+    // (fixes crash on Resolve)
+    if (!OFX::Private::gMessageSuiteV2 || !OFX::Private::gMessageSuiteV2->setPersistentMessage || !OFX::Private::gMessageSuiteV2->clearPersistentMessage) {
       if (throwIfMissing) {
         OFX::Log::error(true, "OfxMessageSuiteV2::clearPersistentMessage() not available");
         throwHostMissingSuiteException("clearPersistentMessage");

@@ -47,7 +47,7 @@ of the direct OFX objects and any library side only functions.
 */
 #include "ofxsParam.h"
 
-#include <Windows.h>
+#include <windows.h>
 
 /** @brief Nasty macro used to define empty protected copy ctors and assign ops */
 #define mDeclareProtectedAssignAndCC(CLASS) \

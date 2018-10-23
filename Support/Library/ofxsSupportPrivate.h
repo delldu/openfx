@@ -41,7 +41,7 @@ England
 #include "ofxsInteract.h"
 #ifdef OFX_EXTENSIONS_VEGAS
 #if defined(WIN32) || defined(WIN64)
-#include "ofxsHWndInteract.h"
+#include "ofxsHWNDInteract.h"
 #endif
 #endif
 #include "ofxsImageEffect.h"

@@ -467,6 +467,7 @@ namespace OFX {
 #ifdef OFX_EXTENSIONS_RESOLVE
     bool supportsOpenCLRender;
     bool supportsCudaRender;
+    bool supportsMetalRender;
 #endif
 #ifdef OFX_SUPPORTS_OPENGLRENDER
     bool supportsOpenGLRender;
@@ -786,6 +787,12 @@ namespace OFX {
 
     /** @brief Does the plugin support CUDA Render, defaults to false */
     void setSupportsCudaRender(bool v);
+
+    /** @brief Does the plugin support Metal Render, defaults to false */
+    void setSupportsMetalRender(bool v);
+
+    /** @brief Does the plugin have no spatial awareness, defaults to false */
+    void setNoSpatialAwareness(bool v);
 #endif
 
 #ifdef OFX_SUPPORTS_OPENGLRENDER
@@ -1415,7 +1422,9 @@ namespace OFX {
 #ifdef OFX_EXTENSIONS_RESOLVE
     bool      isEnabledOpenCLRender;
     bool      isEnabledCudaRender;
+    bool      isEnabledMetalRender;
     void*     pOpenCLCmdQ;
+    void*     pMetalCmdQ;
 #endif
 #ifdef OFX_SUPPORTS_OPENGLRENDER
     bool      openGLEnabled;
@@ -1461,7 +1470,9 @@ namespace OFX {
 #ifdef OFX_EXTENSIONS_RESOLVE
     bool      isEnabledOpenCLRender;
     bool      isEnabledCudaRender;
+    bool      isEnabledMetalRender;
     void*     pOpenCLCmdQ;
+    void*     pMetalCmdQ;
 #endif
 #ifdef OFX_SUPPORTS_OPENGLRENDER
     bool      openGLEnabled;
@@ -1484,7 +1495,9 @@ namespace OFX {
 #ifdef OFX_EXTENSIONS_RESOLVE
     bool      isEnabledOpenCLRender;
     bool      isEnabledCudaRender;
+    bool      isEnabledMetalRender;
     void*     pOpenCLCmdQ;
+    void*     pMetalCmdQ;
 #endif
 #ifdef OFX_SUPPORTS_OPENGLRENDER
     bool      openGLEnabled;

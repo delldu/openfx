@@ -4252,11 +4252,13 @@ namespace OFX {
 
       EndSequenceRenderArguments args;
 
+#ifdef OFX_EXTENSIONS_RESOLVE
       args.isEnabledOpenCLRender = inArgs.propGetInt(kOfxImageEffectPropOpenCLEnabled, false) != 0;
       args.isEnabledCudaRender   = inArgs.propGetInt(kOfxImageEffectPropCudaEnabled, false) != 0;
       args.isEnabledMetalRender  = inArgs.propGetInt(kOfxImageEffectPropMetalEnabled, false) != 0;
       args.pOpenCLCmdQ           = inArgs.propGetPointer(kOfxImageEffectPropOpenCLCommandQueue, false);
       args.pMetalCmdQ            = inArgs.propGetPointer(kOfxImageEffectPropMetalCommandQueue, false);
+#endif
       args.renderScale.x = args.renderScale.y = 1.;
       inArgs.propGetDoubleN(kOfxImageEffectPropRenderScale, &args.renderScale.x, 2);
 

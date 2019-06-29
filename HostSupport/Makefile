@@ -41,7 +41,7 @@ ifeq ($(OS),Darwin)
     MACOSX := 10.6
     MACOSXSDK := 10.6
     CXX_OSFLAGS=-arch i386 -arch x86_64 -DBYTEORDER=1234
-  fi
+  endif
   ifeq ($(shell uname -r | sed 's/^\(.*\)\..*\..*/\1/'), 8)
     # OSX 10.4 (Tiger)
     MACOSX := 10.4

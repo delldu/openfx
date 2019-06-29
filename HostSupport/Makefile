@@ -39,11 +39,12 @@ ifeq ($(OS),Darwin)
   # OSX 10.6 (Snow Leopard) or later, build for i386/x86_64
   MACOSX := 10.6
   MACOSXSDK := 10.6
-  CXX_OSFLAGS=-arch i386 -arch x86_64
+  CXX_OSFLAGS=-arch i386 -arch x86_64 -DBYTEORDER=1234
   ifeq ($(shell uname -r | sed 's/^\(.*\)\..*\..*/\1/'), 8)
     # OSX 10.4 (Tiger)
     MACOSX := 10.4
     MACOSXSDK := 10.4u
+    # Will not be able to build expat, which requires a definition for BYTEORDER
     CXX_OSFLAGS=-arch i386 -arch ppc
   endif
   ifeq ($(shell uname -r | sed 's/^\(.*\)\..*\..*/\1/'), 9)

@@ -3447,7 +3447,7 @@ namespace OFX {
           *memoryHandle = NULL;
           return kOfxStatErrMemory;
         }
-        } catch (std::bad_alloc) {
+        } catch (std::bad_alloc&) {
           *memoryHandle = NULL;
           return kOfxStatErrMemory;
         } catch (...) {

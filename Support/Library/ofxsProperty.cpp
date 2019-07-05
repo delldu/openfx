@@ -218,7 +218,7 @@ namespace OFX {
     if(throwOnFailure)
       throwPropertyException(stat, property);
     
-    if(_gPropLogging > 0) Log::print("Set string property %s[0..%d].",  property, values.size()-1);
+    if(_gPropLogging > 0) Log::print("Set string property %s[0..%d].",  property, (int)values.size()-1);
   }
 
   /** @brief, Set a multiple dimension double property */
@@ -361,7 +361,7 @@ namespace OFX {
     if(throwOnFailure)
       throwPropertyException(stat, property);
       
-    if(_gPropLogging > 0) Log::print("Retrieved string property %s, was given %s.", property, &rawValue.front());
+    if(_gPropLogging > 0) Log::print("Retrieved string property %s, was given %s.", property, (const char*)&rawValue.front());
     
     values->resize(dimension);
     for (int i = 0; i < dimension; ++i) {

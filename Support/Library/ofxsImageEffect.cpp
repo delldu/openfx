@@ -249,7 +249,7 @@ namespace OFX {
     if(! _supportedComponents.empty()) {
       return _supportedComponents[0];
     } else {
-      OFX::Log::warning(true, "The host doesn't define supported pixel component. (size: %d)", _supportedComponents.size());
+      OFX::Log::warning(true, "The host doesn't define supported pixel component. (size: %d)", (int)_supportedComponents.size());
       return ePixelComponentRGBA;
     }
   }
@@ -2478,7 +2478,11 @@ namespace OFX {
   ImageEffect::~ImageEffect()
   {
     // clobber the instance data property on the effect handle
-    _effectProps.propSetPointer(kOfxPropInstanceData, 0, false);
+    try {
+      _effectProps.propSetPointer(kOfxPropInstanceData, 0, false);
+    } catch (OFX::Exception::Suite&) {
+      // ignore
+    }
 
     // delete any clip instances we may have constructed
     std::map<std::string, Clip *>::iterator iter;

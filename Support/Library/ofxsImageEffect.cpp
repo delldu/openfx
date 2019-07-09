@@ -985,7 +985,7 @@ namespace OFX {
     }
     if (!versionLabel.empty()) {
       validateXMLString(versionLabel, false);
-      _effectProps.propSetString(kOfxPropVersionLabel, versionLabel, false);
+      _effectProps.propSetString(kOfxPropVersionLabel, versionLabel, false); // OFX 1.2
     }
   }
 
@@ -1201,7 +1201,7 @@ namespace OFX {
   /** @brief Have we informed the host we want to be seqentially renderred ? */
   bool ImageEffectDescriptor::getSequentialRender(void) const
   {
-    return _effectProps.propGetInt(kOfxImageEffectInstancePropSequentialRender) != 0;
+    return _effectProps.propGetInt(kOfxImageEffectInstancePropSequentialRender, false) != 0; // missing in Resolve
   }
 
   /** @brief Does the plugin support image tiling */

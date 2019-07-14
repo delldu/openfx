@@ -77,7 +77,7 @@ void Binary::load()
     LPVOID lpMsgBuf = NULL;
     DWORD err = GetLastError();
 
-    // explicitely use the ANSI version of FOrmatMessage to get a char*
+    // explicitly use the ANSI version of FOrmatMessage to get a char*
     FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER |
       FORMAT_MESSAGE_FROM_SYSTEM |
       FORMAT_MESSAGE_IGNORE_INSERTS,

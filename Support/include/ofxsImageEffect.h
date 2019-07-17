@@ -1938,6 +1938,39 @@ namespace OFX {
     Camera* fetchCamera(const std::string& name);
 #endif
 
+    /** @brief Check that the render scale and the field of a fetched image corresponds to the render args
+    */
+    template <typename T1>
+    void
+    checkBadRenderScaleOrField(bool ignore, const T1& img, const RenderArguments& args)
+    {
+      if (ignore) {
+        return;
+      }
+      if ( (img->getRenderScale().x != args.renderScale.x) ||
+           (img->getRenderScale().y != args.renderScale.y) ||
+           (img->getField() != args.fieldToRender) ) {
+        setPersistentMessage(Message::eMessageError, "", "OFX Host gave image with wrong scale or field properties");
+        throwSuiteStatusException(kOfxStatFailed);
+      }
+    }
+
+    /** @brief Check that the render scale and the field of a fetched image corresponds to the render args
+    */
+    template <typename T1, typename T2>
+    void
+    checkBadRenderScale(bool ignore, const T1& img, const T2& args)
+    {
+      if (ignore) {
+        return;
+      }
+      if ( (img->getRenderScale().x != args.renderScale.x) ||
+           (img->getRenderScale().y != args.renderScale.y) ) {
+        setPersistentMessage(Message::eMessageError, "", "OFX Host gave image with wrong scale or field properties");
+        throwSuiteStatusException(kOfxStatFailed);
+      }
+    }
+
     /** @brief does the host want us to abort rendering? */
     bool abort(void) const;
 

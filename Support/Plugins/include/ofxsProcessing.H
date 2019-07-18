@@ -58,9 +58,10 @@ namespace OFX {
     // base class to process images with
     class ImageProcessor : public OFX::MultiThread::Processor {
     protected :
-        OFX::ImageEffect &_effect;      /**< @brief effect to render with */
+        OFX::ImageEffect &_effect;        /**< @brief effect to render with */
         OFX::Image       *_dstImg;        /**< @brief image to process into */
         OfxRectI          _renderWindow;  /**< @brief render window to use */
+        OfxPointD         _renderScale;   /**< @brief render scale to use */
 #ifdef OFX_EXTENSIONS_RESOLVE
         bool             _isEnabledOpenCLRender; /**< @brief is OpenCL Render Enabled */
         bool             _isEnabledCudaRender;   /**< @brief is Cuda Render Enabled */
@@ -99,7 +100,7 @@ namespace OFX {
 #endif
 
         /** @brief reset the render window */
-        void setRenderWindow(OfxRectI rect) {_renderWindow = rect;}
+        void setRenderWindow(const OfxRectI& rect, const OfxPointD& rs) {_renderWindow = rect; _renderScale = rs; }
 
         /** @brief overridden from OFX::MultiThread::Processor. This function is called once on each SMP thread by the base class */
         void multiThreadFunction(unsigned int threadId, unsigned int nThreads)
@@ -109,7 +110,7 @@ namespace OFX {
             MultiThread::getThreadRange(threadId, nThreads, _renderWindow.y1, _renderWindow.y2, &win.y1, &win.y2);
             if ( (win.y2 - win.y1) > 0 ) {
                 // and render that thread on each
-                multiThreadProcessImages(win);
+                multiThreadProcessImages(win, _renderScale);
             }
         }
         
@@ -133,7 +134,7 @@ namespace OFX {
 #endif
 
         /** @brief this is called by multiThreadFunction to actually process images, override in derived classes */
-        virtual void multiThreadProcessImages(OfxRectI window) = 0;
+        virtual void multiThreadProcessImages(const OfxRectI& window, const OfxPointD& rs) = 0;
 
         /** @brief called before any MP is done */
         virtual void postProcess(void) {}

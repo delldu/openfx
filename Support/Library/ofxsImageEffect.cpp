@@ -4027,9 +4027,7 @@ namespace OFX {
         for(EffectContextMap::iterator it2 = toBeDeleted.begin(); it2 != toBeDeleted.end(); ++it2)
         {
           OFX::ImageEffectDescriptor* desc = it2->second;
-            std::cout << "deleting " <<     desc->getPropertySet().propGetString(kOfxPropLabel) << " version " << desc->getPropertySet().propGetInt(kOfxPropVersion, 0) << std::endl;
-
-            //delete desc;
+          delete desc;
         }
         gEffectDescriptors.erase(it);
       }

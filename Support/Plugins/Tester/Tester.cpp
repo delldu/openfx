@@ -225,7 +225,7 @@ class ImageGenericTester : public GenericTestBase
 {
 public :
   ImageGenericTester(OFX::ImageEffect &instance) : GenericTestBase(instance){}
-  void multiThreadProcessImages(OfxRectI procWindow)
+  void multiThreadProcessImages(const OfxRectI& procWindow, const OfxPointD& renderScale)
   {
     for(int y = procWindow.y1; y < procWindow.y2; y++) 
     {
@@ -379,7 +379,7 @@ void GenericTestPlugin::setupAndProcess(GenericTestBase &processor, const OFX::R
 
   processor.setDstImg(dst.get());
   processor.setSrcImg(src.get());
-  processor.setRenderWindow(args.renderWindow);
+  processor.setRenderWindow(args.renderWindow, args.renderScale);
   processor.process();
 }
 

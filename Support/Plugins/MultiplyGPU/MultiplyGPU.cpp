@@ -208,12 +208,12 @@ public:
 
 private:
 
-  virtual void multiThreadProcessImages(OfxRectI procWindow);// OVERRIDE FINAL;
+  virtual void multiThreadProcessImages(const OfxRectI& procWindow, const OfxPointD& renderScale);// OVERRIDE FINAL;
 };
 
 template <class PIX, int nComponents, int maxValue>
 void
-MultiplyProcessor<PIX,nComponents,maxValue>::multiThreadProcessImages(OfxRectI procWindow)
+MultiplyProcessor<PIX,nComponents,maxValue>::multiThreadProcessImages(const OfxRectI& procWindow, const OfxPointD& renderScale)
 {
   assert(nComponents == 1 || nComponents == 3 || nComponents == 4);
   assert(_dstImg);
@@ -345,7 +345,7 @@ MultiplyPlugin::setupAndProcess(MultiplyProcessorBase &processor,
 #endif // OFX_EXTENSIONS_RESOLVE
 
   // set the render window
-  processor.setRenderWindow(args.renderWindow);
+  processor.setRenderWindow(args.renderWindow, args.renderScale);
 
   double r, g, b, a;
   _value->getValueAtTime(time, r, g, b, a);

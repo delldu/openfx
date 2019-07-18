@@ -72,7 +72,7 @@ public :
   {}
 
   // and do some processing
-  void multiThreadProcessImages(OfxRectI procWindow)
+  void multiThreadProcessImages(const OfxRectI& procWindow, const OfxPointD& renderScale)
   {
     for(int y = procWindow.y1; y < procWindow.y2; y++) {
       if(_effect.abort()) break;
@@ -164,7 +164,7 @@ InvertPlugin::setupAndProcess(InvertBase &processor, const OFX::RenderArguments 
   processor.setSrcImg(src.get());
 
   // set the render window
-  processor.setRenderWindow(args.renderWindow);
+  processor.setRenderWindow(args.renderWindow, args.renderScale);
 
   // Call the base class process member, this will call the derived templated process code
   processor.process();

@@ -151,7 +151,7 @@ public :
   {}
 
   // and do some processing
-  void multiThreadProcessImages(OfxRectI procWindow)
+  void multiThreadProcessImages(const OfxRectI& procWindow, const OfxPointD& /*renderScale*/)
   {
     float scales[4];
     scales[0] = nComponents == 1 ? (float)_aScale : (float)_rScale;
@@ -348,7 +348,7 @@ BasicPlugin::setupAndProcess(ImageScalerBase &processor, const OFX::RenderArgume
 
 
   // set the render window
-  processor.setRenderWindow(args.renderWindow);
+  processor.setRenderWindow(args.renderWindow, args.renderScale);
 
   // set the scales
   processor.setScales((float)r, (float)g, (float)b, (float)a);

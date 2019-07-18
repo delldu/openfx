@@ -121,7 +121,7 @@ class ImageScaler : public ImageScalerBase
 public :
   ImageScaler(OFX::ImageEffect &instance): ImageScalerBase(instance)
   {}
-  void multiThreadProcessImages(OfxRectI procWindow)
+  void multiThreadProcessImages(const OfxRectI& procWindow, const OfxPointD& renderScale)
   {
     float scales[4];
     scales[0] = nComponents == 1 ? (float)_aScale : (float)_rScale;
@@ -240,7 +240,7 @@ void GammaPlugin::setupAndProcess(ImageScalerBase &processor, const OFX::RenderA
   }
   processor.setDstImg(dst.get());
   processor.setSrcImg(src.get());
-  processor.setRenderWindow(args.renderWindow);
+  processor.setRenderWindow(args.renderWindow, args.renderScale);
   processor.setScales((float)r, (float)g, (float)b, (float)a);
   processor.process();
 }

@@ -130,7 +130,7 @@ CrossFadePlugin::setupAndProcess(OFX::ImageBlenderBase &processor, const OFX::Re
   processor.setToImg(toImg.get());
 
   // set the render window
-  processor.setRenderWindow(args.renderWindow);
+  processor.setRenderWindow(args.renderWindow, args.renderScale);
 
   // set the scales
   processor.setBlend(blend);

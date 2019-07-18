@@ -4023,23 +4023,28 @@ namespace OFX {
         key.majorVersion = majorVersion;
         key.minorVersion = minorVersion;
         EffectDescriptorMap::iterator it = gEffectDescriptors.find(key);
-        EffectContextMap& toBeDeleted = it->second;
-        for(EffectContextMap::iterator it2 = toBeDeleted.begin(); it2 != toBeDeleted.end(); ++it2)
-        {
-          OFX::ImageEffectDescriptor* desc = it2->second;
-          delete desc;
+        // There is an entry in gEffectDescriptors only if describeInContext() was called
+        if ( it != gEffectDescriptors.end() ) {
+          EffectContextMap& toBeDeleted = it->second;
+          for(EffectContextMap::iterator it2 = toBeDeleted.begin(); it2 != toBeDeleted.end(); ++it2) {
+            OFX::ImageEffectDescriptor* desc = it2->second;
+            delete desc;
+          }
+          gEffectDescriptors.erase(it);
         }
-        gEffectDescriptors.erase(it);
       }
       { 
         OFX::OfxPlugInfoMap::iterator it = OFX::plugInfoMap.find(id);
-        OfxPlugin* plug = it->second._plug;
-        OFX::OfxPluginArray::iterator it2 = std::find(ofxPlugs.begin(), ofxPlugs.end(), plug);
-        if (it2 != ofxPlugs.end()) {
-          (*it2) = 0;
+        assert( it != OFX::plugInfoMap.end() );
+        if (it != OFX::plugInfoMap.end() ) {
+          OfxPlugin* plug = it->second._plug;
+          OFX::OfxPluginArray::iterator it2 = std::find(ofxPlugs.begin(), ofxPlugs.end(), plug);
+          if (it2 != ofxPlugs.end()) {
+            (*it2) = 0;
+          }
+          delete plug;
+          OFX::plugInfoMap.erase(it);
         }
-        delete plug;
-        OFX::plugInfoMap.erase(it);
       }
     }
 

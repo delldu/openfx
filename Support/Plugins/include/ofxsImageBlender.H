@@ -47,8 +47,9 @@ namespace OFX {
         }
 
         // and do some processing
-        void multiThreadProcessImages(OfxRectI procWindow)
+        void multiThreadProcessImages(const OfxRectI& procWindow, const OfxPointD& rs)
         {
+            unused(rs);
             float blend = _blend;
             float blendComp = 1.0f - blend;
 

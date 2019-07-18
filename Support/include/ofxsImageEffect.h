@@ -976,8 +976,15 @@ namespace OFX {
     /** @brief premultiplication on the image */
     PreMultiplicationEnum getPreMultiplication(void) const { return _preMultiplication;}
 
+  protected:
+    friend class ImageEffect;
+    // protected for safety, because Fusion gives a bad RS:
+    // Effects should use the RS from inArgs instead,
+    // or they will not run on Fusion.
     /** @brief get the scale factor that has been applied to this image */
     const OfxPointD& getRenderScale(void) const { return _renderScale;}
+
+  public:
 
     /** @brief get the scale factor that has been applied to this image */
     double getPixelAspectRatio(void) const { return _pixelAspectRatio;}
@@ -1825,6 +1832,22 @@ namespace OFX {
 
     /** @brief cached result of whether progress start succeeded. */
     bool _progressStartSuccess;
+
+    /** @brief used to disable checks on some hosts.
+
+    in Resolve, kOfxImagePropField property is always kOfxImageFieldNone on OFX images, regardless of the clip properties
+    */
+    bool _hostIsResolve;
+
+    /** @brief used to disable checks on some hosts.
+
+    in Fusion, kOfxImageEffectPropRenderScale is 1/3. in the inArgs for render, but 3. on the images
+    */
+    bool _hostIsFusion;
+
+    /** @brief ignore render scale checks */
+    bool _ignoreBadRenderScale;
+
   public :
     /** @brief ctor */
     ImageEffect(OfxImageEffectHandle handle);
@@ -1939,14 +1962,19 @@ namespace OFX {
     */
     template <typename T1>
     void
-    checkBadRenderScaleOrField(bool ignore, const T1& img, const RenderArguments& args)
+    checkBadRenderScaleOrField(const T1& img, const RenderArguments& args)
     {
-      if (ignore) {
+      if (_ignoreBadRenderScale) {
         return;
       }
       if ( (img->getRenderScale().x != args.renderScale.x) ||
            (img->getRenderScale().y != args.renderScale.y) ||
            (img->getField() != args.fieldToRender) ) {
+          printf("bad RS: %g!=%g || %g!=%g || %d!=%d\n",
+                 img->getRenderScale().x, args.renderScale.x,
+                 img->getRenderScale().y, args.renderScale.y,
+img->getField(), args.fieldToRender
+                 );
         setPersistentMessage(Message::eMessageError, "", "OFX Host gave image with wrong scale or field properties");
         throwSuiteStatusException(kOfxStatFailed);
       }
@@ -1956,13 +1984,29 @@ namespace OFX {
     */
     template <typename T1, typename T2>
     void
-    checkBadRenderScale(bool ignore, const T1& img, const T2& args)
+    checkBadRenderScale(const T1& img, const T2& args)
     {
-      if (ignore) {
+      if (_ignoreBadRenderScale) {
         return;
       }
       if ( (img->getRenderScale().x != args.renderScale.x) ||
            (img->getRenderScale().y != args.renderScale.y) ) {
+        setPersistentMessage(Message::eMessageError, "", "OFX Host gave image with wrong scale or field properties");
+        throwSuiteStatusException(kOfxStatFailed);
+      }
+    }
+
+    /** @brief Check that the render scale of a fetched image is one
+    */
+    template <typename T>
+    void
+    checkRenderScaleOne(const T& img)
+    {
+      if (_ignoreBadRenderScale) {
+        return;
+      }
+      if ( (img->getRenderScale().x != 1.) ||
+           (img->getRenderScale().y != 1.) ) {
         setPersistentMessage(Message::eMessageError, "", "OFX Host gave image with wrong scale or field properties");
         throwSuiteStatusException(kOfxStatFailed);
       }
@@ -2185,6 +2229,14 @@ namespace OFX {
 #endif
   };
 
+};
+
+namespace OFX {
+  /** @brief utility function to ignore an argument
+   */
+  template<typename T>
+  static inline void
+  unused(const T&) {}
 };
 
 // undeclare the protected assign and CC macro

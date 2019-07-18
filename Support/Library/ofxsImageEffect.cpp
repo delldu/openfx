@@ -1446,7 +1446,7 @@ namespace OFX {
     int n = _effectProps.propGetDimension(kOfxImageEffectPropClipPreferencesSlaveParam);
     validateXMLString(p.getName(), false);
 # ifdef DEBUG
-    if (p.getPropertySet().propGetInt(kOfxParamPropAnimates)) {
+    if (p.getPropertySet().propGetInt(kOfxParamPropAnimates, false)) {
       std::cout << "Warning: parameter " << p.getName() << " is a clip preferences slave param but is animated\n";
     }
 # endif
@@ -2469,6 +2469,10 @@ namespace OFX {
     throwSuiteStatusException(stat);
     setParamSetHandle(paramSet);      
 
+    const ImageEffectHostDescription &hostDescription = *getImageEffectHostDescription();
+    _hostIsResolve = (hostDescription.hostName.substr(0, 14) == "DaVinciResolve");  // Resolve gives bad image properties (RS is always 1 and field is None)
+    _hostIsFusion = (hostDescription.hostName == "com.eyeonline.Fusion") || (hostDescription.hostName == "com.blackmagicdesign.Fusion"); // Fusion gives inverse RS props in inargs and on the images
+    _ignoreBadRenderScale = _hostIsResolve || _hostIsFusion;
   }
 
   /** @brief dtor */
@@ -4023,7 +4027,9 @@ namespace OFX {
         for(EffectContextMap::iterator it2 = toBeDeleted.begin(); it2 != toBeDeleted.end(); ++it2)
         {
           OFX::ImageEffectDescriptor* desc = it2->second;
-          delete desc;
+            std::cout << "deleting " <<     desc->getPropertySet().propGetString(kOfxPropLabel) << " version " << desc->getPropertySet().propGetInt(kOfxPropVersion, 0) << std::endl;
+
+            //delete desc;
         }
         gEffectDescriptors.erase(it);
       }

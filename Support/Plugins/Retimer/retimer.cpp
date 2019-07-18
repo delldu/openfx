@@ -196,7 +196,7 @@ RetimerPlugin::setupAndProcess(OFX::ImageBlenderBase &processor, const OFX::Rend
     processor.setToImg(toImg.get());
 
     // set the render window
-    processor.setRenderWindow(args.renderWindow);
+    processor.setRenderWindow(args.renderWindow, args.renderScale);
 
     // set the blend between
     processor.setBlend((float)blend);

@@ -114,7 +114,7 @@ template <class PIX, int nComponents, int max>
 class DotGenerator : public DotGeneratorBase {
 public :
   DotGenerator(OFX::ImageEffect &instance): DotGeneratorBase(instance){}
-  void multiThreadProcessImages(OfxRectI procWindow)
+  void multiThreadProcessImages(const OfxRectI& procWindow, const OfxPointD& renderScale)
   {
     float radiusSq = _radius * _radius;
     for(int y = procWindow.y1; y < procWindow.y2; y++) 
@@ -187,7 +187,7 @@ void DotExamplePlugin::setupAndProcess(DotGeneratorBase &processor, const OFX::R
   colour_->getValueAtTime(args.time, r, g, b, a);
   processor.setColour(r,g,b,a);
   processor.setDstImg(dst.get());
-  processor.setRenderWindow(args.renderWindow);
+  processor.setRenderWindow(args.renderWindow, args.renderScale);
   double xpospixel, ypospixel;
   getPositionInPixels(xpospixel, ypospixel, args);
   float fieldScaler = (args.fieldToRender == OFX::eFieldLower || args.fieldToRender == OFX::eFieldUpper)? 0.5f: 1.0f;

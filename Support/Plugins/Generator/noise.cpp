@@ -78,7 +78,7 @@ public :
   {}
 
   // and do some processing
-  void multiThreadProcessImages(OfxRectI procWindow)
+  void multiThreadProcessImages(const OfxRectI& procWindow, const OfxPointD& renderScale)
   {
     float noiseLevel = _noiseLevel;
 
@@ -163,7 +163,7 @@ NoisePlugin::setupAndProcess(NoiseGeneratorBase &processor, const OFX::RenderArg
   processor.setDstImg(dst.get());
 
   // set the render window
-  processor.setRenderWindow(args.renderWindow);
+  processor.setRenderWindow(args.renderWindow, args.renderScale);
 
   // set the scales
   processor.setNoiseLevel((float)noise_->getValueAtTime(args.time));

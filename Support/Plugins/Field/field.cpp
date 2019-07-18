@@ -74,7 +74,7 @@ public :
   {}
 
   // and do some processing
-  void multiThreadProcessImages(OfxRectI procWindow)
+  void multiThreadProcessImages(const OfxRectI& procWindow, const OfxPointD& renderScale)
   {
     //eFieldLower only the spatially lower field is present
     //eFieldUpper only the spatially upper field is present
@@ -179,7 +179,7 @@ FieldPlugin::setupAndProcess(FieldBase &processor, const OFX::RenderArguments &a
   processor.setSrcImg(src.get());
 
   // set the render window
-  processor.setRenderWindow(args.renderWindow);
+  processor.setRenderWindow(args.renderWindow, args.renderScale);
 
   // Call the base class process member, this will call the derived templated process code
   processor.process();

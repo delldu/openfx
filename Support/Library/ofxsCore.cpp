@@ -92,6 +92,8 @@ namespace OFX {
     }
     free(strs);
 #   endif
+#  else
+    unused(name);
 #  endif
     throw OFX::Exception::Suite(kOfxStatErrUnsupported);
   }

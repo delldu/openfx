@@ -2136,9 +2136,11 @@ namespace OFX {
   /** @brief get the RoD for this clip in the cannonical coordinate system */
   OfxRectD Clip::getRegionOfDefinition(double t)
   {
+#  ifndef NDEBUG
     if ( OFX::IsNaN(t) ) {
       throwSuiteStatusException(kOfxStatErrValue);
     }
+#  endif
     OfxRectD bounds;
     OfxStatus stat = OFX::Private::gEffectSuite->clipGetRegionOfDefinition(_clipHandle, t, &bounds);
     if(stat == kOfxStatFailed) {
@@ -2159,9 +2161,11 @@ namespace OFX {
   /** @brief fetch an image */
   Image *Clip::fetchImage(double t)
   {
+#  ifndef NDEBUG
     if ( OFX::IsNaN(t) ) {
       throwSuiteStatusException(kOfxStatErrValue);
     }
+#  endif
     OfxPropertySetHandle imageHandle;
     OfxStatus stat = OFX::Private::gEffectSuite->clipGetImage(_clipHandle, t, NULL, &imageHandle);
     if(stat == kOfxStatFailed) {
@@ -2176,9 +2180,11 @@ namespace OFX {
   /** @brief fetch an image, with a specific region in cannonical coordinates */
   Image *Clip::fetchImage(double t, const OfxRectD &bounds)
   {
+#  ifndef NDEBUG
     if ( OFX::IsNaN(t) ) {
       throwSuiteStatusException(kOfxStatErrValue);
     }
+#  endif
     OfxPropertySetHandle imageHandle;
     OfxStatus stat = OFX::Private::gEffectSuite->clipGetImage(_clipHandle, t, &bounds, &imageHandle);
     if(stat == kOfxStatFailed) {
@@ -2193,9 +2199,11 @@ namespace OFX {
 #ifdef OFX_EXTENSIONS_NUKE
   OfxRectD Clip::getRegionOfDefinition(double t, int view)
   {
+#  ifndef NDEBUG
     if ( OFX::IsNaN(t) ) {
       throwSuiteStatusException(kOfxStatErrValue);
     }
+#  endif
     if (!OFX::Private::gImageEffectPlaneSuiteV2) {
       return getRegionOfDefinition(t);
     }
@@ -2210,9 +2218,11 @@ namespace OFX {
 
   Image* Clip::fetchImagePlane(double t, int view, const char* plane)
   {
+#  ifndef NDEBUG
     if ( OFX::IsNaN(t) ) {
       throwSuiteStatusException(kOfxStatErrValue);
     }
+#  endif
     if (!OFX::Private::gImageEffectPlaneSuiteV2 || !OFX::Private::gImageEffectPlaneSuiteV2->clipGetImagePlane) {
       throwHostMissingSuiteException(kFnOfxImageEffectPlaneSuite"V2");
     }
@@ -2229,9 +2239,11 @@ namespace OFX {
     
   Image* Clip::fetchImagePlane(double t, const char* plane)
   {
+#  ifndef NDEBUG
     if ( OFX::IsNaN(t) ) {
       throwSuiteStatusException(kOfxStatErrValue);
     }
+#  endif
     if (!OFX::Private::gImageEffectPlaneSuiteV1 || !OFX::Private::gImageEffectPlaneSuiteV1->clipGetImagePlane) {
       if (std::string(plane) == kFnOfxImagePlaneColour) {
         return fetchImage(t);
@@ -2252,9 +2264,11 @@ namespace OFX {
     
   Image* Clip::fetchImagePlane(double t, int view, const char* plane, const OfxRectD& bounds)
   {
+#  ifndef NDEBUG
     if ( OFX::IsNaN(t) ) {
       throwSuiteStatusException(kOfxStatErrValue);
     }
+#  endif
     if (!OFX::Private::gImageEffectPlaneSuiteV2 || !OFX::Private::gImageEffectPlaneSuiteV2->clipGetImagePlane) {
       throwHostMissingSuiteException(kFnOfxImageEffectPlaneSuite"V2");
     }
@@ -2272,9 +2286,11 @@ namespace OFX {
     
   Image* Clip::fetchImagePlane(double t, const char* plane, const OfxRectD& bounds)
   {
+#  ifndef NDEBUG
     if ( OFX::IsNaN(t) ) {
       throwSuiteStatusException(kOfxStatErrValue);
     }
+#  endif
     if (!OFX::Private::gImageEffectPlaneSuiteV1 || !OFX::Private::gImageEffectPlaneSuiteV1->clipGetImagePlane) {
       if (std::string(plane) == kFnOfxImagePlaneColour) {
         return fetchImage(t, bounds);
@@ -2304,9 +2320,11 @@ namespace OFX {
   /** @brief fetch an image */
   Image *Clip::fetchStereoscopicImage(double t, int view)
   {
+#  ifndef NDEBUG
     if ( OFX::IsNaN(t) ) {
       throwSuiteStatusException(kOfxStatErrValue);
     }
+#  endif
 #ifdef OFX_EXTENSIONS_NUKE
     if (OFX::Private::gImageEffectPlaneSuiteV2 && OFX::Private::gImageEffectPlaneSuiteV2->clipGetImagePlane) {
       return fetchImagePlane(t, view, kFnOfxImagePlaneColour);
@@ -2344,9 +2362,11 @@ namespace OFX {
 #ifdef OFX_SUPPORTS_OPENGLRENDER
   Texture *Clip::loadTexture(double t, BitDepthEnum format, const OfxRectD *region)
   {
+#  ifndef NDEBUG
     if ( OFX::IsNaN(t) ) {
       throwSuiteStatusException(kOfxStatErrValue);
     }
+#  endif
     if (!gHostDescription.supportsOpenGLRender) {
       throwHostMissingSuiteException("loadTexture");
     }
@@ -3347,9 +3367,11 @@ namespace OFX {
   /// false if you should abandon processing, true to continue
   bool ImageEffect::progressUpdate(double t)
   {
+#  ifndef NDEBUG
     if ( OFX::IsNaN(t) ) {
       throwSuiteStatusException(kOfxStatErrValue);
     }
+#  endif
     if(_progressStartSuccess) {
       if(OFX::Private::gProgressSuiteV2) {
         OfxStatus stat = OFX::Private::gProgressSuiteV2->progressUpdate((void *) _effectHandle, t);
@@ -3384,9 +3406,11 @@ namespace OFX {
   /// set the timeline to a specific time
   void ImageEffect::timeLineGotoTime(double t)
   {
+#  ifndef NDEBUG
     if ( OFX::IsNaN(t) ) {
       throwSuiteStatusException(kOfxStatErrValue);
     }
+#  endif
     if(OFX::Private::gTimeLineSuite) {
       OFX::Private::gTimeLineSuite->gotoTime((void *) _effectHandle, t);
     }
@@ -3463,9 +3487,11 @@ namespace OFX {
     
   void ClipComponentsSetter::setPassThroughClip(const Clip* clip, double time, int view)
   {
-    if ( OFX::IsNaN(time) ) {
+#   ifndef NDEBUG
+      if ( OFX::IsNaN(time) ) {
           throwSuiteStatusException(kOfxStatErrValue);
       }
+#   endif
       _doneSomething = true;
       if (clip) {
         _outArgs.propSetString(kFnOfxImageEffectPropPassThroughClip, clip->name(), 0);

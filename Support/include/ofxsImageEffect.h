@@ -101,6 +101,12 @@ namespace OFX
 /** @brief The core 'OFX Support' namespace, used by plugin implementations. All code for these are defined in the common support libraries.
 */
 namespace OFX {
+  /** @brief utility function to ignore an argument
+    */
+  template<typename T>
+  static inline void
+  unused(const T&) {}
+
   /** forward class declarations */
   class ClipDescriptor;
   class ImageEffectDescriptor;
@@ -1964,6 +1970,10 @@ namespace OFX {
     void
     checkBadRenderScaleOrField(const T1& img, const RenderArguments& args)
     {
+#    ifdef NDEBUG
+      unused(img);
+      unused(args);
+#    else
       if (_ignoreBadRenderScale) {
         return;
       }
@@ -1978,6 +1988,7 @@ img->getField(), args.fieldToRender
         setPersistentMessage(Message::eMessageError, "", "OFX Host gave image with wrong scale or field properties");
         throwSuiteStatusException(kOfxStatFailed);
       }
+#    endif
     }
 
     /** @brief Check that the render scale and the field of a fetched image corresponds to the render args
@@ -1986,6 +1997,10 @@ img->getField(), args.fieldToRender
     void
     checkBadRenderScale(const T1& img, const T2& args)
     {
+#    ifdef NDEBUG
+      unused(img);
+      unused(args);
+#    else
       if (_ignoreBadRenderScale) {
         return;
       }
@@ -1994,6 +2009,7 @@ img->getField(), args.fieldToRender
         setPersistentMessage(Message::eMessageError, "", "OFX Host gave image with wrong scale or field properties");
         throwSuiteStatusException(kOfxStatFailed);
       }
+#    endif
     }
 
     /** @brief Check that the render scale of a fetched image is one
@@ -2002,6 +2018,9 @@ img->getField(), args.fieldToRender
     void
     checkRenderScaleOne(const T& img)
     {
+#    ifdef NDEBUG
+      unused(img);
+#    else
       if (_ignoreBadRenderScale) {
         return;
       }
@@ -2010,6 +2029,7 @@ img->getField(), args.fieldToRender
         setPersistentMessage(Message::eMessageError, "", "OFX Host gave image with wrong scale or field properties");
         throwSuiteStatusException(kOfxStatFailed);
       }
+#    endif
     }
 
     /** @brief does the host want us to abort rendering? */
@@ -2229,14 +2249,6 @@ img->getField(), args.fieldToRender
 #endif
   };
 
-};
-
-namespace OFX {
-  /** @brief utility function to ignore an argument
-   */
-  template<typename T>
-  static inline void
-  unused(const T&) {}
 };
 
 // undeclare the protected assign and CC macro

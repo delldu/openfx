@@ -102,6 +102,7 @@ void MultiplyProcessorBase::processImagesCUDA()
   const PixelComponentEnum dstComponents = _dstImg->getPixelComponents();
   const int dstRowBytes = _dstImg->getRowBytes();
 
+#ifndef NDEBUG
   if (dstDepth != eBitDepthFloat || dstComponents != ePixelComponentRGBA ||
       dstRowBytes != (dstBounds.x2 - dstBounds.x1) * _dstImg->getPixelBytes() ) {
     throwSuiteStatusException(kOfxStatErrFormat);
@@ -112,6 +113,7 @@ void MultiplyProcessorBase::processImagesCUDA()
       dstBounds.y1 != srcBounds.y1 || dstBounds.y2 != srcBounds.y2) {
     throwSuiteStatusException(kOfxStatErrFormat);
   }
+#endif
 
   const int width = srcBounds.x2 - srcBounds.x1;
   const int height = srcBounds.y2 - srcBounds.y1;
@@ -140,6 +142,7 @@ void MultiplyProcessorBase::processImagesOpenCL()
   const PixelComponentEnum dstComponents = _dstImg->getPixelComponents();
   const int dstRowBytes = _dstImg->getRowBytes();
 
+#ifndef NDEBUG
   if (dstDepth != eBitDepthFloat || dstComponents != ePixelComponentRGBA ||
       dstRowBytes != (dstBounds.x2 - dstBounds.x1) * _dstImg->getPixelBytes() ) {
     throwSuiteStatusException(kOfxStatErrFormat);
@@ -150,6 +153,7 @@ void MultiplyProcessorBase::processImagesOpenCL()
       dstBounds.y1 != srcBounds.y1 || dstBounds.y2 != srcBounds.y2) {
     throwSuiteStatusException(kOfxStatErrFormat);
   }
+#endif
 
   const int width = srcBounds.x2 - srcBounds.x1;
   const int height = srcBounds.y2 - srcBounds.y1;
@@ -308,6 +312,7 @@ MultiplyPlugin::setupAndProcess(MultiplyProcessorBase &processor,
   }
   BitDepthEnum dstBitDepth    = dst->getPixelDepth();
   PixelComponentEnum dstComponents  = dst->getPixelComponents();
+#ifndef NDEBUG
   if ( ( dstBitDepth != _dstClip->getPixelDepth() ) ||
       ( dstComponents != _dstClip->getPixelComponents() ) ) {
     setPersistentMessage(Message::eMessageError, "", "OFX Host gave image with wrong depth or components");
@@ -319,8 +324,10 @@ MultiplyPlugin::setupAndProcess(MultiplyProcessorBase &processor,
     setPersistentMessage(Message::eMessageError, "", "OFX Host gave image with wrong scale or field properties");
     throwSuiteStatusException(kOfxStatFailed);
   }
+#endif
   auto_ptr<const Image> src( ( _srcClip && _srcClip->isConnected() ) ?
                                  _srcClip->fetchImage(time) : 0 );
+#ifndef NDEBUG
   if ( src.get() ) {
     if ( (src->getRenderScale().x != args.renderScale.x) ||
         ( src->getRenderScale().y != args.renderScale.y) ||
@@ -334,6 +341,7 @@ MultiplyPlugin::setupAndProcess(MultiplyProcessorBase &processor,
       throwSuiteStatusException(kOfxStatErrImageFormat);
     }
   }
+#endif
 
   // set the images
   processor.setDstImg( dst.get() );

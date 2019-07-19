@@ -1429,9 +1429,11 @@ namespace OFX {
 
   void ParametricParamDescriptor::addControlPoint(const int id, const OfxTime time, const double x, const double y, const bool addKey)
   {
+#  ifndef NDEBUG
     if ( OFX::IsNaN(time) ) {
       throwSuiteStatusException(kOfxStatErrValue);
     }
+#  endif
     OfxStatus stat = OFX::Private::gParametricParameterSuite->parametricParamAddControlPoint(_ofxParamHandle, id, time, x, y, addKey);
     throwSuiteStatusException(stat);
   }
@@ -2048,9 +2050,11 @@ namespace OFX {
     ValueParam::getKeyIndex(double time, 
     KeySearchEnum searchDir)
   {
+#  ifndef NDEBUG
     if ( OFX::IsNaN(time) ) {
       throwSuiteStatusException(kOfxStatErrValue);
     }
+#  endif
     if(!OFX::Private::gParamSuite->paramGetKeyIndex) throwHostMissingSuiteException("paramGetKeyIndex");
     int v = 0;
 
@@ -2070,9 +2074,11 @@ namespace OFX {
   void 
     ValueParam::deleteKeyAtTime(double time)
   {
+#  ifndef NDEBUG
     if ( OFX::IsNaN(time) ) {
       throwSuiteStatusException(kOfxStatErrValue);
     }
+#  endif
     if(!OFX::Private::gParamSuite->paramDeleteKey) throwHostMissingSuiteException("paramDeleteKey");
     OfxStatus stat = OFX::Private::gParamSuite->paramDeleteKey(_paramHandle, time);
     if(stat == kOfxStatFailed) return; // if no key at time, fail quietly
@@ -2100,9 +2106,11 @@ namespace OFX {
   /** @brief gets the interpolation type of a key at the given time */
   VegasInterpolationEnum ValueParam::getKeyInterpolation(double time)
   {
+#  ifndef NDEBUG
     if ( OFX::IsNaN(time) ) {
       throwSuiteStatusException(kOfxStatErrValue);
     }
+#  endif
     if(!OFX::Private::gVegasKeyframeSuite) throwHostMissingSuiteException("vegasKeyframeSuite");
     char *cStr;
     OfxStatus stat = OFX::Private::gVegasKeyframeSuite->paramGetKeyInterpolation(_paramHandle, time, &cStr);
@@ -2113,9 +2121,11 @@ namespace OFX {
   /** @brief sets the interpolation type of a key at the given time */
   void ValueParam::setKeyInterpolation(double time, VegasInterpolationEnum interpolation)
   {
+#  ifndef NDEBUG
     if ( OFX::IsNaN(time) ) {
       throwSuiteStatusException(kOfxStatErrValue);
     }
+#  endif
     if(!OFX::Private::gVegasKeyframeSuite) throwHostMissingSuiteException("vegasKeyframeSuite");
     OfxStatus stat = OFX::Private::gVegasKeyframeSuite->paramSetKeyInterpolation(_paramHandle, time, mapToInterpolationTypeEnum(interpolation));
     throwSuiteStatusException(stat); 
@@ -2181,9 +2191,11 @@ namespace OFX {
   /** @brief get the value at a time */
   void IntParam::getValueAtTime(double t, int &v) const
   {
+#  ifndef NDEBUG
     if ( OFX::IsNaN(t) ) {
       throwSuiteStatusException(kOfxStatErrValue);
     }
+#  endif
     OfxStatus stat = OFX::Private::gParamSuite->paramGetValueAtTime(_paramHandle, t, &v);
     throwSuiteStatusException(stat);
   }
@@ -2198,9 +2210,11 @@ namespace OFX {
   /** @brief set the value at a time, implicitly adds a keyframe */
   void IntParam::setValueAtTime(double t, int v)
   {
+#  ifndef NDEBUG
     if ( OFX::IsNaN(t) ) {
       throwSuiteStatusException(kOfxStatErrValue);
     }
+#  endif
     if(!OFX::Private::gParamSuite->paramSetValueAtTime) throwHostMissingSuiteException("paramSetValueAtTime");
     OfxStatus stat = OFX::Private::gParamSuite->paramSetValueAtTime(_paramHandle, t, v);
     throwSuiteStatusException(stat);
@@ -2293,9 +2307,11 @@ namespace OFX {
   /** @brief get the value at a time */
   void Int2DParam::getValueAtTime(double t, int &x, int &y) const
   {
+#  ifndef NDEBUG
     if ( OFX::IsNaN(t) ) {
       throwSuiteStatusException(kOfxStatErrValue);
     }
+#  endif
     OfxStatus stat = OFX::Private::gParamSuite->paramGetValueAtTime(_paramHandle, t, &x, &y);
     throwSuiteStatusException(stat);
   }
@@ -2310,9 +2326,11 @@ namespace OFX {
   /** @brief set the value at a time, implicitly adds a keyframe */
   void Int2DParam::setValueAtTime(double t, int x, int y)
   {
+#  ifndef NDEBUG
     if ( OFX::IsNaN(t) ) {
       throwSuiteStatusException(kOfxStatErrValue);
     }
+#  endif
     if(!OFX::Private::gParamSuite->paramSetValueAtTime) throwHostMissingSuiteException("paramSetValueAtTime");
     OfxStatus stat = OFX::Private::gParamSuite->paramSetValueAtTime(_paramHandle, t, x, y);
     throwSuiteStatusException(stat);
@@ -2411,9 +2429,11 @@ namespace OFX {
   /** @brief get the value at a time */
   void Int3DParam::getValueAtTime(double t, int &x, int &y, int &z) const
   {
+#  ifndef NDEBUG
     if ( OFX::IsNaN(t) ) {
       throwSuiteStatusException(kOfxStatErrValue);
     }
+#  endif
     OfxStatus stat = OFX::Private::gParamSuite->paramGetValueAtTime(_paramHandle, t, &x, &y, &z);
     throwSuiteStatusException(stat);
   }
@@ -2428,9 +2448,11 @@ namespace OFX {
   /** @brief set the value at a time, implicitly adds a keyframe */
   void Int3DParam::setValueAtTime(double t, int x, int y, int z)
   {
+#  ifndef NDEBUG
     if ( OFX::IsNaN(t) ) {
       throwSuiteStatusException(kOfxStatErrValue);
     }
+#  endif
     if(!OFX::Private::gParamSuite->paramSetValueAtTime) throwHostMissingSuiteException("paramSetValueAtTime");
     OfxStatus stat = OFX::Private::gParamSuite->paramSetValueAtTime(_paramHandle, t, x, y, z);
     throwSuiteStatusException(stat);
@@ -2593,9 +2615,11 @@ namespace OFX {
   /** @brief get the value at a time */
   void DoubleParam::getValueAtTime(double t, double &v) const
   {
+#  ifndef NDEBUG
     if ( OFX::IsNaN(t) ) {
       throwSuiteStatusException(kOfxStatErrValue);
     }
+#  endif
     OfxStatus stat = OFX::Private::gParamSuite->paramGetValueAtTime(_paramHandle, t, &v);
     throwSuiteStatusException(stat);
   }
@@ -2603,9 +2627,11 @@ namespace OFX {
   /** @brief set value */
   void DoubleParam::setValue(double v)
   {
+#  ifndef NDEBUG
     if ( OFX::IsNaN(v) ) {
       throwSuiteStatusException(kOfxStatErrValue);
     }
+#  endif
     OfxStatus stat = OFX::Private::gParamSuite->paramSetValue(_paramHandle, v);
     throwSuiteStatusException(stat);
   }
@@ -2613,12 +2639,11 @@ namespace OFX {
   /** @brief set the value at a time, implicitly adds a keyframe */
   void DoubleParam::setValueAtTime(double t, double v)
   {
-    if ( OFX::IsNaN(t) ) {
+#  ifndef NDEBUG
+    if ( OFX::IsNaN(t) || OFX::IsNaN(v) ) {
       throwSuiteStatusException(kOfxStatErrValue);
     }
-    if ( OFX::IsNaN(v) ) {
-      throwSuiteStatusException(kOfxStatErrValue);
-    }
+#  endif
     if(!OFX::Private::gParamSuite->paramSetValueAtTime) throwHostMissingSuiteException("paramSetValueAtTime");
     OfxStatus stat = OFX::Private::gParamSuite->paramSetValueAtTime(_paramHandle, t, v);
     throwSuiteStatusException(stat);
@@ -2627,9 +2652,11 @@ namespace OFX {
   /** @brief get the value at a time */
   void DoubleParam::differentiate(double t, double &v)
   {
+#  ifndef NDEBUG
     if ( OFX::IsNaN(t) ) {
       throwSuiteStatusException(kOfxStatErrValue);
     }
+#  endif
     if(!OFX::Private::gParamSuite->paramGetDerivative) throwHostMissingSuiteException("paramGetDerivative");
     OfxStatus stat = OFX::Private::gParamSuite->paramGetDerivative(_paramHandle, t, &v);
     throwSuiteStatusException(stat);
@@ -2638,9 +2665,11 @@ namespace OFX {
   /** @brief get the value at a time */
   void DoubleParam::integrate(double t1, double t2, double &v)
   {
+#  ifndef NDEBUG
     if ( OFX::IsNaN(t1) || OFX::IsNaN(t2) ) {
       throwSuiteStatusException(kOfxStatErrValue);
     }
+#  endif
     if(!OFX::Private::gParamSuite->paramGetIntegral) throwHostMissingSuiteException("paramGetIntegral");
     OfxStatus stat = OFX::Private::gParamSuite->paramGetIntegral(_paramHandle, t1, t2, &v);
     throwSuiteStatusException(stat);
@@ -2733,9 +2762,11 @@ namespace OFX {
   /** @brief get the value at a time */
   void Double2DParam::getValueAtTime(double t, double &x, double &y) const
   {
+#  ifndef NDEBUG
     if ( OFX::IsNaN(t) ) {
       throwSuiteStatusException(kOfxStatErrValue);
     }
+#  endif
     OfxStatus stat = OFX::Private::gParamSuite->paramGetValueAtTime(_paramHandle, t, &x, &y);
     throwSuiteStatusException(stat);
   }
@@ -2743,9 +2774,11 @@ namespace OFX {
   /** @brief set value */
   void Double2DParam::setValue(double x, double y)
   {
+#  ifndef NDEBUG
     if ( OFX::IsNaN(x) || OFX::IsNaN(y) ) {
       throwSuiteStatusException(kOfxStatErrValue);
     }
+#  endif
     OfxStatus stat = OFX::Private::gParamSuite->paramSetValue(_paramHandle, x, y);
     throwSuiteStatusException(stat);
   }
@@ -2753,12 +2786,11 @@ namespace OFX {
   /** @brief set the value at a time, implicitly adds a keyframe */
   void Double2DParam::setValueAtTime(double t, double x, double y)
   {
-    if ( OFX::IsNaN(t) ) {
+#  ifndef NDEBUG
+    if ( OFX::IsNaN(t) || OFX::IsNaN(x) || OFX::IsNaN(y) ) {
       throwSuiteStatusException(kOfxStatErrValue);
     }
-    if ( OFX::IsNaN(x) || OFX::IsNaN(y) ) {
-      throwSuiteStatusException(kOfxStatErrValue);
-    }
+#  endif
     if(!OFX::Private::gParamSuite->paramSetValueAtTime) throwHostMissingSuiteException("paramSetValueAtTime");
     OfxStatus stat = OFX::Private::gParamSuite->paramSetValueAtTime(_paramHandle, t, x, y);
     throwSuiteStatusException(stat);
@@ -2767,9 +2799,11 @@ namespace OFX {
   /** @brief get the value at a time */
   void Double2DParam::differentiate(double t, double &x, double &y)
   {
+#  ifndef NDEBUG
     if ( OFX::IsNaN(t) ) {
       throwSuiteStatusException(kOfxStatErrValue);
     }
+#  endif
     if(!OFX::Private::gParamSuite->paramGetDerivative) throwHostMissingSuiteException("paramGetDerivative");
     OfxStatus stat = OFX::Private::gParamSuite->paramGetDerivative(_paramHandle, t, &x, &y);
     throwSuiteStatusException(stat);
@@ -2778,9 +2812,11 @@ namespace OFX {
   /** @brief get the value at a time */
   void Double2DParam::integrate(double t1, double t2, double &x, double &y)
   {
+#  ifndef NDEBUG
     if ( OFX::IsNaN(t1) || OFX::IsNaN(t2) ) {
       throwSuiteStatusException(kOfxStatErrValue);
     }
+#  endif
     if(!OFX::Private::gParamSuite->paramGetIntegral) throwHostMissingSuiteException("paramGetIntegral");
     OfxStatus stat = OFX::Private::gParamSuite->paramGetIntegral(_paramHandle, t1, t2, &x, &y);
     throwSuiteStatusException(stat);
@@ -2878,9 +2914,11 @@ namespace OFX {
   /** @brief get the value at a time */
   void Double3DParam::getValueAtTime(double t, double &x, double &y, double &z) const
   {
+#  ifndef NDEBUG
     if ( OFX::IsNaN(t) ) {
       throwSuiteStatusException(kOfxStatErrValue);
     }
+#  endif
     OfxStatus stat = OFX::Private::gParamSuite->paramGetValueAtTime(_paramHandle, t, &x, &y, &z);
     throwSuiteStatusException(stat);
   }
@@ -2888,9 +2926,11 @@ namespace OFX {
   /** @brief set value */
   void Double3DParam::setValue(double x, double y, double z)
   {
+#  ifndef NDEBUG
     if ( OFX::IsNaN(x) || OFX::IsNaN(y) || OFX::IsNaN(z) ) {
       throwSuiteStatusException(kOfxStatErrValue);
     }
+#  endif
     OfxStatus stat = OFX::Private::gParamSuite->paramSetValue(_paramHandle, x, y, z);
     throwSuiteStatusException(stat);
   }
@@ -2898,12 +2938,11 @@ namespace OFX {
   /** @brief set the value at a time, implicitly adds a keyframe */
   void Double3DParam::setValueAtTime(double t, double x, double y, double z)
   {
-    if ( OFX::IsNaN(t) ) {
+#  ifndef NDEBUG
+    if ( OFX::IsNaN(t) || OFX::IsNaN(x) || OFX::IsNaN(y) || OFX::IsNaN(z) ) {
       throwSuiteStatusException(kOfxStatErrValue);
     }
-    if ( OFX::IsNaN(x) || OFX::IsNaN(y) || OFX::IsNaN(z) ) {
-      throwSuiteStatusException(kOfxStatErrValue);
-    }
+#  endif
     if(!OFX::Private::gParamSuite->paramSetValueAtTime) throwHostMissingSuiteException("paramSetValueAtTime");
     OfxStatus stat = OFX::Private::gParamSuite->paramSetValueAtTime(_paramHandle, t, x, y, z);
     throwSuiteStatusException(stat);
@@ -2912,9 +2951,11 @@ namespace OFX {
   /** @brief get the value at a time */
   void Double3DParam::differentiate(double t, double &x, double &y, double &z)
   {
+#  ifndef NDEBUG
     if ( OFX::IsNaN(t) ) {
       throwSuiteStatusException(kOfxStatErrValue);
     }
+#  endif
     if(!OFX::Private::gParamSuite->paramGetDerivative) throwHostMissingSuiteException("paramGetDerivative");
     OfxStatus stat = OFX::Private::gParamSuite->paramGetDerivative(_paramHandle, t, &x, &y, &z);
     throwSuiteStatusException(stat);
@@ -2923,9 +2964,11 @@ namespace OFX {
   /** @brief get the value at a time */
   void Double3DParam::integrate(double t1, double t2, double &x, double &y, double &z)
   {
+#  ifndef NDEBUG
     if ( OFX::IsNaN(t1) || OFX::IsNaN(t2) ) {
       throwSuiteStatusException(kOfxStatErrValue);
     }
+#  endif
     if(!OFX::Private::gParamSuite->paramGetIntegral) throwHostMissingSuiteException("paramGetIntegral");
     OfxStatus stat = OFX::Private::gParamSuite->paramGetIntegral(_paramHandle, t1, t2, &x, &y, &z);
     throwSuiteStatusException(stat);
@@ -2974,9 +3017,11 @@ namespace OFX {
   /** @brief get the value at a time */
   void RGBParam::getValueAtTime(double t, double &r, double &g, double &b) const
   {
+#  ifndef NDEBUG
     if ( OFX::IsNaN(t) ) {
       throwSuiteStatusException(kOfxStatErrValue);
     }
+#  endif
     OfxStatus stat = OFX::Private::gParamSuite->paramGetValueAtTime(_paramHandle, t, &r, &g, &b);
     throwSuiteStatusException(stat);
   }
@@ -2984,9 +3029,11 @@ namespace OFX {
   /** @brief set value */
   void RGBParam::setValue(double r, double g, double b)
   {
+#  ifndef NDEBUG
     if ( OFX::IsNaN(r) || OFX::IsNaN(g) || OFX::IsNaN(b) ) {
       throwSuiteStatusException(kOfxStatErrValue);
     }
+#  endif
     OfxStatus stat = OFX::Private::gParamSuite->paramSetValue(_paramHandle, r, g, b);
     throwSuiteStatusException(stat);
   }
@@ -2994,12 +3041,11 @@ namespace OFX {
   /** @brief set the value at a time, implicitly adds a keyframe */
   void RGBParam::setValueAtTime(double t, double r, double g, double b)
   {
-    if ( OFX::IsNaN(r) || OFX::IsNaN(g) || OFX::IsNaN(b) ) {
+#  ifndef NDEBUG
+    if ( OFX::IsNaN(r) || OFX::IsNaN(g) || OFX::IsNaN(b) || OFX::IsNaN(t) ) {
       throwSuiteStatusException(kOfxStatErrValue);
     }
-    if ( OFX::IsNaN(t) ) {
-      throwSuiteStatusException(kOfxStatErrValue);
-    }
+#  endif
     if(!OFX::Private::gParamSuite->paramSetValueAtTime) throwHostMissingSuiteException("paramSetValueAtTime");
     OfxStatus stat = OFX::Private::gParamSuite->paramSetValueAtTime(_paramHandle, t, r, g, b);
     throwSuiteStatusException(stat);
@@ -3049,9 +3095,11 @@ namespace OFX {
   /** @brief get the value at a time */
   void RGBAParam::getValueAtTime(double t, double &r, double &g, double &b, double &a) const
   {
+#  ifndef NDEBUG
     if ( OFX::IsNaN(t) ) {
       throwSuiteStatusException(kOfxStatErrValue);
     }
+#  endif
     OfxStatus stat = OFX::Private::gParamSuite->paramGetValueAtTime(_paramHandle, t, &r, &g, &b, &a);
     throwSuiteStatusException(stat);
   }
@@ -3059,9 +3107,11 @@ namespace OFX {
   /** @brief set value */
   void RGBAParam::setValue(double r, double g, double b, double a)
   {
+#  ifndef NDEBUG
     if ( OFX::IsNaN(r) || OFX::IsNaN(g) || OFX::IsNaN(b) || OFX::IsNaN(a) ) {
       throwSuiteStatusException(kOfxStatErrValue);
     }
+#  endif
     OfxStatus stat = OFX::Private::gParamSuite->paramSetValue(_paramHandle, r, g, b, a);
     throwSuiteStatusException(stat);
   }
@@ -3069,12 +3119,11 @@ namespace OFX {
   /** @brief set the value at a time, implicitly adds a keyframe */
   void RGBAParam::setValueAtTime(double t, double r, double g, double b, double a)
   {
-    if ( OFX::IsNaN(t) ) {
+#  ifndef NDEBUG
+    if ( OFX::IsNaN(t) || OFX::IsNaN(r) || OFX::IsNaN(g) || OFX::IsNaN(b) || OFX::IsNaN(a) ) {
       throwSuiteStatusException(kOfxStatErrValue);
     }
-    if ( OFX::IsNaN(r) || OFX::IsNaN(g) || OFX::IsNaN(b) || OFX::IsNaN(a) ) {
-      throwSuiteStatusException(kOfxStatErrValue);
-    }
+#  endif
     if(!OFX::Private::gParamSuite->paramSetValueAtTime) throwHostMissingSuiteException("paramSetValueAtTime");
     OfxStatus stat = OFX::Private::gParamSuite->paramSetValueAtTime(_paramHandle, t, r, g, b, a);
     throwSuiteStatusException(stat);
@@ -3127,9 +3176,11 @@ namespace OFX {
   /** @brief get the value at a time */
   void StringParam::getValueAtTime(double t, std::string &v) const
   {
+#  ifndef NDEBUG
     if ( OFX::IsNaN(t) ) {
       throwSuiteStatusException(kOfxStatErrValue);
     }
+#  endif
     char *cStr;
     OfxStatus stat = OFX::Private::gParamSuite->paramGetValueAtTime(_paramHandle, t, &cStr);
     throwSuiteStatusException(stat);
@@ -3156,9 +3207,11 @@ namespace OFX {
   /** @brief set the value at a time, implicitly adds a keyframe */
   void StringParam::setValueAtTime(double t, const std::string &v)
   {
+#  ifndef NDEBUG
     if ( OFX::IsNaN(t) ) {
       throwSuiteStatusException(kOfxStatErrValue);
     }
+#  endif
     if(!OFX::Private::gParamSuite->paramSetValueAtTime) throwHostMissingSuiteException("paramSetValueAtTime");
     OfxStatus stat = OFX::Private::gParamSuite->paramSetValueAtTime(_paramHandle, t, v.c_str());
     throwSuiteStatusException(stat);
@@ -3211,9 +3264,11 @@ namespace OFX {
   /** @brief get the value at a time */
   void BooleanParam::getValueAtTime(double t, bool &v) const
   {
+#  ifndef NDEBUG
     if ( OFX::IsNaN(t) ) {
       throwSuiteStatusException(kOfxStatErrValue);
     }
+#  endif
     int iVal;
     OfxStatus stat = OFX::Private::gParamSuite->paramGetValueAtTime(_paramHandle, t, &iVal);
     throwSuiteStatusException(stat);
@@ -3231,9 +3286,11 @@ namespace OFX {
   /** @brief set the value at a time, implicitly adds a keyframe */
   void BooleanParam::setValueAtTime(double t, bool v)
   {
+#  ifndef NDEBUG
     if ( OFX::IsNaN(t) ) {
       throwSuiteStatusException(kOfxStatErrValue);
     }
+#  endif
     if(!OFX::Private::gParamSuite->paramSetValueAtTime) throwHostMissingSuiteException("paramSetValueAtTime");
     int iVal = v;
     OfxStatus stat = OFX::Private::gParamSuite->paramSetValueAtTime(_paramHandle, t, iVal);
@@ -3280,9 +3337,11 @@ namespace OFX {
   /** @brief get the value at a time */
   void ChoiceParam::getValueAtTime(double t, int &v) const
   {
+#  ifndef NDEBUG
     if ( OFX::IsNaN(t) ) {
       throwSuiteStatusException(kOfxStatErrValue);
     }
+#  endif
     OfxStatus stat = OFX::Private::gParamSuite->paramGetValueAtTime(_paramHandle, t, &v);
     throwSuiteStatusException(stat);
   }
@@ -3568,9 +3627,11 @@ namespace OFX {
   /** @brief get the value at a time */
   void CustomParam::getValueAtTime(double t, std::string &v) const
   {
+#  ifndef NDEBUG
     if ( OFX::IsNaN(t) ) {
       throwSuiteStatusException(kOfxStatErrValue);
     }
+#  endif
     char *cStr;
     OfxStatus stat = OFX::Private::gParamSuite->paramGetValueAtTime(_paramHandle, t, &cStr);
     throwSuiteStatusException(stat);
@@ -3594,9 +3655,11 @@ namespace OFX {
   /** @brief set the value at a time, implicitly adds a keyframe */
   void CustomParam::setValueAtTime(double t, const std::string &v)
   {
+#  ifndef NDEBUG
     if ( OFX::IsNaN(t) ) {
       throwSuiteStatusException(kOfxStatErrValue);
     }
+#  endif
     if(!OFX::Private::gParamSuite->paramSetValueAtTime) throwHostMissingSuiteException("paramSetValueAtTime");
     OfxStatus stat = OFX::Private::gParamSuite->paramSetValueAtTime(_paramHandle, t, v.c_str());
     throwSuiteStatusException(stat);
@@ -3708,9 +3771,11 @@ namespace OFX {
                                     const OfxTime time,
                                     const double parametricPosition) const
   {
+#  ifndef NDEBUG
     if ( OFX::IsNaN(time) ) {
       throwSuiteStatusException(kOfxStatErrValue);
     }
+#  endif
     double returnValue = 0.0;
     OfxStatus stat = OFX::Private::gParametricParameterSuite->parametricParamGetValue(_paramHandle,
                                                                                        curveIndex,
@@ -3731,9 +3796,11 @@ namespace OFX {
   int ParametricParam::getNControlPoints(const int curveIndex,
                                           const OfxTime time) const
   {
+#  ifndef NDEBUG
     if ( OFX::IsNaN(time) ) {
       throwSuiteStatusException(kOfxStatErrValue);
     }
+#  endif
     int returnValue = 0;
     OfxStatus stat = OFX::Private::gParametricParameterSuite->parametricParamGetNControlPoints(_paramHandle,
                                                                                                 curveIndex,
@@ -3755,9 +3822,11 @@ namespace OFX {
                                                                 const OfxTime time,
                                                                 const int nthCtl) const
   {
+#  ifndef NDEBUG
     if ( OFX::IsNaN(time) ) {
       throwSuiteStatusException(kOfxStatErrValue);
     }
+#  endif
     std::pair<double, double> returnValue;
     OfxStatus stat = OFX::Private::gParametricParameterSuite->parametricParamGetNthControlPoint(_paramHandle,
                                                                                                  curveIndex,
@@ -3797,9 +3866,11 @@ namespace OFX {
                                              const double value,
                                              const bool addAnimationKey)
   {
+#  ifndef NDEBUG
     if ( OFX::IsNaN(time) ) {
       throwSuiteStatusException(kOfxStatErrValue);
     }
+#  endif
     OfxStatus stat = OFX::Private::gParametricParameterSuite->parametricParamSetNthControlPoint(_paramHandle,
                                                                                                  curveIndex,
                                                                                                  time,
@@ -3816,9 +3887,11 @@ namespace OFX {
                                              const std::pair<double, double> ctrlPoint,
                                              const bool addAnimationKey)
   {
+#  ifndef NDEBUG
     if ( OFX::IsNaN(time) ) {
       throwSuiteStatusException(kOfxStatErrValue);
     }
+#  endif
     setNthControlPoints(curveIndex,
                          time,
                          nthCtl,
@@ -3847,9 +3920,11 @@ namespace OFX {
                                          const double value,
                                          const bool addAnimationKey)
   {
+#  ifndef NDEBUG
     if ( OFX::IsNaN(time) ) {
       throwSuiteStatusException(kOfxStatErrValue);
     }
+#  endif
     OfxStatus stat = OFX::Private::gParametricParameterSuite->parametricParamAddControlPoint(_paramHandle, curveIndex, time, key, value, addAnimationKey);
     throwSuiteStatusException(stat);
   }

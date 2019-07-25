@@ -1912,7 +1912,7 @@ namespace OFX {
       }
     }
     // gone wrong ?
-    catch(std::invalid_argument) {
+    catch(std::invalid_argument&) {
       OFX::Log::error(true, "Unknown pixel depth property '%s' reported on clip '%s'", str.c_str(), _clipName.c_str());
       e = eBitDepthNone;
     }
@@ -1931,7 +1931,7 @@ namespace OFX {
       }
     }
     // gone wrong ?
-    catch(std::invalid_argument) {
+    catch(std::invalid_argument&) {
       OFX::Log::error(true, "Unknown  pixel component type '%s' reported on clip '%s'", str.c_str(), _clipName.c_str());
       e = ePixelComponentNone;
     }
@@ -1950,7 +1950,7 @@ namespace OFX {
       }
     }
     // gone wrong ?
-    catch(std::invalid_argument) {
+    catch(std::invalid_argument&) {
       OFX::Log::error(true, "Unknown  pixel component type '%s' reported on clip '%s'", str.c_str(), _clipName.c_str());
       e = ePixelComponentNone;
     }
@@ -2000,7 +2000,7 @@ namespace OFX {
       }
     }
     // gone wrong ?
-    catch(std::invalid_argument) {
+    catch(std::invalid_argument&) {
       OFX::Log::error(true, "Unknown unmapped pixel depth property '%s' reported on clip '%s'", str.c_str(), _clipName.c_str());
       e = eBitDepthNone;
     }
@@ -2019,7 +2019,7 @@ namespace OFX {
       }
     }
     // gone wrong ?
-    catch(std::invalid_argument) {
+    catch(std::invalid_argument&) {
       OFX::Log::error(true, "Unknown unmapped pixel component type '%s' reported on clip '%s'", str.c_str(), _clipName.c_str());
       e = ePixelComponentNone;
     }
@@ -2035,7 +2035,7 @@ namespace OFX {
       e = mapStrToPreMultiplicationEnum(str);
     }
     // gone wrong ?
-    catch(std::invalid_argument) {
+    catch(std::invalid_argument&) {
       OFX::Log::error(true, "Unknown premultiplication type '%s' reported on clip %s!", str.c_str(), _clipName.c_str());
       e = eImageOpaque;
     }
@@ -2053,7 +2053,7 @@ namespace OFX {
         "Field order '%s' reported on a clip %s is invalid, it must be none, lower or upper.", str.c_str(), _clipName.c_str());
     }
     // gone wrong ?
-    catch(std::invalid_argument) {
+    catch(std::invalid_argument&) {
       OFX::Log::error(true, "Unknown field order '%s' reported on a clip %s.", str.c_str(), _clipName.c_str());
       e = eFieldNone;
     }
@@ -4194,7 +4194,7 @@ namespace OFX {
       try {
         args.fieldToRender = mapStrToFieldEnum(str);
       }
-      catch (std::invalid_argument) {
+      catch (std::invalid_argument&) {
         // dud field?
         OFX::Log::error(true, "Unknown field to render '%s'", str.c_str());
 
@@ -4209,7 +4209,7 @@ namespace OFX {
         std::string strQuality = inArgs.propGetString(kOfxImageEffectPropRenderQuality, /*throwOnFailure*/false);
         try {
           args.renderQuality = mapToVegasRenderQualityEnum(strQuality);
-        } catch (std::invalid_argument) {
+        } catch (std::invalid_argument&) {
           // dud field?
           OFX::Log::error(true, "Unknown render quality '%s'", str.c_str());
         }
@@ -4348,7 +4348,7 @@ namespace OFX {
       try {
         args.fieldToRender = mapStrToFieldEnum(str);
       }
-      catch (std::invalid_argument) {
+      catch (std::invalid_argument&) {
         // dud field?
         OFX::Log::error(true, "Unknown field to render '%s'", str.c_str());
 
@@ -4849,7 +4849,7 @@ namespace OFX {
       try {
         args.fieldToRender = eFieldBoth;
         args.fieldToRender = mapStrToFieldEnum(str);
-      } catch (std::invalid_argument) {
+      } catch (std::invalid_argument&) {
         // dud field?
         OFX::Log::error(true, "Unknown field to render '%s'", str.c_str());
 
@@ -4894,7 +4894,7 @@ namespace OFX {
       try {
         args.fieldToRender = eFieldBoth;
         args.fieldToRender = mapStrToFieldEnum(str);
-      } catch (std::invalid_argument) {
+      } catch (std::invalid_argument&) {
         // dud field?
         OFX::Log::error(true, "Unknown field to render '%s'", str.c_str());
 
@@ -5365,7 +5365,7 @@ namespace OFX {
       }
 
       // catch memory
-      catch (std::bad_alloc)
+      catch (std::bad_alloc&)
       {
         stat = kOfxStatErrMemory;
       }
@@ -5464,7 +5464,7 @@ namespace OFX {
       }
 
       // catch memory
-      catch (std::bad_alloc)
+      catch (std::bad_alloc&)
       {
         stat = kOfxStatErrMemory;
       }

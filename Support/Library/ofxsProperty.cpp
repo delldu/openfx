@@ -214,7 +214,7 @@ namespace OFX {
     }
     OfxStatus stat = gPropSuite->propSetStringN(_propHandle, property, (int)values.size(), &data[0]);
     OFX::Log::error(stat != kOfxStatOK, "Failed on setting string property %s[0..%d], host returned status %s;",
-                    property, values.size()-1, mapStatusToString(stat));
+                    property, (int)values.size()-1, mapStatusToString(stat));
     if(throwOnFailure)
       throwPropertyException(stat, property);
     

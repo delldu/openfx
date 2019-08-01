@@ -80,6 +80,7 @@ namespace OFX {
 #endif
         {
             _renderWindow.x1 = _renderWindow.y1 = _renderWindow.x2 = _renderWindow.y2 = 0;
+            _renderScale.x = _renderScale.y = 1.;
         }  
         
         /** @brief set the destination image */

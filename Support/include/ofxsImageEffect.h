@@ -46,6 +46,9 @@ of the direct OFX objects and any library side only functions.
 #include <string>
 #include <sstream> // stringstream
 #include <memory>
+#ifndef NDEBUG
+#include <stdio.h> // printf in debug
+#endif
 #include "ofxsParam.h"
 #include "ofxsInteract.h"
 #ifdef OFX_EXTENSIONS_VEGAS

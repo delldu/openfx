@@ -2493,9 +2493,10 @@ namespace OFX {
     setParamSetHandle(paramSet);      
 
     const ImageEffectHostDescription &hostDescription = *getImageEffectHostDescription();
-    _hostIsResolve = (hostDescription.hostName.substr(0, 14) == "DaVinciResolve");  // Resolve gives bad image properties (RS is always 1 and field is None)
+    _hostIsResolve = (hostDescription.hostName.rfind("DaVinciResolve", 0) == 0);  // Resolve gives bad image properties (RS is always 1 and field is None)
     _hostIsFusion = (hostDescription.hostName == "com.eyeonline.Fusion") || (hostDescription.hostName == "com.blackmagicdesign.Fusion"); // Fusion gives inverse RS props in inargs and on the images
-    _ignoreBadRenderScale = _hostIsResolve || _hostIsFusion;
+    _hostIsVegas = (hostDescription.hostName.rfind("com.sonycreativesoftware.vegas", 0) == 0); // Vegas, and probably VegasMovieStudio, always use renderScale, and do not set it in the image props, see https://github.com/NatronGitHub/openfx-misc/issues/66#issuecomment-562783481
+    _ignoreBadRenderScale = _hostIsResolve || _hostIsFusion || _hostIsVegas;
   }
 
   /** @brief dtor */

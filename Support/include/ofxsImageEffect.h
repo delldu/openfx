@@ -1854,6 +1854,12 @@ namespace OFX {
     */
     bool _hostIsFusion;
 
+    /** @brief used to disable checks on some hosts.
+
+    in Sony Vegas, kOfxImageEffectPropRenderScale is <1 in the inArgs for downscaled render, but =1. on the images
+    */
+    bool _hostIsVegas;
+
     /** @brief ignore render scale checks */
     bool _ignoreBadRenderScale;
 

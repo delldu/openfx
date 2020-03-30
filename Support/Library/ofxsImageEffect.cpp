@@ -1788,7 +1788,7 @@ namespace OFX {
     if(x < _bounds.x1 || x >= _bounds.x2 || y < _bounds.y1 || y >= _bounds.y2 || _pixelBytes == 0)
       return 0;
 
-    char *pix = ((char *) _pixelData) + (size_t)(y - _bounds.y1) * _rowBytes;
+    char *pix = ((char *) _pixelData) + (size_t)(y - _bounds.y1) * (size_t)_rowBytes;
     pix += (x - _bounds.x1) * _pixelBytes;
     return (void *) pix;   
   }
@@ -1799,7 +1799,7 @@ namespace OFX {
     if(x < _bounds.x1 || x >= _bounds.x2 || y < _bounds.y1 || y >= _bounds.y2 || _pixelBytes == 0)
       return 0;
 
-    const char *pix = ((const char *) _pixelData) + (size_t)(y - _bounds.y1) * _rowBytes;
+    const char *pix = ((const char *) _pixelData) + (size_t)(y - _bounds.y1) * (size_t)_rowBytes;
     pix += (x - _bounds.x1) * _pixelBytes;
     return (const void *) pix;
   }
@@ -1809,7 +1809,7 @@ namespace OFX {
     x = (std::max)(_bounds.x1, (std::min)(x, _bounds.x2 - 1));
     y = (std::max)(_bounds.y1, (std::min)(y, _bounds.y2 - 1));
 
-    char *pix = ((char *) _pixelData) + (size_t)(y - _bounds.y1) * _rowBytes;
+    char *pix = ((char *) _pixelData) + (size_t)(y - _bounds.y1) * (size_t)_rowBytes;
     pix += (x - _bounds.x1) * _pixelBytes;
     return (void *) pix;   
   }
@@ -1819,7 +1819,7 @@ namespace OFX {
     x = (std::max)(_bounds.x1, (std::min)(x, _bounds.x2 - 1));
     y = (std::max)(_bounds.y1, (std::min)(y, _bounds.y2 - 1));
 
-    const char *pix = ((const char *) _pixelData) + (size_t)(y - _bounds.y1) * _rowBytes;
+    const char *pix = ((const char *) _pixelData) + (size_t)(y - _bounds.y1) * (size_t)_rowBytes;
     pix += (x - _bounds.x1) * _pixelBytes;
     return (const void *) pix;
   }

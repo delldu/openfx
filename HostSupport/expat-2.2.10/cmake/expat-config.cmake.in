@@ -1,4 +1,3 @@
-#
 #                          __  __            _
 #                       ___\ \/ /_ __   __ _| |_
 #                      / _ \\  /| '_ \ / _` | __|
@@ -6,7 +5,7 @@
 #                      \___/_/\_\ .__/ \__,_|\__|
 #                               |_| XML parser
 #
-# Copyright (c) 2017 Expat development team
+# Copyright (c) 2019 Expat development team
 # Licensed under the MIT license:
 #
 # Permission is  hereby granted,  free of charge,  to any  person obtaining
@@ -27,50 +26,50 @@
 # DAMAGES OR  OTHER LIABILITY, WHETHER  IN AN  ACTION OF CONTRACT,  TORT OR
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
 # USE OR OTHER DEALINGS IN THE SOFTWARE.
+#
+if(NOT _expat_config_included)
+    # Protect against multiple inclusion
+    set(_expat_config_included TRUE)
 
-include_HEADERS = \
-    ../expat_config.h \
-    expat.h \
-    expat_external.h
 
-lib_LTLIBRARIES = libexpat.la
+include("${CMAKE_CURRENT_LIST_DIR}/expat.cmake")
 
-libexpat_la_LDFLAGS = \
-    @AM_LDFLAGS@ \
-    -no-undefined \
-    -version-info @LIBCURRENT@:@LIBREVISION@:@LIBAGE@
+@PACKAGE_INIT@
 
-libexpat_la_SOURCES = \
-    xmlparse.c \
-    xmltok.c \
-    xmlrole.c
+#
+# Supported components
+#
+macro(expat_register_component _NAME _AVAILABE)
+    set(expat_${_NAME}_FOUND ${_AVAILABE})
+endmacro()
 
-doc_DATA = \
-    ../AUTHORS \
-    ../Changes
+expat_register_component(attr_info          @EXPAT_ATTR_INFO@)
+expat_register_component(dtd                @EXPAT_DTD@)
+expat_register_component(large_size         @EXPAT_LARGE_SIZE@)
+expat_register_component(min_size           @EXPAT_MIN_SIZE@)
+expat_register_component(ns                 @EXPAT_NS@)
 
-install-data-hook:
-	cd "$(DESTDIR)$(docdir)" && $(am__mv) Changes changelog
+if(@EXPAT_CONTEXT_BYTES@)
+    expat_register_component(context_bytes  ON)
+else()
+    expat_register_component(context_bytes  OFF)
+endif()
 
-uninstall-local:
-	$(RM) "$(DESTDIR)$(docdir)/changelog"
+if("@EXPAT_CHAR_TYPE@" STREQUAL "char")
+    expat_register_component(char           ON)
+    expat_register_component(ushort         OFF)
+    expat_register_component(wchar_t        OFF)
+elseif("@EXPAT_CHAR_TYPE@" STREQUAL "ushort")
+    expat_register_component(char           OFF)
+    expat_register_component(ushort         ON)
+    expat_register_component(wchar_t        OFF)
+elseif("@EXPAT_CHAR_TYPE@" STREQUAL "wchar_t")
+    expat_register_component(char           OFF)
+    expat_register_component(ushort         OFF)
+    expat_register_component(wchar_t        ON)
+endif()
 
-EXTRA_DIST = \
-    ascii.h \
-    asciitab.h \
-    expat_external.h \
-    expat.h \
-    iasciitab.h \
-    internal.h \
-    latin1tab.h \
-    libexpat.def \
-    libexpatw.def \
-    nametab.h \
-    siphash.h \
-    utf8tab.h \
-    winconfig.h \
-    xmlrole.h \
-    xmltok.h \
-    xmltok_impl.c \
-    xmltok_impl.h \
-    xmltok_ns.c
+check_required_components(expat)
+
+
+endif(NOT _expat_config_included)

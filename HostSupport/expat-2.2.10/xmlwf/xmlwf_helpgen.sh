@@ -1,4 +1,4 @@
-#
+#! /usr/bin/env bash
 #                          __  __            _
 #                       ___\ \/ /_ __   __ _| |_
 #                      / _ \\  /| '_ \ / _` | __|
@@ -6,7 +6,7 @@
 #                      \___/_/\_\ .__/ \__,_|\__|
 #                               |_| XML parser
 #
-# Copyright (c) 2017 Expat development team
+# Copyright (c) 2019 Expat development team
 # Licensed under the MIT license:
 #
 # Permission is  hereby granted,  free of charge,  to any  person obtaining
@@ -28,49 +28,8 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
 # USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-include_HEADERS = \
-    ../expat_config.h \
-    expat.h \
-    expat_external.h
-
-lib_LTLIBRARIES = libexpat.la
-
-libexpat_la_LDFLAGS = \
-    @AM_LDFLAGS@ \
-    -no-undefined \
-    -version-info @LIBCURRENT@:@LIBREVISION@:@LIBAGE@
-
-libexpat_la_SOURCES = \
-    xmlparse.c \
-    xmltok.c \
-    xmlrole.c
-
-doc_DATA = \
-    ../AUTHORS \
-    ../Changes
-
-install-data-hook:
-	cd "$(DESTDIR)$(docdir)" && $(am__mv) Changes changelog
-
-uninstall-local:
-	$(RM) "$(DESTDIR)$(docdir)/changelog"
-
-EXTRA_DIST = \
-    ascii.h \
-    asciitab.h \
-    expat_external.h \
-    expat.h \
-    iasciitab.h \
-    internal.h \
-    latin1tab.h \
-    libexpat.def \
-    libexpatw.def \
-    nametab.h \
-    siphash.h \
-    utf8tab.h \
-    winconfig.h \
-    xmlrole.h \
-    xmltok.h \
-    xmltok_impl.c \
-    xmltok_impl.h \
-    xmltok_ns.c
+./xmlwf/xmlwf_helpgen.py | sed \
+        -e 's,usage: xmlwf,usage: %s,' \
+        -e 's, \[-h | -v\],,' \
+        -e 's,^,      T(",' \
+        -e 's,$,\\n"),'

@@ -1,4 +1,4 @@
-#
+#! /usr/bin/env bash
 #                          __  __            _
 #                       ___\ \/ /_ __   __ _| |_
 #                      / _ \\  /| '_ \ / _` | __|
@@ -6,7 +6,7 @@
 #                      \___/_/\_\ .__/ \__,_|\__|
 #                               |_| XML parser
 #
-# Copyright (c) 2017 Expat development team
+# Copyright (c) 2019 Expat development team
 # Licensed under the MIT license:
 #
 # Permission is  hereby granted,  free of charge,  to any  person obtaining
@@ -28,49 +28,21 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
 # USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-include_HEADERS = \
-    ../expat_config.h \
-    expat.h \
-    expat_external.h
+set -e
 
-lib_LTLIBRARIES = libexpat.la
+filename="${1:-tests/xmltest.log}"
 
-libexpat_la_LDFLAGS = \
-    @AM_LDFLAGS@ \
-    -no-undefined \
-    -version-info @LIBCURRENT@:@LIBREVISION@:@LIBAGE@
+dos2unix "${filename}"
 
-libexpat_la_SOURCES = \
-    xmlparse.c \
-    xmltok.c \
-    xmlrole.c
-
-doc_DATA = \
-    ../AUTHORS \
-    ../Changes
-
-install-data-hook:
-	cd "$(DESTDIR)$(docdir)" && $(am__mv) Changes changelog
-
-uninstall-local:
-	$(RM) "$(DESTDIR)$(docdir)/changelog"
-
-EXTRA_DIST = \
-    ascii.h \
-    asciitab.h \
-    expat_external.h \
-    expat.h \
-    iasciitab.h \
-    internal.h \
-    latin1tab.h \
-    libexpat.def \
-    libexpatw.def \
-    nametab.h \
-    siphash.h \
-    utf8tab.h \
-    winconfig.h \
-    xmlrole.h \
-    xmltok.h \
-    xmltok_impl.c \
-    xmltok_impl.h \
-    xmltok_ns.c
+tempfile="$(mktemp)"
+sed \
+        -e 's/^wine: Call .* msvcrt\.dll\._wperror, aborting$/ibm49i02.dtd: No such file or directory/' \
+        \
+        -e '/^wine: /d' \
+        -e '/^Application tried to create a window, but no driver could be loaded.$/d' \
+        -e '/^Make sure that your X server is running and that $DISPLAY is set correctly.$/d' \
+        -e '/^err:systray:initialize_systray Could not create tray window$/d' \
+        -e '/^In ibm\/invalid\/P49\/: Unhandled exception: unimplemented .\+/d' \
+        \
+        "${filename}" > "${tempfile}"
+mv "${tempfile}" "${filename}"

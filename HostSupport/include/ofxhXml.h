@@ -74,6 +74,24 @@ namespace OFX {
               int d = c & 0xf;
               ns += d < 10 ? ('0' + d) : ('A' + d - 10);
               ns += ';';
+            } else if (0xC0 <= c && c < 0xE0) { // 2-byte UTF-8
+                ns += s[i];
+                ++i;
+                ns += s[i];
+            } else if (0xE0 <= c && c < 0xF0) { // 3-byte UTF-8
+                ns += s[i];
+                ++i;
+                ns += s[i];
+                ++i;
+                ns += s[i];
+            } else if (0xF0 <= c && c < 0xF8) { // 4-byte UTF-8
+                ns += s[i];
+                ++i;
+                ns += s[i];
+                ++i;
+                ns += s[i];
+                ++i;
+                ns += s[i];
             } else {
               ns += s[i];
             }

@@ -284,16 +284,16 @@ This is a property on parameters of type ::kOfxParamTypeChoice, and tells the ch
  **/
 #define kNatronOfxParamProcessR      "NatronOfxParamProcessR"
 #define kNatronOfxParamProcessRLabel "R"
-#define kNatronOfxParamProcessRHint  "Process red component."
+#define kNatronOfxParamProcessRHint  "Process red channel."
 #define kNatronOfxParamProcessG      "NatronOfxParamProcessG"
 #define kNatronOfxParamProcessGLabel "G"
-#define kNatronOfxParamProcessGHint  "Process green component."
+#define kNatronOfxParamProcessGHint  "Process green channel."
 #define kNatronOfxParamProcessB      "NatronOfxParamProcessB"
 #define kNatronOfxParamProcessBLabel "B"
-#define kNatronOfxParamProcessBHint  "Process blue component."
+#define kNatronOfxParamProcessBHint  "Process blue channel."
 #define kNatronOfxParamProcessA      "NatronOfxParamProcessA"
 #define kNatronOfxParamProcessALabel "A"
-#define kNatronOfxParamProcessAHint  "Process alpha component."
+#define kNatronOfxParamProcessAHint  "Process alpha channel."
 
 /** @brief Used to define the tracker effect context. 
  In this context the effect instance will be exactly 1 track. 

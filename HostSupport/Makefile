@@ -6,7 +6,7 @@
 
 OS = $(shell uname)
 DEBUG ?= false
-EXPAT ?= expat-2.2.10
+EXPAT ?= expat-2.3.0
 EXPAT_INCLUDE ?= $(EXPAT)/lib
 OBJSUF ?= .o
 LIBSUF ?= .a

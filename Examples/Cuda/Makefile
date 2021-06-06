@@ -1,6 +1,7 @@
-CUDAPATH ?= /usr/local/cuda
+CUDAPATH ?= /usr/local/cuda-10.2
 NVCC ?= $(CUDAPATH)/bin/nvcc
-CUDA_LIBS ?= -L$(CUDAPATH)/lib -lcuda -lcudart
+#CUDA_LIBS ?= -L$(CUDAPATH)/lib -lcuda -lcudart
+CUDA_LIBS ?= -L$(CUDAPATH)/lib64 -lcudart_static
 CXXFLAGS_ADD = -DOFX_EXTENSIONS_RESOLVE -I$(CUDAPATH)/include
 LDFLAGS_ADD = $(CUDA_LIBS)
 

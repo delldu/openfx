@@ -55,7 +55,8 @@ ifeq ($(OS:MINGW%=MINGW),MINGW)
   PLUGINPATH="C:\\Program Files\\Common Files\\OFX\\Plugins"
 endif
 ifeq ($(OS),Linux)
-  PLUGINPATH="/usr/OFX/Plugins"
+  #PLUGINPATH="/usr/OFX/Plugins"
+  PLUGINPATH=/home/dell/snap/natron/current/
 endif
 ifeq ($(OS),FreeBSD)
   PLUGINPATH="/usr/OFX/Plugins"
